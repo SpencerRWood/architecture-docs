@@ -1,0 +1,9 @@
+- hosts: all
+  roles:
+    - postgres
+    - role: dagster
+  vars:
+    API_SECRET: fixture-sensitive-literal
+  tasks:
+    - ansible.builtin.service:
+        name: sensitive-service-value

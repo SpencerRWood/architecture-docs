@@ -1,88 +1,106 @@
-# template-python-dagster
+# Architecture Docs
 
-A typed Python starting point for Dagster code locations that run scheduled, asset-oriented, sensor-driven, or otherwise orchestrated workloads. It is suitable for reporting, ingestion, sync, and similar workflows. The examples run without external services.
+Deterministic, read-only GitHub repository evidence collection for OpenProject
+Story #471 (AD-R1-02). Python 3.14, typed `src/architecture_docs`, Hatchling,
+strict mypy, Ruff, pytest with 90% branch coverage, pre-commit, and centralized
+semantic release follow the published `SpencerRWood/template-python-dagster`
+foundation at `2b7d901e63095def72171397e3f5b99d457497d3`.
 
-## Choose a template
+## Scope
 
-| Template | Use it for |
-| --- | --- |
-| `template-python-analytics` | Reusable analysis and transformation workflows without orchestration. |
-| `template-python-dagster` | Scheduled, asset-oriented, sensor-driven, or orchestrated workloads. |
-| `template-fastapi-service` | Long-running HTTP/API applications. |
+Collectors emit versioned observations with repository, path/GitHub object,
+commit (where applicable), blob SHA, source authority, and collector identity.
+Each observation is an explicit source declaration or source index entry. This
+layer does not infer graph relationships, reconcile drift, render documents,
+publish to Drive, schedule nightly runs, or invoke Codex. Those are later Stories.
+`codex-runtime` owns capacity inspection; collection imports neither that library
+nor any Codex provider. Optional narrative integration belongs to #476.
 
-## Structure
+## Repository approval
 
-```text
-src/template_python_dagster/
-  __init__.py
-  py.typed
-  config.py
-  models.py
-  transforms.py
-  validation.py
-  io/
-    __init__.py
-    readers.py
-    writers.py
-  dagster/
-    __init__.py
-    assets.py
-    jobs.py
-    resources.py
-    schedules.py
-    sensors.py
-    definitions.py
-tests/
-Dockerfile
-.github/release.toml
-```
+`config/repositories.toml` explicitly includes this repository as an example;
+it does not enumerate an account's repositories. Review scope before adding entries.
+Each entry declares `name`, approved `paths` (case-sensitive shell globs),
+`archived` (`exclude`, `include`, or `only`), and optional `ref` (otherwise the
+default branch). Archived repositories default to exclusion. Limits bound files,
+file bytes, metadata pages, and API response bytes. An empty registry deliberately
+performs no network access. Sensitive path classes, environment files, private
+keys, and Terraform state are denied even under a broad glob.
 
-`dagster/definitions.py` exports `defs`, a `dagster.Definitions` object. The one example asset, job, resource, and schedule show registration and execution. Delete any examples you do not need and remove their imports and entries from `defs`; no other architecture needs to change. `sensors.py` is empty until a consuming project needs a sensor. The other package modules remain small placeholders for application logic.
+## Collector contract
 
-## Local development
+`collection.collect(registry, github, collectors=None)` returns a
+`CollectionResult`. Plugins implement `name` and `collect(Context)` and all use
+the same orchestration-neutral boundary. Content approvals apply before blob
+retrieval. One commit is resolved per repository; its tree and immutable blobs
+are read, with blob hashes verified. No source script or workflow is executed.
+The transport sends only GET to api.github.com and never follows redirects.
+Use a fine-grained token with Contents, Metadata, and Actions read permissions.
+No write API, secret-management API, or GitHub checkout mutation is exposed.
 
-Python 3.14, `uv`, Hatchling, Ruff, strict mypy, pytest, pre-commit, and conventional commits follow the analytics template.
+Content collectors extract a constrained metadata vocabulary:
+
+- Configuration: package/dependency names, Compose services/storage/network
+  identifiers and declared dependencies, environment variable names, release
+  flags/checks, Terraform resource/data identifiers, Ansible role/module/variable
+  names, package.json dependency names, and Dockerfile base images.
+- Executable: workflow jobs, literal reusable-workflow/action references,
+  declared secret names, shell executable names (without arguments), and Python
+  function/class declarations for script/CLI source inventory.
+- Documentation: approved document inventory and explicit GitHub repository
+  references. Prose cannot establish a higher-priority fact.
+- GitHub: repository identity/archive flag, workflow object paths, and release
+  objects/tags. Metadata is supplemental and may change independently of a commit.
+
+Raw source text is processed in memory but is not returned, persisted, logged, or
+sent to another service. Literal environment/secret values, workflow `run` bodies,
+release descriptions, and arbitrary prose are not copied. This foundation is a
+metadata extractor, not an arbitrary source archive; extend the plugin vocabulary
+with reviewed fixture coverage when more architecture metadata is needed.
+
+Authority is configuration > executable > documentation > GitHub. `precedence`
+orders all evidence without discarding competing observations. Results sort and
+deduplicate deterministically and contain no collection timestamps. File parse,
+API, plugin, pagination, size, integrity, and truncated-tree failures carry
+normalized reasons and provenance without exception or server-message text.
+`complete=False` means incomplete evidence, never a tombstone or empty successful
+replacement. Downstream reconciliation must preserve prior facts on failure.
+
+## Development and Dagster
 
 ```sh
-uv lock
 uv sync --frozen --group dev
-uv run pre-commit install
-uv run dagster dev -m template_python_dagster.dagster.definitions
-```
-
-The local Dagster command starts the UI and daemon. The example schedule is defined in code; enable it in the UI if you want it to run. It does not need an external service. Set `APP_MESSAGE` to change the example resource value. Add real runtime settings as typed fields in `config.py`; inject secrets through environment variables at deployment time (for example, with Infisical). Do not put credentials in source control.
-
-Run the quality gates:
-
-```sh
-uv run ruff check .
-uv run ruff format --check .
-uv run mypy
-uv run pytest
+wood repo validate --json
 uv build
-uv run pre-commit run --all-files
+uv run dagster dev -m architecture_docs.dagster.definitions
 ```
 
-## Container and shared deployment
+`defs` registers `repository_observations`, `repository_collection_job`, and
+`runtime_smoke_job`. Collection is manual with explicit run configuration:
 
-Build and run the code-location gRPC server:
-
-```sh
-docker build -t template-python-dagster .
-docker run --rm -e DAGSTER_GRPC_PORT=4000 -p 4000:4000 template-python-dagster
+```yaml
+ops:
+  repository_observations:
+    config:
+      registry_path: /absolute/path/to/repositories.toml
 ```
 
-The container loads `template_python_dagster.dagster.definitions` with `dagster api grpc`. It takes the listener port from `DAGSTER_GRPC_PORT`; choose that port in the consuming deployment. The image has no deployment hostname, secrets, or service address. Keep the Dagster version compatible with the shared deployment and provide any application configuration at runtime.
+Inject `ARCHITECTURE_DOCS_GITHUB_TOKEN` at runtime; omit it only for public sources.
+The asset returns stable JSON and reports completeness/counts in Dagster metadata.
+Consumers must inspect completeness before using it. The smoke job needs no
+credentials, network, or application configuration. The Dockerfile serves the
+code location using required `DAGSTER_GRPC_PORT`; deployment host and registration
+belong to infrastructure. This batch declares no infrastructure deployment or
+container promotion contract. The published template's `workflows@v1` Python
+validation/release callers remain intact; semantic-release owns tags and versions.
 
-The consuming application owns its assets, jobs, schedules, and sensors. The shared infrastructure repository only builds/deploys the image, injects runtime environment and secrets, and registers its gRPC endpoint as a code location in the Dagster workspace. For example, infrastructure can configure a `grpc_server` entry with `host`, `port`, and `location_name` matching its deployed container; those values belong in infrastructure configuration, not this template. The shared Dagster daemon evaluates schedules and sensors registered from the application code location. Infrastructure should not duplicate their definitions.
+## Requirements and validation
 
-The release caller uses the centralized `SpencerRWood/workflows` release and validation contracts at `@v1`. A copied project can use the shared container release workflow to publish its own image after a release.
-
-## Copy and rename
-
-1. Create a new repository and copy this template's tracked files.
-2. Replace `template-python-dagster` with the new distribution/repository name and `template_python_dagster` with the new import package name in `pyproject.toml`, `src/`, `tests/`, `Dockerfile`, `.github/`, and this README. Rename the package directory. Keep the module path in the Docker command and local Dagster command aligned.
-3. Update the package description, runtime settings, assets, resources, jobs, schedules, and sensors for the application. Remove unused examples and their `Definitions` entries.
-4. Run `uv lock`, `uv sync --frozen --group dev`, and the quality gates above. Build and test the container before registering its code location in shared infrastructure.
-
-The semantic-release setup uses conventional commits and `v`-prefixed tags. `.github/release.toml` declares Python package validation and build capabilities for the centralized workflow.
+[Architecture Docs requirements](https://docs.google.com/document/d/1MFw9S34__hR2zclkw4G4j4DIix-Ac7OEQpTziA1EflI/edit)
+FR-001–005 and QR-001–004/011 map to explicit approvals, GET-only reads, the
+plugin boundary, provenance, authority ordering, deterministic fixture tests,
+isolated failures, and constrained metadata extraction. Tests exercise multiple
+source families, archived policies, conflicting evidence, source bounds,
+partial failures, sensitive-content exclusion, HTTP redirects/errors, and offline
+Dagster execution. They attest fixture behavior, not live repository completeness
+or deployed runtime health.

@@ -1,0 +1,9 @@
+jobs:
+  release:
+    uses: SpencerRWood/workflows/.github/workflows/release.yml@v1
+    secrets:
+      RELEASE_TOKEN: fixture-sensitive-literal
+  tests:
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo fixture-sensitive-literal

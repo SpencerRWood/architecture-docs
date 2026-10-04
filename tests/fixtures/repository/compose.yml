@@ -1,0 +1,10 @@
+services:
+  api:
+    environment:
+      API_TOKEN: fixture-sensitive-literal
+      DATABASE_URL: postgresql://sensitive
+    depends_on: [database]
+  database:
+    environment: [POSTGRES_PASSWORD=fixture-sensitive-literal]
+volumes:
+  postgres_data: {}

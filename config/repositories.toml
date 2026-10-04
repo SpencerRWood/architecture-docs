@@ -1,0 +1,12 @@
+# Explicit example scope. Operators review additions before collection.
+version = 1
+
+[limits]
+max_file_bytes = 262144
+max_files = 500
+max_pages = 10
+
+[[repositories]]
+name = "SpencerRWood/architecture-docs"
+archived = "exclude"
+paths = ["pyproject.toml", ".github/release.toml", ".github/workflows/*.yml", "README.md", "docs/*.md"]

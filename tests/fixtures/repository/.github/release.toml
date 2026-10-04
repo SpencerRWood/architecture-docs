@@ -1,0 +1,8 @@
+version = 1
+[validation]
+checks = ["ruff", "mypy", "pytest"]
+[build]
+python_package = true
+[release]
+semantic_release = true
+token = "fixture-sensitive-literal"
