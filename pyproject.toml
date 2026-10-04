@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "template-python-dagster"
+name = "architecture-docs"
 version = "0.1.0"
-description = "A typed Python template for Dagster code locations and orchestrated workloads."
+description = "Deterministic, read-only repository architecture evidence collectors."
 readme = "README.md"
 requires-python = ">=3.14"
 authors = [
@@ -19,7 +19,7 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "Typing :: Typed",
 ]
-dependencies = ["dagster>=1.12,<2"]
+dependencies = ["dagster>=1.12,<2", "httpx>=0.28,<1", "pyyaml>=6,<7"]
 
 [dependency-groups]
 dev = [
@@ -31,10 +31,11 @@ dev = [
   "pytest-cov",
   "python-semantic-release",
   "ruff",
+  "types-pyyaml",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/template_python_dagster"]
+packages = ["src/architecture_docs"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
@@ -54,7 +55,7 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["template_python_dagster"]
+source = ["architecture_docs"]
 
 [tool.coverage.report]
 fail_under = 90
