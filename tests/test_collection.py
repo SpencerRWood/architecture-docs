@@ -8,9 +8,11 @@ from typing import Any
 
 import httpx
 import pytest
+import yaml
 
 from architecture_docs.collection import collect
-from architecture_docs.collectors.contracts import Context
+from architecture_docs.collectors.content import executable, parsed
+from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.collectors.github import GitHub, SourceError
 from architecture_docs.config import Registry, Repository
 from architecture_docs.model import Authority, CollectionResult, Observation, Provenance
@@ -205,6 +207,22 @@ def test_malformed_configuration_is_isolated() -> None:
     result = collect(registry(), fixture.client())
     assert any(item.reason == "parse_error" for item in result.failures)
     assert any(item.key == "workflow.uses" for item in result.observations)
+
+
+def test_actions_on_key_uses_yaml12_without_changing_global_safe_loader() -> None:
+    source = SourceFile(
+        Provenance(
+            "fixture/service", ".github/workflows/validate.yml", "a" * 40, "b" * 40
+        ),
+        "on:\n  push:\n    branches: [main]\nenabled: true\n"
+        "jobs:\n  validation:\n    uses: "
+        "SpencerRWood/workflows/.github/workflows/validate.yml@v1\n",
+    )
+    data = parsed(source)
+    assert "on" in data
+    assert data["enabled"] is True
+    assert ("workflow.job", "validation") in executable(source)
+    assert True in yaml.safe_load("on: push")
 
 
 def test_invalid_json_cannot_be_accepted_as_yaml() -> None:

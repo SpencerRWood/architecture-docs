@@ -2,7 +2,8 @@
 
 Deterministic, read-only GitHub repository evidence collection (#471) and
 architecture graph/snapshot reconciliation (#472), and deterministic architecture
-documents (#473), Secrets Manifest and grounded runbooks (#474).
+documents (#473), Secrets Manifest and grounded runbooks (#474), and stable native
+Google Drive publication (#475).
 Python 3.14, typed `src/architecture_docs`, Hatchling,
 strict mypy, Ruff, pytest with 90% branch coverage, pre-commit, and centralized
 semantic release follow the published `SpencerRWood/template-python-dagster`
@@ -14,8 +15,8 @@ Collectors emit versioned observations with repository, path/GitHub object,
 commit (where applicable), blob SHA, source authority, and collector identity.
 Each observation is an explicit source declaration or source index entry. This
 collection layer feeds a separate deterministic graph and reconciliation layer.
-Modular renderers consume that normalized snapshot. Drive publication (#475),
-nightly scheduling, and Codex invocation (#476) belong
+Modular renderers consume that normalized snapshot. Nightly scheduling and
+Codex invocation (#476) belong
 to later Stories.
 `codex-runtime` owns capacity inspection; collection imports neither that library
 nor any Codex provider. Optional narrative integration belongs to #476.
@@ -200,3 +201,30 @@ See [Secrets Manifest and operational contracts](docs/operations.md) for #474's
 metadata-only schema, approved discovery, ordered reference steps, grounding,
 evidence gaps, and acceptance mapping. Runbooks link to repository invocation
 contracts; they never copy arbitrary command arguments, credentials, or prose.
+
+## Stable Drive publication
+
+`publishing.publish(snapshot, drive, state_path, parent_id)` renders and validates
+the whole deterministic document set before publishing native Google Docs under
+`Architecture/`, with eight separate runbooks in `Architecture/Runbooks/`.
+An explicit approved parent ID and absolute durable SQLite state path are required.
+No source collection, account-wide discovery, scheduling or Codex invocation is
+performed by the publisher.
+
+```sh
+uv run python -m architecture_docs.publishing /absolute/snapshot.json \
+  --state /persistent/local/state/publication.sqlite3 \
+  --parent APPROVED_DRIVE_FOLDER_ID
+```
+
+Inject `ARCHITECTURE_DOCS_GOOGLE_ACCESS_TOKEN` only into the process. The publisher
+accepts an OAuth access token and performs no token refresh or credential storage.
+Use the same OAuth application, parent and durable ledger on retries. Stable IDs,
+pending writes, actual published snapshot/provenance and normalized event reasons
+remain in the local ledger; snapshot history stays in `SnapshotStore`.
+
+Unchanged documents are read but never rewritten for provenance-only churn.
+Changed documents receive a revision-guarded atomic body update in the same native
+Doc. Partial evidence, conflicting identities or unexpected human edits block the
+affected writes and preserve known-good content. See [publication operations,
+recovery and acceptance evidence](docs/publication.md) for the exact boundaries.
