@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.3.0 (2026-10-05)
+
+### Features
+
+- Render deterministic architecture documents (OP #473)
+  ([#3](https://github.com/SpencerRWood/architecture-docs/pull/3),
+  [`89055c9`](https://github.com/SpencerRWood/architecture-docs/commit/89055c92de13377047a7f4f9f2339480fa486c7f))
+
+
 ## v0.2.0 (2026-10-05)
 
 ### Features
