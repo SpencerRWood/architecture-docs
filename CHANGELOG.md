@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.6.0 (2026-10-05)
+
+### Features
+
+- Move architecture persistence to PostgreSQL (OP #519)
+  ([#6](https://github.com/SpencerRWood/architecture-docs/pull/6),
+  [`1b44ce1`](https://github.com/SpencerRWood/architecture-docs/commit/1b44ce1604e630d788adddad8f53d2b25d1fdb88))
+
+
 ## v0.5.0 (2026-10-05)
 
 ### Features
