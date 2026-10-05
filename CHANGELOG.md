@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.5.0 (2026-10-05)
+
+### Features
+
+- Publish stable architecture documents to Google Drive (OP #475)
+  ([#5](https://github.com/SpencerRWood/architecture-docs/pull/5),
+  [`cfcf657`](https://github.com/SpencerRWood/architecture-docs/commit/cfcf657899e6488334a220b0969523820be19781))
+
+
 ## v0.4.0 (2026-10-05)
 
 ### Features
