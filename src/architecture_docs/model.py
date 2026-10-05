@@ -38,12 +38,34 @@ class Failure:
     reason: str
 
 
+@dataclass(frozen=True, order=True)
+class SourceCoverage:
+    """Positive evidence that one collector completely read one source."""
+
+    repository: str
+    source: str
+    collector: str
+    revision: str | None
+
+
+@dataclass(frozen=True, order=True)
+class RepositoryInventory:
+    """A complete pinned tree within the current approvals, not an account scan."""
+
+    repository: str
+    revision: str
+    paths: tuple[str, ...]
+    approvals: tuple[str, ...]
+
+
 @dataclass(frozen=True)
 class CollectionResult:
     observations: tuple[Observation, ...] = ()
     failures: tuple[Failure, ...] = ()
     skipped: tuple[str, ...] = ()
     schema_version: int = 1
+    coverage: tuple[SourceCoverage, ...] = ()
+    inventories: tuple[RepositoryInventory, ...] = ()
 
     @property
     def complete(self) -> bool:

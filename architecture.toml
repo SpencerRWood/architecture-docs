@@ -1,0 +1,39 @@
+version = 1
+
+[[nodes]]
+kind = "system"
+name = "architecture-docs"
+attributes = { technology = "python" }
+
+[[nodes]]
+kind = "service"
+name = "code-location"
+attributes = { technology = "dagster" }
+
+[[nodes]]
+kind = "storage"
+name = "snapshot-ledger"
+attributes = { technology = "sqlite" }
+
+[[nodes]]
+kind = "orchestration"
+name = "repository_collection_job"
+
+[[nodes]]
+kind = "orchestration"
+name = "architecture_reconciliation_job"
+
+[[edges]]
+kind = "contains"
+source = { kind = "system", name = "architecture-docs" }
+target = { kind = "service", name = "code-location" }
+
+[[edges]]
+kind = "uses_storage"
+source = { kind = "service", name = "code-location" }
+target = { kind = "storage", name = "snapshot-ledger" }
+
+[[edges]]
+kind = "orchestrates"
+source = { kind = "orchestration", name = "architecture_reconciliation_job" }
+target = { kind = "service", name = "code-location" }

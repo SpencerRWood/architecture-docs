@@ -5,8 +5,10 @@ from pathlib import Path
 
 from dagster import Definitions, materialize
 
+from architecture_docs.codec import snapshot_from_json
 from architecture_docs.dagster.assets import repository_observations
 from architecture_docs.dagster.definitions import defs
+from architecture_docs.store import SnapshotStore
 
 
 def test_smoke_and_importable_definitions() -> None:
@@ -48,3 +50,31 @@ def test_package_release_and_shared_runtime_boundary() -> None:
         "codex" in dependency for dependency in project["project"]["dependencies"]
     )
     assert project["tool"]["coverage"]["report"]["fail_under"] == 90
+
+
+def test_manual_reconciliation_job_is_restart_safe_and_has_no_schedule(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "registry.toml"
+    path.write_text("version=1")
+    policy = tmp_path / "policy.toml"
+    policy.write_text("version=1")
+    ledger = tmp_path / "snapshots.sqlite3"
+    config = {
+        "ops": {
+            "repository_observations": {"config": {"registry_path": str(path)}},
+            "architecture_snapshot": {
+                "config": {"snapshot_path": str(ledger), "policy_path": str(policy)}
+            },
+        }
+    }
+    job = defs.resolve_job_def("architecture_reconciliation_job")
+    result = job.execute_in_process(run_config=config)
+    assert result.success
+    snapshot = snapshot_from_json(result.output_for_node("architecture_snapshot"))
+    assert SnapshotStore(ledger).latest() == snapshot
+    config["ops"]["architecture_snapshot"]["config"].pop("policy_path")
+    repeated = job.execute_in_process(run_config=config)
+    assert repeated.success
+    assert repeated.output_for_node("architecture_snapshot") == snapshot.to_json()
+    assert not defs.schedules

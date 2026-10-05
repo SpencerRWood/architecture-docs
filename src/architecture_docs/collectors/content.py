@@ -13,7 +13,14 @@ import yaml
 
 from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.collectors.github import mapping
-from architecture_docs.model import Authority, CollectionResult, Failure, Observation
+from architecture_docs.declarations import architecture_declarations
+from architecture_docs.model import (
+    Authority,
+    CollectionResult,
+    Failure,
+    Observation,
+    SourceCoverage,
+)
 
 Facts = list[tuple[str, str]]
 
@@ -41,6 +48,8 @@ def parsed(source: SourceFile) -> dict[str, Any]:
 
 def configuration(source: SourceFile) -> Facts:
     path = source.provenance.source
+    if PurePosixPath(path).name == "architecture.toml":
+        return architecture_declarations(parsed(source))
     if PurePosixPath(path).name == "Dockerfile":
         return [
             ("container.base_image", value)
@@ -112,6 +121,12 @@ def structured_configuration(data: dict[str, Any], path: str) -> Facts:
         facts.extend(
             (f"service.{name}.depends_on", value)
             for value in identifiers(settings.get("depends_on", {}))
+        )
+        volumes = settings.get("volumes", [])
+        facts.extend(
+            (f"service.{name}.volume", value.split(":", 1)[0])
+            for value in identifiers(volumes)
+            if value.split(":", 1)[0] in identifiers(data.get("volumes", {}))
         )
     # Release contracts expose bounded booleans/check identifiers, never tokens.
     for section in ("validation", "build", "release", "dagster", "container"):
@@ -227,6 +242,7 @@ class ContentCollector:
     def collect(self, context: Context) -> CollectionResult:
         observations: list[Observation] = []
         failures = []
+        coverage = []
         for source in context.files:
             if not self.supports(source.provenance.source):
                 continue
@@ -243,9 +259,19 @@ class ContentCollector:
                     )
                     for key, value in sorted(set(facts))
                 )
+                coverage.append(
+                    SourceCoverage(
+                        context.repository,
+                        source.provenance.source,
+                        self.name,
+                        context.revision,
+                    )
+                )
             except Exception:  # A broken parser/plugin must not damage its peers.
                 failures.append(Failure(self.name, source.provenance, "parse_error"))
-        return CollectionResult(tuple(observations), tuple(failures))
+        return CollectionResult(
+            tuple(observations), tuple(failures), coverage=tuple(coverage)
+        )
 
 
 def content_collectors() -> tuple[ContentCollector, ...]:

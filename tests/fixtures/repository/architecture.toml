@@ -1,0 +1,116 @@
+version = 1
+
+[[nodes]]
+kind = "system"
+name = "platform"
+attributes = { technology = "python", owner = "operations" }
+
+[[nodes]]
+kind = "service"
+name = "api"
+attributes = { deployment_path = "compose.yml" }
+
+[[nodes]]
+kind = "environment"
+name = "dev"
+
+[[nodes]]
+kind = "host"
+name = "linux"
+
+[[nodes]]
+kind = "database"
+name = "analytics"
+attributes = { role = "application", schema = "public", backup = "scripts/backup.sh" }
+
+[[nodes]]
+kind = "storage"
+name = "data"
+
+[[nodes]]
+kind = "release_contract"
+name = "release"
+attributes = { workflow = ".github/workflows/release.yml", rollback = "scripts/restore.sh" }
+
+[[nodes]]
+kind = "orchestration"
+name = "dagster"
+
+[[nodes]]
+kind = "interface"
+name = "http"
+attributes = { protocol = "https", port = "443" }
+
+[[nodes]]
+kind = "secret_reference"
+name = "API_TOKEN"
+attributes = { project = "platform", environment = "dev", path = "/api", injection = "infisical", required = "true", scope = "runtime" }
+
+[[nodes]]
+kind = "owner"
+name = "operations"
+
+[[nodes]]
+kind = "procedure"
+name = "deploy"
+attributes = { script = "scripts/deploy.sh", prerequisite = "docker", verification = "scripts/check.sh", recovery = "scripts/restore.sh" }
+
+[[edges]]
+kind = "contains"
+source = { kind = "system", name = "platform" }
+target = { kind = "service", name = "api" }
+
+[[edges]]
+kind = "hosted_by"
+source = { kind = "service", name = "api" }
+target = { kind = "host", name = "linux" }
+
+[[edges]]
+kind = "deploys_to"
+source = { kind = "service", name = "api" }
+target = { kind = "environment", name = "dev" }
+
+[[edges]]
+kind = "deployment_owner"
+source = { kind = "service", name = "api" }
+target = { kind = "repository", name = "fixture/infrastructure", repository = "fixture/infrastructure" }
+
+[[edges]]
+kind = "reads_database"
+source = { kind = "service", name = "api" }
+target = { kind = "database", name = "analytics" }
+
+[[edges]]
+kind = "uses_storage"
+source = { kind = "service", name = "api" }
+target = { kind = "storage", name = "data" }
+
+[[edges]]
+kind = "consumes_secret"
+source = { kind = "service", name = "api" }
+target = { kind = "secret_reference", name = "API_TOKEN" }
+
+[[edges]]
+kind = "owned_by"
+source = { kind = "system", name = "platform" }
+target = { kind = "owner", name = "operations" }
+
+[[edges]]
+kind = "orchestrates"
+source = { kind = "orchestration", name = "dagster" }
+target = { kind = "service", name = "api" }
+
+[[edges]]
+kind = "exposes"
+source = { kind = "service", name = "api" }
+target = { kind = "interface", name = "http" }
+
+[[edges]]
+kind = "notifies"
+source = { kind = "orchestration", name = "dagster" }
+target = { kind = "interface", name = "http" }
+
+[[edges]]
+kind = "operated_by"
+source = { kind = "service", name = "api" }
+target = { kind = "procedure", name = "deploy" }

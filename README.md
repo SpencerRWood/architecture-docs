@@ -1,7 +1,7 @@
 # Architecture Docs
 
-Deterministic, read-only GitHub repository evidence collection for OpenProject
-Story #471 (AD-R1-02). Python 3.14, typed `src/architecture_docs`, Hatchling,
+Deterministic, read-only GitHub repository evidence collection (#471) and
+architecture graph/snapshot reconciliation (#472). Python 3.14, typed `src/architecture_docs`, Hatchling,
 strict mypy, Ruff, pytest with 90% branch coverage, pre-commit, and centralized
 semantic release follow the published `SpencerRWood/template-python-dagster`
 foundation at `2b7d901e63095def72171397e3f5b99d457497d3`.
@@ -11,8 +11,9 @@ foundation at `2b7d901e63095def72171397e3f5b99d457497d3`.
 Collectors emit versioned observations with repository, path/GitHub object,
 commit (where applicable), blob SHA, source authority, and collector identity.
 Each observation is an explicit source declaration or source index entry. This
-layer does not infer graph relationships, reconcile drift, render documents,
-publish to Drive, schedule nightly runs, or invoke Codex. Those are later Stories.
+collection layer feeds a separate deterministic graph and reconciliation layer.
+Document rendering (#473+), Drive publication, nightly scheduling, and Codex
+invocation belong to later Stories.
 `codex-runtime` owns capacity inspection; collection imports neither that library
 nor any Codex provider. Optional narrative integration belongs to #476.
 
@@ -65,6 +66,49 @@ API, plugin, pagination, size, integrity, and truncated-tree failures carry
 normalized reasons and provenance without exception or server-message text.
 `complete=False` means incomplete evidence, never a tombstone or empty successful
 replacement. Downstream reconciliation must preserve prior facts on failure.
+Successful collectors also emit per-source coverage; a complete pinned approved
+tree emits an inventory. Reconciliation uses these as positive absence evidence.
+Legacy/plugin results without coverage are accepted conservatively and cannot
+delete prior observations by omission.
+
+## Graph and snapshots
+
+[`reconcile`](src/architecture_docs/reconciliation.py) normalizes collected
+evidence into a versioned typed graph, retaining every competing candidate and
+its provenance. Scalar properties mark lower-priority disagreements as drift;
+equal highest-priority candidates are ambiguous with no preferred value.
+Typed edges, including conflicting hosting/ownership edges, remain inspectable.
+`Graph.manifest(NodeKind)` and `Graph.cross_repository_edges()` provide stable
+inputs for later document and manifest renderers.
+
+Existing collectors map packages, Compose services/storage/dependencies,
+workflows and shared workflow consumption, release contracts, Terraform
+declarations, and script contracts. An optional, approved `architecture.toml`
+provides explicit declarations for otherwise unavailable topology. The
+[declaration contract](docs/reconciliation.md) covers all R1 entity and edge
+types without inferring runtime state from names, prose links, or variable names.
+
+`SnapshotStore(Path(...)).reconcile(collection, policy)` atomically persists
+content-addressed snapshots, prior/current diffs, and a successful head in an
+SQLite ledger. Repeated identical inputs reuse the same snapshot. Each run has
+a ledger identifier, so a return to an older snapshot still records the correct
+transition. Partial runs preserve known-good facts with `verification="stale"`
+and expose `publication_blocked`; failed normalization never advances the head.
+`latest()`, `get(snapshot_id)`, and bounded `recent_runs()` support diagnosis.
+
+The store requires an explicit file in an existing persistent directory. It has
+no implicit `/tmp`, working-directory, or memory fallback. Deployments must mount
+durable local state and back up the ledger, following the platform's filesystem
+state convention; this Story does not provision a runtime or storage mount.
+SQLite writer transactions serialize concurrent reconciliations, with full
+synchronous commits. Use a local filesystem with SQLite locking support.
+
+Material diffs exclude source revisions, general blob churn, verification state,
+and configured transient properties. Script/workflow content digests remain
+semantic because opaque executable changes can affect operations. No raw script
+body or secret value is retained. Categories identify repository/system changes,
+dependencies, deployment paths, data/storage, secret topology, release contracts,
+runbooks, ownership, interfaces, and orchestration.
 
 ## Development and Dagster
 
@@ -76,13 +120,19 @@ uv run dagster dev -m architecture_docs.dagster.definitions
 ```
 
 `defs` registers `repository_observations`, `repository_collection_job`, and
-`runtime_smoke_job`. Collection is manual with explicit run configuration:
+`runtime_smoke_job`, plus `architecture_snapshot` and
+`architecture_reconciliation_job`. Both collection and reconciliation are manual;
+there are no new schedules or sensors. Reconciliation configuration:
 
 ```yaml
 ops:
   repository_observations:
     config:
       registry_path: /absolute/path/to/repositories.toml
+  architecture_snapshot:
+    config:
+      snapshot_path: /persistent/local/state/snapshots.sqlite3
+      policy_path: /absolute/path/to/reconciliation.toml # Optional
 ```
 
 Inject `ARCHITECTURE_DOCS_GITHUB_TOKEN` at runtime; omit it only for public sources.
@@ -104,3 +154,9 @@ source families, archived policies, conflicting evidence, source bounds,
 partial failures, sensitive-content exclusion, HTTP redirects/errors, and offline
 Dagster execution. They attest fixture behavior, not live repository completeness
 or deployed runtime health.
+
+For #472, FR-005–012 and FR-049–054 / QR-001–004,009–010 map to normalized
+provenance, drift/ambiguity, positive deletion evidence, deterministic snapshots
+and material diffs, durable history, stale-source preservation, a downstream
+publication block, and sanitized diagnostic records. See the
+[acceptance and test mapping](docs/reconciliation.md#acceptance-evidence).
