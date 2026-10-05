@@ -81,7 +81,7 @@ def test_manual_reconciliation_job_is_restart_safe_and_has_no_schedule(
     assert not defs.schedules
 
 
-def test_manual_rendering_job_emits_six_documents_without_external_publication(
+def test_manual_rendering_job_emits_documents_without_external_publication(
     tmp_path: Path,
 ) -> None:
     path = tmp_path / "registry.toml"
@@ -97,7 +97,7 @@ def test_manual_rendering_job_emits_six_documents_without_external_publication(
     )
     assert result.success
     artifacts = json.loads(result.output_for_node("architecture_documents"))
-    assert len(artifacts["documents"]) == 6
+    assert len(artifacts["documents"]) == 15
     snapshot = SnapshotStore(ledger).latest()
     assert snapshot is not None
     assert artifacts["snapshot_id"] == snapshot.id

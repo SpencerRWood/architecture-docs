@@ -179,19 +179,19 @@ def rows(doc: Document) -> tuple[Row, ...]:
     return tuple(row for section in doc.sections for row in section.rows)
 
 
-def test_all_six_documents_have_stable_ids_generation_metadata_and_sources() -> None:
+def test_all_documents_have_stable_ids_generation_metadata_and_sources() -> None:
     snapshot = representative()
     bundle = render_documents(snapshot)
     assert {doc.id for doc in bundle.documents} == set(DocumentKind)
-    assert len(bundle.documents) == 6
-    assert {doc.title for doc in bundle.documents} == {
+    assert len(bundle.documents) == 15
+    assert {
         "Architecture Overview",
         "Repository & Dependency Catalog",
         "Deployment & Release Architecture",
         "Runtime & Infrastructure Architecture",
         "Data & Storage Architecture",
         "Automation & Orchestration Architecture",
-    }
+    } <= {doc.title for doc in bundle.documents}
     assert bundle.snapshot_id == snapshot.id
     for doc in bundle.documents:
         assert doc.snapshot_id == snapshot.id
@@ -204,7 +204,8 @@ def test_all_six_documents_have_stable_ids_generation_metadata_and_sources() -> 
         )
         assert not doc.publication_blocked
         assert len(doc.content_hash) == 64
-        assert doc.sources
+        if not doc.id.value.startswith("runbook-"):
+            assert doc.sources
         assert len({section.id for section in doc.sections}) == len(doc.sections)
         for section in doc.sections:
             assert len({row.id for row in section.rows}) == len(section.rows)

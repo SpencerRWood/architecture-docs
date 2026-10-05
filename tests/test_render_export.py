@@ -10,7 +10,7 @@ from architecture_docs.renderers.artifacts import DocumentKind
 from test_rendering import representative
 
 
-def test_local_export_writes_six_stable_markdown_files_and_structured_artifacts(
+def test_local_export_writes_stable_markdown_files_and_structured_artifacts(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     snapshot = tmp_path / "snapshot.json"
@@ -18,7 +18,7 @@ def test_local_export_writes_six_stable_markdown_files_and_structured_artifacts(
     output = tmp_path / "documents"
     assert main([str(snapshot), str(output)]) == 0
     metadata = json.loads(capsys.readouterr().out)
-    assert metadata["document_count"] == 6
+    assert metadata["document_count"] == 15
     assert metadata["publication_blocked"] is False
     assert {path.stem for path in output.glob("*.md")} == {
         kind.value for kind in DocumentKind

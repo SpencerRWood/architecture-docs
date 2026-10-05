@@ -100,7 +100,9 @@ if snapshot is not None:
 ```
 
 The local CLI validates a saved snapshot through the #472 codec before writing
-six Markdown files and `document-set.json`. It accepts an explicit output
+fifteen Markdown files and `document-set.json` after #474 adds the Secrets
+Manifest and eight runbooks (see [operational contracts](operations.md)).
+It accepts an explicit output
 directory, validates/renders all artifacts before writing, and emits bounded
 result metadata. Local export writes individual files; it is not a transactional
 publication store and does not claim Drive lifecycle guarantees.

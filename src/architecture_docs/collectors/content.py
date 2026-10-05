@@ -198,6 +198,7 @@ def executable(source: SourceFile) -> Facts:
     facts = []
     for name, job in mapping(data.get("jobs", {})).items():
         settings = mapping(job)
+        encoded = json.dumps(settings)
         facts.extend(("workflow.job", value) for value in identifiers([name]))
         actions = [settings.get("uses")]
         actions.extend(mapping(step).get("uses") for step in settings.get("steps", []))
@@ -207,8 +208,28 @@ def executable(source: SourceFile) -> Facts:
                 facts.append(("workflow.uses", action))
         facts.extend(
             ("workflow.secret_name", value)
-            for value in identifiers(settings.get("secrets", {}))
+            for value in sorted(
+                set(
+                    re.findall(
+                        r"\$\{\{\s*secrets\.([A-Za-z_][A-Za-z0-9_]*)\s*\}\}",
+                        encoded,
+                    )
+                )
+            )
         )
+        if settings.get("secrets") == "inherit":
+            facts.append(("workflow.secret_gap", "inherited_secret_names_unavailable"))
+        if re.search(r"secrets\s*\[", encoded):
+            facts.append(("workflow.secret_gap", "indexed_secret_reference_unresolved"))
+        if any(
+            isinstance(value, str) and "${{" not in value
+            for value in (
+                {}
+                if settings.get("secrets") == "inherit"
+                else mapping(settings.get("secrets", {}))
+            ).values()
+        ):
+            facts.append(("workflow.secret_gap", "literal_secret_input_excluded"))
     return facts
 
 

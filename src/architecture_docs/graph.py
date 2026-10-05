@@ -264,6 +264,10 @@ def workflow(builder: Builder, repository: str, item: Evidence) -> None:
     if observation.key == "workflow.secret_name":
         target = builder.node(NodeKind.SECRET_REFERENCE, observation.value, item)
         builder.edge(EdgeKind.CONSUMES_SECRET, source, target, item)
+    elif observation.key == "workflow.secret_gap":
+        builder.property(
+            source, f"secret_gap:{observation.value}", observation.value, item
+        )
     elif observation.key == "workflow.uses":
         value = observation.value.split("@", 1)[0]
         parts = value.split("/")

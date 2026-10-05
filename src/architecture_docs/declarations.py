@@ -93,8 +93,69 @@ FIELDS = frozenset(
         "network",
         "reverse_proxy",
         "code_location",
+        "runbook",
+        "phase",
+        "order",
     }
 )
+
+# Secret references accept only location/usage metadata, never arbitrary attributes.
+SECRET_FIELDS = frozenset(
+    {"project", "environment", "path", "scope", "injection", "required", "owner"}
+)
+
+
+class RunbookKind(StrEnum):
+    DEPLOYMENT = "deployment-redeployment"
+    ROLLBACK = "rollback-known-good-recovery"
+    HOST = "linux-host-rebuild-recovery"
+    SECRETS = "secret-reference-management"
+    DATABASE = "database-provisioning-onboarding"
+    RELEASE = "release-promotion-troubleshooting"
+    RESTORATION = "service-restoration"
+    DAGSTER = "dagster-operations"
+
+
+class Phase(StrEnum):
+    PREREQUISITES = "prerequisites"
+    STEPS = "steps"
+    VERIFICATION = "verification"
+    RECOVERY = "rollback-recovery"
+
+
+def procedure_attributes(attributes: dict[str, Any]) -> None:
+    """Opt-in ordered steps carry a source reference, never a shell command."""
+    if not {"runbook", "phase", "order"}.intersection(attributes):
+        return  # Legacy procedure references remain descriptive evidence.
+    if set(attributes) - {
+        "runbook",
+        "phase",
+        "order",
+        "script",
+        "workflow",
+        "reference",
+    }:
+        raise ValueError("unknown runbook attribute")
+    RunbookKind(attributes["runbook"])
+    Phase(attributes["phase"])
+    order = attributes["order"]
+    if not isinstance(order, str) or not re.fullmatch(r"[1-9][0-9]{0,3}", order):
+        raise ValueError("invalid runbook order")
+    targets = set(attributes).intersection({"script", "workflow", "reference"})
+    if len(targets) != 1:
+        raise ValueError("runbook step requires one source reference")
+    target = attributes[next(iter(targets))]
+    identifier(target)
+    if target.startswith("/") or ":" in target or "*" in target:
+        raise ValueError("invalid runbook source reference")
+    if "script" in targets and not target.startswith("scripts/"):
+        raise ValueError("invalid runbook script reference")
+    if "script" in targets and not target.endswith((".sh", ".py")):
+        raise ValueError("invalid runbook script type")
+    if "workflow" in targets and not target.startswith(".github/workflows/"):
+        raise ValueError("invalid runbook workflow reference")
+    if "workflow" in targets and not target.endswith((".yml", ".yaml")):
+        raise ValueError("invalid runbook workflow type")
 
 
 def canonical(value: object) -> str:
@@ -118,6 +179,17 @@ def node_declaration(data: dict[str, Any]) -> dict[str, Any]:
     attributes = data.get("attributes", {})
     if not isinstance(attributes, dict) or set(attributes) - FIELDS:
         raise ValueError("unknown architecture attribute")
+    if kind == NodeKind.SECRET_REFERENCE:
+        if set(attributes) - SECRET_FIELDS:
+            raise ValueError("unknown secret reference attribute")
+        if "required" in attributes and attributes["required"] not in {"true", "false"}:
+            raise ValueError("invalid secret required state")
+        if "path" in attributes and not attributes["path"].startswith("/"):
+            raise ValueError("invalid secret location path")
+    if kind == NodeKind.PROCEDURE:
+        procedure_attributes(attributes)
+    elif {"runbook", "phase", "order"}.intersection(attributes):
+        raise ValueError("runbook attributes require a procedure")
     return {
         "kind": kind.value,
         "name": identifier(data["name"]),

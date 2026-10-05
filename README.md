@@ -2,7 +2,8 @@
 
 Deterministic, read-only GitHub repository evidence collection (#471) and
 architecture graph/snapshot reconciliation (#472), and deterministic architecture
-documents (#473). Python 3.14, typed `src/architecture_docs`, Hatchling,
+documents (#473), Secrets Manifest and grounded runbooks (#474).
+Python 3.14, typed `src/architecture_docs`, Hatchling,
 strict mypy, Ruff, pytest with 90% branch coverage, pre-commit, and centralized
 semantic release follow the published `SpencerRWood/template-python-dagster`
 foundation at `2b7d901e63095def72171397e3f5b99d457497d3`.
@@ -13,8 +14,8 @@ Collectors emit versioned observations with repository, path/GitHub object,
 commit (where applicable), blob SHA, source authority, and collector identity.
 Each observation is an explicit source declaration or source index entry. This
 collection layer feeds a separate deterministic graph and reconciliation layer.
-Six modular renderers consume that normalized snapshot. Secrets/runbooks (#474),
-Drive publication (#475), nightly scheduling, and Codex invocation (#476) belong
+Modular renderers consume that normalized snapshot. Drive publication (#475),
+nightly scheduling, and Codex invocation (#476) belong
 to later Stories.
 `codex-runtime` owns capacity inspection; collection imports neither that library
 nor any Codex provider. Optional narrative integration belongs to #476.
@@ -81,7 +82,7 @@ its provenance. Scalar properties mark lower-priority disagreements as drift;
 equal highest-priority candidates are ambiguous with no preferred value.
 Typed edges, including conflicting hosting/ownership edges, remain inspectable.
 `Graph.manifest(NodeKind)` and `Graph.cross_repository_edges()` provide stable
-inputs for architecture documents and later secrets/runbook renderers.
+inputs for architecture documents and secrets/runbook renderers.
 
 Existing collectors map packages, Compose services/storage/dependencies,
 workflows and shared workflow consumption, release contracts, Terraform
@@ -167,7 +168,8 @@ publication block, and sanitized diagnostic records. See the
 ## Deterministic documents
 
 `renderers.render_documents(snapshot, RenderConfig(...))` generates the six
-required architecture documents from the normalized graph and source provenance.
+required architecture documents, Secrets Manifest, and eight separate runbooks
+from the normalized graph and source provenance.
 Artifacts preserve stable document and section identities, candidate conflicts,
 stale verification states, missing-contract gaps, and source repository/path/
 revision/blob/authority. An Architecture Overview Mermaid diagram derives major
@@ -186,10 +188,15 @@ Export a saved, verified snapshot locally:
 uv run python -m architecture_docs.renderers snapshot.json /absolute/output/path
 ```
 
-The exporter writes six stable `.md` filenames and `document-set.json`, and
+The exporter writes fifteen stable `.md` filenames and `document-set.json`, and
 returns bounded JSON metadata. Optional `--title-prefix` and `--no-source-links`
 affect presentation; provenance remains in the artifact. No GitHub collection,
 Drive access, or Codex runtime is involved in this command.
 
 See [document contracts and acceptance evidence](docs/rendering.md) for the
 FR-013/016/020 and QR-001/002/004/012 mapping and explicit declaration vocabulary.
+
+See [Secrets Manifest and operational contracts](docs/operations.md) for #474's
+metadata-only schema, approved discovery, ordered reference steps, grounding,
+evidence gaps, and acceptance mapping. Runbooks link to repository invocation
+contracts; they never copy arbitrary command arguments, credentials, or prose.
