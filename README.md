@@ -92,20 +92,21 @@ provides explicit declarations for otherwise unavailable topology. The
 [declaration contract](docs/reconciliation.md) covers all R1 entity and edge
 types without inferring runtime state from names, prose links, or variable names.
 
-`SnapshotStore(Path(...)).reconcile(collection, policy)` atomically persists
+`SnapshotStore().reconcile(collection, policy)` atomically persists
 content-addressed snapshots, prior/current diffs, and a successful head in an
-SQLite ledger. Repeated identical inputs reuse the same snapshot. Each run has
+PostgreSQL ledger. Repeated identical inputs reuse the same snapshot. Each run has
 a ledger identifier, so a return to an older snapshot still records the correct
 transition. Partial runs preserve known-good facts with `verification="stale"`
 and expose `publication_blocked`; failed normalization never advances the head.
 `latest()`, `get(snapshot_id)`, and bounded `recent_runs()` support diagnosis.
 
-The store requires an explicit file in an existing persistent directory. It has
-no implicit `/tmp`, working-directory, or memory fallback. Deployments must mount
-durable local state and back up the ledger, following the platform's filesystem
-state convention; this Story does not provision a runtime or storage mount.
-SQLite writer transactions serialize concurrent reconciliations, with full
-synchronous commits. Use a local filesystem with SQLite locking support.
+Inject `ARCHITECTURE_DOCS_DATABASE_URL` from Infisical into the process.
+PostgreSQL is the only supported runtime backend. Application-owned versioned
+schemas separate snapshot history from publication state. Transaction advisory
+locks serialize snapshot writers; a session advisory lock coordinates publishers
+across commits and hosts. Infrastructure Ansible provisions the dedicated dev
+database/role; application initialization creates its tables. See
+[PostgreSQL setup and cutover](docs/postgresql.md).
 
 Material diffs exclude source revisions, general blob churn, verification state,
 and configured transient properties. Script/workflow content digests remain
@@ -136,7 +137,6 @@ ops:
       registry_path: /absolute/path/to/repositories.toml
   architecture_snapshot:
     config:
-      snapshot_path: /persistent/local/state/snapshots.sqlite3
       policy_path: /absolute/path/to/reconciliation.toml # Optional
 ```
 
@@ -204,24 +204,24 @@ contracts; they never copy arbitrary command arguments, credentials, or prose.
 
 ## Stable Drive publication
 
-`publishing.publish(snapshot, drive, state_path, parent_id)` renders and validates
+`publishing.publish(snapshot, drive, database_url, parent_id)` renders and validates
 the whole deterministic document set before publishing native Google Docs under
 `Architecture/`, with eight separate runbooks in `Architecture/Runbooks/`.
-An explicit approved parent ID and absolute durable SQLite state path are required.
+An explicit approved parent ID and Infisical-injected PostgreSQL URL are required.
 No source collection, account-wide discovery, scheduling or Codex invocation is
 performed by the publisher.
 
 ```sh
 uv run python -m architecture_docs.publishing /absolute/snapshot.json \
-  --state /persistent/local/state/publication.sqlite3 \
   --parent APPROVED_DRIVE_FOLDER_ID
 ```
 
 Inject `ARCHITECTURE_DOCS_GOOGLE_ACCESS_TOKEN` only into the process. The publisher
 accepts an OAuth access token and performs no token refresh or credential storage.
-Use the same OAuth application, parent and durable ledger on retries. Stable IDs,
+Use the same OAuth application, parent and database on retries. Stable IDs,
 pending writes, actual published snapshot/provenance and normalized event reasons
-remain in the local ledger; snapshot history stays in `SnapshotStore`.
+remain in the PostgreSQL publication ledger; snapshot history stays in
+`SnapshotStore`.
 
 Unchanged documents are read but never rewritten for provenance-only churn.
 Changed documents receive a revision-guarded atomic body update in the same native

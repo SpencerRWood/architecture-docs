@@ -99,13 +99,14 @@ Graph gaps and drift remain available for focused uncertainty explanations.
 
 ## Snapshot ledger
 
-Use `SnapshotStore(Path(...))` with an explicit path in an existing directory on
-a durable local volume. A platform deployment can provision
-`/srv/infrastructure/state/architecture-docs/snapshots.sqlite3` following the
-existing infrastructure state-directory convention. This path is illustrative,
-not a claim that storage or a deployed code location has been provisioned.
-SQLite does not require another service or store data in Drive. Deployment
-provisioning and volume backups remain infrastructure responsibilities.
+Use `SnapshotStore()` with `ARCHITECTURE_DOCS_DATABASE_URL` injected from Infisical,
+or pass an explicit PostgreSQL URL in application code. Schema
+`architecture_snapshot` stores history, head and diffs. Application initialization
+applies versioned transactional DDL under a database migration lock. Reconciliation
+uses a transaction advisory lock, and commits the snapshot, run and head atomically.
+No SQLite, memory, filesystem path or legacy setting fallback exists.
+Database provisioning and backups remain infrastructure responsibilities.
+See [PostgreSQL setup and cutover](postgresql.md).
 
 Store schema 1 retains content-addressed JSON snapshots, an atomic head, and
 run records with transition diffs. Snapshot and graph schemas are versioned.

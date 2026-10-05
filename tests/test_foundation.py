@@ -4,6 +4,7 @@ import json
 import tomllib
 from pathlib import Path
 
+import pytest
 from dagster import Definitions, materialize
 
 from architecture_docs.codec import snapshot_from_json
@@ -55,25 +56,25 @@ def test_package_release_and_shared_runtime_boundary() -> None:
 
 def test_manual_reconciliation_job_is_restart_safe_and_has_no_schedule(
     tmp_path: Path,
+    database_url: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setenv("ARCHITECTURE_DOCS_DATABASE_URL", database_url)
     path = tmp_path / "registry.toml"
     path.write_text("version=1")
     policy = tmp_path / "policy.toml"
     policy.write_text("version=1")
-    ledger = tmp_path / "snapshots.sqlite3"
     config = {
         "ops": {
             "repository_observations": {"config": {"registry_path": str(path)}},
-            "architecture_snapshot": {
-                "config": {"snapshot_path": str(ledger), "policy_path": str(policy)}
-            },
+            "architecture_snapshot": {"config": {"policy_path": str(policy)}},
         }
     }
     job = defs.resolve_job_def("architecture_reconciliation_job")
     result = job.execute_in_process(run_config=config)
     assert result.success
     snapshot = snapshot_from_json(result.output_for_node("architecture_snapshot"))
-    assert SnapshotStore(ledger).latest() == snapshot
+    assert SnapshotStore().latest() == snapshot
     config["ops"]["architecture_snapshot"]["config"].pop("policy_path")
     repeated = job.execute_in_process(run_config=config)
     assert repeated.success
@@ -83,22 +84,24 @@ def test_manual_reconciliation_job_is_restart_safe_and_has_no_schedule(
 
 def test_manual_rendering_job_emits_documents_without_external_publication(
     tmp_path: Path,
+    database_url: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setenv("ARCHITECTURE_DOCS_DATABASE_URL", database_url)
     path = tmp_path / "registry.toml"
     path.write_text("version=1")
-    ledger = tmp_path / "snapshots.sqlite3"
     result = defs.resolve_job_def("architecture_rendering_job").execute_in_process(
         run_config={
             "ops": {
                 "repository_observations": {"config": {"registry_path": str(path)}},
-                "architecture_snapshot": {"config": {"snapshot_path": str(ledger)}},
+                "architecture_snapshot": {"config": {}},
             }
         },
     )
     assert result.success
     artifacts = json.loads(result.output_for_node("architecture_documents"))
     assert len(artifacts["documents"]) == 15
-    snapshot = SnapshotStore(ledger).latest()
+    snapshot = SnapshotStore().latest()
     assert snapshot is not None
     assert artifacts["snapshot_id"] == snapshot.id
     assert all(doc["generation_state"] == "with_gaps" for doc in artifacts["documents"])

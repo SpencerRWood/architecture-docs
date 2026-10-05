@@ -39,7 +39,6 @@ def repository_observations(
 
 
 class ReconciliationConfig(Config):
-    snapshot_path: str
     policy_path: str | None = None
 
 
@@ -52,7 +51,7 @@ def architecture_snapshot(
     policy = (
         load_policy(Path(config.policy_path)) if config.policy_path else DEFAULT_POLICY
     )
-    record = SnapshotStore(Path(config.snapshot_path)).reconcile(
+    record = SnapshotStore().reconcile(
         collection_from_json(repository_observations),
         policy,
     )
