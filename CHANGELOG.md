@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.4.0 (2026-10-05)
+
+### Features
+
+- Generate Secrets Manifest and evidence-grounded runbooks (OP #474)
+  ([#4](https://github.com/SpencerRWood/architecture-docs/pull/4),
+  [`0ae6ca7`](https://github.com/SpencerRWood/architecture-docs/commit/0ae6ca79c0f0453a768ef55f77f981e2d1a2d145))
+
+
 ## v0.3.0 (2026-10-05)
 
 ### Features
