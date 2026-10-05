@@ -25,6 +25,23 @@ from architecture_docs.model import (
 Facts = list[tuple[str, str]]
 
 
+class RepositoryLoader(yaml.SafeLoader):
+    """Use YAML 1.2 booleans; GitHub Actions' `on` is a literal mapping key."""
+
+
+RepositoryLoader.yaml_implicit_resolvers = {
+    key: [
+        (tag, pattern) for tag, pattern in resolvers if tag != "tag:yaml.org,2002:bool"
+    ]
+    for key, resolvers in yaml.SafeLoader.yaml_implicit_resolvers.items()
+}
+RepositoryLoader.add_implicit_resolver(
+    "tag:yaml.org,2002:bool",
+    re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"),
+    list("tTfF"),
+)
+
+
 def identifiers(values: object) -> list[str]:
     """Only declared identifiers; no descriptions or arbitrary literal values."""
     candidates = values if isinstance(values, (list, dict)) else []
@@ -43,7 +60,8 @@ def parsed(source: SourceFile) -> dict[str, Any]:
         return tomllib.loads(source.content)
     if source.provenance.source.endswith(".json"):
         return mapping(json.loads(source.content))
-    return mapping(yaml.safe_load(source.content))
+    # The subclass retains SafeLoader's constructors; only scalar resolution changes.
+    return mapping(yaml.load(source.content, Loader=RepositoryLoader))  # noqa: S506
 
 
 def configuration(source: SourceFile) -> Facts:

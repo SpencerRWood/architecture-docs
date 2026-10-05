@@ -9,6 +9,9 @@
 - Graph reconciliation owns evidence, conflicts, snapshots, and material changes.
 - Render documents only from normalized snapshots and their provenance.
 - Secrets and runbooks retain only typed metadata and repository-contract references.
-- Drive publication, nightly scheduling, and narrative belong to later Stories.
+- Drive publication consumes deterministic artifacts and requires an explicitly
+  approved parent folder and durable publication state. Keep failed or partial
+  runs from replacing known-good documents; never blindly retry uncertain creates.
+- Nightly scheduling and narrative belong to later Stories.
 - Tests use offline representative repositories and mocked HTTP transports.
 - Preserve the published Dagster template's validation, packaging, and release.
