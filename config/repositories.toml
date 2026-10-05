@@ -9,4 +9,4 @@ max_pages = 10
 [[repositories]]
 name = "SpencerRWood/architecture-docs"
 archived = "exclude"
-paths = ["pyproject.toml", ".github/release.toml", ".github/workflows/*.yml", "README.md", "docs/*.md"]
+paths = ["architecture.toml", "pyproject.toml", ".github/release.toml", ".github/workflows/*.yml", "README.md", "docs/*.md"]

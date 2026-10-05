@@ -9,6 +9,7 @@ from architecture_docs.model import (
     Failure,
     Observation,
     Provenance,
+    SourceCoverage,
 )
 
 
@@ -33,6 +34,9 @@ class MetadataCollector:
             ),
         ]
         failures = []
+        coverage = [
+            SourceCoverage(context.repository, "github:repository", self.name, None)
+        ]
         for endpoint, key, field in (
             ("actions/workflows", "workflows", "path"),
             ("releases", None, "tag_name"),
@@ -63,6 +67,13 @@ class MetadataCollector:
                                 ),
                             )
                         )
+                coverage.append(
+                    SourceCoverage(
+                        context.repository, provenance.source, self.name, None
+                    )
+                )
             except SourceError as error:
                 failures.append(Failure(self.name, provenance, str(error)))
-        return CollectionResult(tuple(observations), tuple(failures))
+        return CollectionResult(
+            tuple(observations), tuple(failures), coverage=tuple(coverage)
+        )

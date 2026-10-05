@@ -18,6 +18,8 @@ from architecture_docs.model import (
     Failure,
     Observation,
     Provenance,
+    RepositoryInventory,
+    SourceCoverage,
     precedence,
 )
 
@@ -28,7 +30,7 @@ def source_files(
     registry: Registry,
     revision: str,
     tree_sha: str,
-) -> tuple[tuple[SourceFile, ...], tuple[Failure, ...]]:
+) -> tuple[tuple[SourceFile, ...], tuple[Failure, ...], RepositoryInventory]:
     response = mapping(
         github.get(
             f"/repos/{repository.name}/git/trees/{tree_sha}?recursive=1",
@@ -71,7 +73,16 @@ def source_files(
             )
         except SourceError as error:
             failures.append(Failure("github_content", provenance, str(error)))
-    return tuple(files), tuple(failures)
+    return (
+        tuple(files),
+        tuple(failures),
+        RepositoryInventory(
+            repository.name,
+            revision,
+            tuple(sorted(entry["path"] for entry in approved)),
+            repository.paths,
+        ),
+    )
 
 
 def collect(
@@ -90,6 +101,8 @@ def collect(
     observations: list[Observation] = []
     failures: list[Failure] = []
     skipped = []
+    coverage: list[SourceCoverage] = []
+    inventories = []
     for repository in sorted(registry.repositories, key=lambda item: item.name):
         provenance = Provenance(repository.name, "github:repository", None)
         try:
@@ -113,7 +126,7 @@ def collect(
             tree_sha = sha(
                 mapping(mapping(commit.get("commit")).get("tree")).get("sha")
             )
-            files, source_failures = source_files(
+            files, source_failures, inventory = source_files(
                 github,
                 repository,
                 registry,
@@ -121,6 +134,7 @@ def collect(
                 tree_sha,
             )
             failures.extend(source_failures)
+            inventories.append(inventory)
             context = Context(
                 github, repository.name, revision, files, metadata, registry.max_pages
             )
@@ -129,6 +143,7 @@ def collect(
                     result = plugin.collect(context)
                     observations.extend(result.observations)
                     failures.extend(result.failures)
+                    coverage.extend(result.coverage)
                 except Exception:
                     failures.append(Failure(plugin.name, provenance, "collector_error"))
         except SourceError as error:
@@ -147,4 +162,6 @@ def collect(
             )
         ),
         tuple(skipped),
+        coverage=tuple(sorted(set(coverage))),
+        inventories=tuple(inventories),
     )

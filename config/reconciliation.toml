@@ -1,0 +1,8 @@
+version = 1
+transient_properties = ["collected_at", "last_seen"]
+
+# Explicit reviewed removals, independent of collection availability:
+# [[tombstones]]
+# repository = "owner/retired-repository"
+# reason = "retired"
+# source = "old/architecture.toml" # Omit to remove the whole repository.
