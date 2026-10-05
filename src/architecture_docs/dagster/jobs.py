@@ -3,6 +3,7 @@
 from dagster import define_asset_job, in_process_executor, job, mem_io_manager, op
 
 from architecture_docs.dagster.assets import (
+    architecture_documents,
     architecture_snapshot,
     repository_observations,
 )
@@ -27,4 +28,13 @@ repository_collection_job = define_asset_job(
 architecture_reconciliation_job = define_asset_job(
     "architecture_reconciliation_job",
     selection=[repository_observations.key, architecture_snapshot.key],
+)
+
+architecture_rendering_job = define_asset_job(
+    "architecture_rendering_job",
+    selection=[
+        repository_observations.key,
+        architecture_snapshot.key,
+        architecture_documents.key,
+    ],
 )

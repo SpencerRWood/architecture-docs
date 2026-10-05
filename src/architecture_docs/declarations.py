@@ -84,6 +84,15 @@ FIELDS = frozenset(
         "executable",
         "declaration",
         "source_digest",
+        "candidate_artifact",
+        "artifact",
+        "runtime_gate",
+        "promotion",
+        "promotion_workflow",
+        "deployment",
+        "network",
+        "reverse_proxy",
+        "code_location",
     }
 )
 
