@@ -7,6 +7,7 @@
 - Treat partial and failed collection as incomplete evidence, never deletion.
 - Keep collection independent of Codex. codex-runtime owns provider capacity.
 - Graph reconciliation owns evidence, conflicts, snapshots, and material changes.
-- Document rendering, publication, nightly scheduling, and narrative belong to later Stories.
+- Render documents only from normalized snapshots and their provenance.
+- Drive publication, secrets/runbook generation, nightly scheduling, and narrative belong to later Stories.
 - Tests use offline representative repositories and mocked HTTP transports.
 - Preserve the published Dagster template's validation, packaging, and release.

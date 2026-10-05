@@ -1,7 +1,8 @@
 # Architecture Docs
 
 Deterministic, read-only GitHub repository evidence collection (#471) and
-architecture graph/snapshot reconciliation (#472). Python 3.14, typed `src/architecture_docs`, Hatchling,
+architecture graph/snapshot reconciliation (#472), and deterministic architecture
+documents (#473). Python 3.14, typed `src/architecture_docs`, Hatchling,
 strict mypy, Ruff, pytest with 90% branch coverage, pre-commit, and centralized
 semantic release follow the published `SpencerRWood/template-python-dagster`
 foundation at `2b7d901e63095def72171397e3f5b99d457497d3`.
@@ -12,8 +13,9 @@ Collectors emit versioned observations with repository, path/GitHub object,
 commit (where applicable), blob SHA, source authority, and collector identity.
 Each observation is an explicit source declaration or source index entry. This
 collection layer feeds a separate deterministic graph and reconciliation layer.
-Document rendering (#473+), Drive publication, nightly scheduling, and Codex
-invocation belong to later Stories.
+Six modular renderers consume that normalized snapshot. Secrets/runbooks (#474),
+Drive publication (#475), nightly scheduling, and Codex invocation (#476) belong
+to later Stories.
 `codex-runtime` owns capacity inspection; collection imports neither that library
 nor any Codex provider. Optional narrative integration belongs to #476.
 
@@ -79,7 +81,7 @@ its provenance. Scalar properties mark lower-priority disagreements as drift;
 equal highest-priority candidates are ambiguous with no preferred value.
 Typed edges, including conflicting hosting/ownership edges, remain inspectable.
 `Graph.manifest(NodeKind)` and `Graph.cross_repository_edges()` provide stable
-inputs for later document and manifest renderers.
+inputs for architecture documents and later secrets/runbook renderers.
 
 Existing collectors map packages, Compose services/storage/dependencies,
 workflows and shared workflow consumption, release contracts, Terraform
@@ -120,8 +122,9 @@ uv run dagster dev -m architecture_docs.dagster.definitions
 ```
 
 `defs` registers `repository_observations`, `repository_collection_job`, and
-`runtime_smoke_job`, plus `architecture_snapshot` and
-`architecture_reconciliation_job`. Both collection and reconciliation are manual;
+`runtime_smoke_job`, plus `architecture_snapshot`, `architecture_documents`,
+`architecture_reconciliation_job`, and `architecture_rendering_job`.
+Collection, reconciliation, and rendering are manual;
 there are no new schedules or sensors. Reconciliation configuration:
 
 ```yaml
@@ -160,3 +163,33 @@ provenance, drift/ambiguity, positive deletion evidence, deterministic snapshots
 and material diffs, durable history, stale-source preservation, a downstream
 publication block, and sanitized diagnostic records. See the
 [acceptance and test mapping](docs/reconciliation.md#acceptance-evidence).
+
+## Deterministic documents
+
+`renderers.render_documents(snapshot, RenderConfig(...))` generates the six
+required architecture documents from the normalized graph and source provenance.
+Artifacts preserve stable document and section identities, candidate conflicts,
+stale verification states, missing-contract gaps, and source repository/path/
+revision/blob/authority. An Architecture Overview Mermaid diagram derives major
+boundaries and cross-repository links directly from the typed graph. The catalog
+separates included repositories from reference-only placeholders.
+
+`Document.to_json()` and `Document.to_markdown(config)` expose structured and
+human-readable views. Semantic `content_hash` excludes provenance-only churn;
+snapshot/configuration/model/renderer identifiers remain explicit. Rendering a
+blocked snapshot produces inspectable **blocked** artifacts; it does not authorize
+publication or replace known-good documents.
+
+Export a saved, verified snapshot locally:
+
+```sh
+uv run python -m architecture_docs.renderers snapshot.json /absolute/output/path
+```
+
+The exporter writes six stable `.md` filenames and `document-set.json`, and
+returns bounded JSON metadata. Optional `--title-prefix` and `--no-source-links`
+affect presentation; provenance remains in the artifact. No GitHub collection,
+Drive access, or Codex runtime is involved in this command.
+
+See [document contracts and acceptance evidence](docs/rendering.md) for the
+FR-013/016/020 and QR-001/002/004/012 mapping and explicit declaration vocabulary.

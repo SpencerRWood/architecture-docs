@@ -5,11 +5,12 @@ from pathlib import Path
 
 from dagster import AssetExecutionContext, Config, asset
 
-from architecture_docs.codec import collection_from_json
+from architecture_docs.codec import collection_from_json, snapshot_from_json
 from architecture_docs.collection import collect
 from architecture_docs.collectors.github import GitHub
 from architecture_docs.config import load_registry
 from architecture_docs.reconciliation import DEFAULT_POLICY, load_policy
+from architecture_docs.renderers import render_documents
 from architecture_docs.store import SnapshotStore
 
 
@@ -68,3 +69,21 @@ def architecture_snapshot(
         }
     )
     return record.snapshot.to_json()
+
+
+@asset
+def architecture_documents(
+    context: AssetExecutionContext, architecture_snapshot: str
+) -> str:
+    documents = render_documents(snapshot_from_json(architecture_snapshot))
+    context.add_output_metadata(
+        {
+            "snapshot_id": documents.snapshot_id,
+            "document_count": len(documents.documents),
+            "publication_blocked": any(
+                doc.publication_blocked for doc in documents.documents
+            ),
+            "schema_version": documents.schema_version,
+        }
+    )
+    return documents.to_json()

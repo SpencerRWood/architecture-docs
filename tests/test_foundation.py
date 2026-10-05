@@ -1,5 +1,6 @@
 """The renamed foundation packages and runs without external credentials."""
 
+import json
 import tomllib
 from pathlib import Path
 
@@ -78,3 +79,28 @@ def test_manual_reconciliation_job_is_restart_safe_and_has_no_schedule(
     assert repeated.success
     assert repeated.output_for_node("architecture_snapshot") == snapshot.to_json()
     assert not defs.schedules
+
+
+def test_manual_rendering_job_emits_six_documents_without_external_publication(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "registry.toml"
+    path.write_text("version=1")
+    ledger = tmp_path / "snapshots.sqlite3"
+    result = defs.resolve_job_def("architecture_rendering_job").execute_in_process(
+        run_config={
+            "ops": {
+                "repository_observations": {"config": {"registry_path": str(path)}},
+                "architecture_snapshot": {"config": {"snapshot_path": str(ledger)}},
+            }
+        },
+    )
+    assert result.success
+    artifacts = json.loads(result.output_for_node("architecture_documents"))
+    assert len(artifacts["documents"]) == 6
+    snapshot = SnapshotStore(ledger).latest()
+    assert snapshot is not None
+    assert artifacts["snapshot_id"] == snapshot.id
+    assert all(doc["generation_state"] == "with_gaps" for doc in artifacts["documents"])
+    assert not defs.schedules
+    assert not defs.sensors
