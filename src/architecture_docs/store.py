@@ -1,13 +1,20 @@
-"""Transactional SQLite snapshot ledger at an explicit persistent filesystem path."""
+"""Transactional PostgreSQL snapshot history, head and normalized run diagnostics."""
 
-import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
-from pathlib import Path
 from typing import Any
 
+from psycopg.rows import dict_row
+
 from architecture_docs.codec import snapshot_from_json
+from architecture_docs.database import (
+    DatabaseConnection,
+    connection,
+    database_url,
+    lock_key,
+    migrate,
+)
 from architecture_docs.declarations import canonical
 from architecture_docs.model import CollectionResult
 from architecture_docs.reconciliation import (
@@ -29,49 +36,34 @@ class ReconciliationRecord:
 class SnapshotStore:
     """Atomic head/history/diff and content-addressed state under a writer lock."""
 
-    def __init__(self, path: Path) -> None:
-        if str(path) == ":memory:":
-            raise ValueError("persistent snapshot path required")
-        self.path = path.resolve()
+    def __init__(self, url: str | None = None) -> None:
+        self._url = database_url(url)
         with self.connection() as connection:
-            version = connection.execute("PRAGMA user_version").fetchone()[0]
-            if version not in {0, 1}:
-                raise ValueError("unsupported store schema")
-            connection.executescript(
-                """
-                CREATE TABLE IF NOT EXISTS snapshots (
-                    id TEXT PRIMARY KEY, payload TEXT NOT NULL
-                );
-                CREATE TABLE IF NOT EXISTS head (
-                    singleton INTEGER PRIMARY KEY CHECK (singleton=1),
-                    snapshot_id TEXT NOT NULL REFERENCES snapshots(id)
-                );
-                CREATE TABLE IF NOT EXISTS runs (
-                    id INTEGER PRIMARY KEY, previous_id TEXT, snapshot_id TEXT,
-                    diff TEXT, state TEXT NOT NULL, reason TEXT, sources TEXT
-                );
-                PRAGMA user_version=1;
-                """
+            migrate(
+                connection,
+                "architecture_snapshot",
+                (
+                    "CREATE TABLE snapshots (id TEXT PRIMARY KEY, "
+                    "payload TEXT NOT NULL)",
+                    "CREATE TABLE head (singleton INTEGER PRIMARY KEY "
+                    "CHECK(singleton=1), "
+                    "snapshot_id TEXT NOT NULL REFERENCES snapshots(id))",
+                    "CREATE TABLE runs (id BIGINT GENERATED ALWAYS AS IDENTITY "
+                    "PRIMARY KEY, previous_id TEXT, snapshot_id TEXT, diff TEXT, "
+                    "state TEXT NOT NULL, "
+                    "reason TEXT, sources TEXT)",
+                ),
             )
 
     @contextmanager
-    def connection(self) -> Iterator[sqlite3.Connection]:
-        connection = None
-        try:
-            connection = sqlite3.connect(self.path, timeout=30)
-            connection.execute("PRAGMA foreign_keys=ON")
-            connection.execute("PRAGMA synchronous=FULL")
-            yield connection
-        except sqlite3.Error:
-            raise ValueError("snapshot store unavailable") from None
-        finally:
-            if connection is not None:
-                connection.close()
+    def connection(self) -> Iterator[DatabaseConnection]:
+        with connection(self._url, "architecture_snapshot") as conn:
+            yield conn
 
     @staticmethod
-    def load(connection: sqlite3.Connection, identity: str) -> Snapshot:
+    def load(connection: DatabaseConnection, identity: str) -> Snapshot:
         row = connection.execute(
-            "SELECT payload FROM snapshots WHERE id=?", (identity,)
+            "SELECT payload FROM snapshots WHERE id=%s", (identity,)
         ).fetchone()
         if row is None:
             raise ValueError("missing snapshot record")
@@ -97,7 +89,10 @@ class SnapshotStore:
         previous_id = None
         try:
             with self.connection() as connection:
-                connection.execute("BEGIN IMMEDIATE")
+                connection.execute(
+                    "SELECT pg_advisory_xact_lock(%s)",
+                    (lock_key("architecture_snapshot:writer"),),
+                )
                 row = connection.execute(
                     "SELECT snapshot_id FROM head WHERE singleton=1"
                 ).fetchone()
@@ -105,27 +100,31 @@ class SnapshotStore:
                 previous = self.load(connection, row[0]) if row else None
                 snapshot, diff = reconcile(collection, previous, policy)
                 connection.execute(
-                    "INSERT OR IGNORE INTO snapshots(id,payload) VALUES (?,?)",
+                    "INSERT INTO snapshots(id,payload) VALUES (%s,%s) "
+                    "ON CONFLICT(id) DO NOTHING",
                     (snapshot.id, snapshot.to_json()),
                 )
                 cursor = connection.execute(
                     "INSERT INTO runs(previous_id,snapshot_id,diff,state) "
-                    "VALUES (?,?,?,'committed')",
+                    "VALUES (%s,%s,%s,'committed') RETURNING id",
                     (diff.previous, snapshot.id, diff.to_json()),
                 )
                 connection.execute(
-                    "INSERT INTO head VALUES(1,?) ON CONFLICT(singleton) "
+                    "INSERT INTO head VALUES(1,%s) ON CONFLICT(singleton) "
                     "DO UPDATE SET snapshot_id=excluded.snapshot_id",
                     (snapshot.id,),
                 )
                 connection.commit()
-                return ReconciliationRecord(int(cursor.lastrowid or 0), snapshot, diff)
+                run = cursor.fetchone()
+                if run is None:
+                    raise ValueError("missing run record")
+                return ReconciliationRecord(int(run[0]), snapshot, diff)
         except ValueError, TypeError, KeyError:
             # Persist only a normalized failure code, never an exception or body.
             with self.connection() as connection:
                 connection.execute(
                     "INSERT INTO runs(state,reason,previous_id,sources) "
-                    "VALUES ('failed','reconciliation_error',?,?)",
+                    "VALUES ('failed','reconciliation_error',%s,%s)",
                     (
                         previous_id,
                         canonical(
@@ -148,13 +147,13 @@ class SnapshotStore:
     def recent_runs(self, limit: int = 20) -> tuple[dict[str, Any], ...]:
         if not 1 <= limit <= 100:
             raise ValueError("invalid diagnostic limit")
-        with self.connection() as connection:
-            connection.row_factory = sqlite3.Row
-            return tuple(
-                dict(row)
-                for row in connection.execute(
-                    "SELECT id,previous_id,snapshot_id,diff,state,reason,sources "
-                    "FROM runs ORDER BY id DESC LIMIT ?",
-                    (limit,),
-                )
+        with (
+            self.connection() as connection,
+            connection.cursor(row_factory=dict_row) as cursor,
+        ):
+            cursor.execute(
+                "SELECT id,previous_id,snapshot_id,diff,state,reason,sources "
+                "FROM runs ORDER BY id DESC LIMIT %s",
+                (limit,),
             )
+            return tuple(cursor.fetchall())

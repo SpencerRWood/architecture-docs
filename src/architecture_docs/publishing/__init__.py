@@ -1,11 +1,10 @@
 """Restart-safe publication of deterministic snapshots into stable native Docs."""
 
-import sqlite3
 from dataclasses import asdict, dataclass
 from hashlib import sha256
-from pathlib import Path
 from typing import Any
 
+from architecture_docs.database import DatabaseConnection
 from architecture_docs.declarations import canonical
 from architecture_docs.publishing.google_drive import (
     DOCUMENT,
@@ -56,7 +55,7 @@ def text_hash(text: str) -> str:
 
 
 def ensure_file(  # noqa: PLR0913, PLR0917 -- explicit remote identity selectors
-    connection: sqlite3.Connection,
+    connection: DatabaseConnection,
     drive: GoogleDrive,
     scope: str,
     parent: str,
@@ -76,7 +75,7 @@ def ensure_file(  # noqa: PLR0913, PLR0917 -- explicit remote identity selectors
         if saved["attempted"]:
             raise PublicationError("creation_unconfirmed")
         # Commit before sending: ambiguous creates must never be blindly retried.
-        connection.execute("UPDATE identities SET attempted=1 WHERE key=?", (key,))
+        connection.execute("UPDATE identities SET attempted=1 WHERE key=%s", (key,))
         connection.commit()
         try:
             file = drive.create(parent, scope, key, title, mime)
@@ -90,7 +89,7 @@ def ensure_file(  # noqa: PLR0913, PLR0917 -- explicit remote identity selectors
             }:
                 # A definitive API rejection did not create the file.
                 connection.execute(
-                    "UPDATE identities SET attempted=0 WHERE key=?", (key,)
+                    "UPDATE identities SET attempted=0 WHERE key=%s", (key,)
                 )
                 connection.commit()
             raise
@@ -106,7 +105,7 @@ def ensure_file(  # noqa: PLR0913, PLR0917 -- explicit remote identity selectors
         }
     ):
         raise PublicationError("identity_metadata_mismatch")
-    connection.execute("UPDATE identities SET file_id=? WHERE key=?", (file_id, key))
+    connection.execute("UPDATE identities SET file_id=%s WHERE key=%s", (file_id, key))
     connection.commit()
     return file_id
 
@@ -124,7 +123,7 @@ def metadata(document: Document, text: str) -> dict[str, object]:
 
 
 def publish_document(
-    connection: sqlite3.Connection,
+    connection: DatabaseConnection,
     drive: GoogleDrive,
     file_id: str,
     document: Document,
@@ -160,7 +159,7 @@ def publish_document(
 def publish(  # noqa: PLR0913 -- explicit storage, destination and render config
     snapshot: Snapshot,
     drive: GoogleDrive,
-    state_path: Path,
+    database_url: str,
     parent_id: str,
     *,
     namespace: str = "architecture-docs",
@@ -185,7 +184,7 @@ def publish(  # noqa: PLR0913 -- explicit storage, destination and render config
     outputs = {doc.id: doc.to_markdown(config) for doc in documents.documents}
     scope = digest((parent_id, namespace))
     results = []
-    with PublicationStore(state_path).locked(scope) as connection:
+    with PublicationStore(database_url).locked(scope) as connection:
         folders: dict[str, str] = {}
         for doc in documents.documents:
             file_id = record(connection, doc.id)["file_id"]
@@ -228,7 +227,7 @@ def publish(  # noqa: PLR0913 -- explicit storage, destination and render config
                 result = ArtifactResult(doc.id, "failed", file_id, str(error))
             connection.execute(
                 "INSERT INTO events(snapshot_id,artifact,state,reason,file_id) "
-                "VALUES (?,?,?,?,?)",
+                "VALUES (%s,%s,%s,%s,%s)",
                 (snapshot.id, doc.id, result.state, result.reason, result.file_id),
             )
             connection.commit()

@@ -93,7 +93,7 @@ documents with missing declarations are `with_gaps`, otherwise `complete`.
 from architecture_docs.renderers import render_documents
 from architecture_docs.store import SnapshotStore
 
-snapshot = SnapshotStore(persistent_path).latest()
+snapshot = SnapshotStore().latest()
 if snapshot is not None:
     artifacts = render_documents(snapshot)
     markdown = artifacts.documents[0].to_markdown()

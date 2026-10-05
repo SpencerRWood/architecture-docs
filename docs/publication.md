@@ -9,8 +9,8 @@ surface across updates.
 
 ## Configuration and hierarchy
 
-The caller supplies an approved parent Drive folder ID, an absolute publication
-SQLite path in an existing persistent directory, and an OAuth access token.
+The caller supplies an approved parent Drive folder ID, a PostgreSQL URL
+injected from Infisical, and an OAuth access token.
 The parent contains one managed `Architecture` folder. Seven architecture
 documents live there; the eight separate runbooks live in its `Runbooks` folder.
 Both folders and every document have stable managed identities.
@@ -33,11 +33,15 @@ Use the same OAuth application because private properties are application scoped
 
 ## Durable state and retry boundaries
 
-Use one ledger and publisher authority per publication scope. Keep the ledger
-and its sibling `.lock` on a local durable filesystem with working SQLite and
-POSIX file locks. Back up publication state together with the separate snapshot
-ledger. Never run two distinct ledgers against the same scope: the local writer
-lock coordinates users of the same ledger, not separate machines or copies.
+Use one database and publisher authority per publication scope. Schema
+`architecture_publication` retains publication state separately from
+`architecture_snapshot`. A PostgreSQL session advisory lock excludes other
+publishers connected to the same database, across commits and remote requests,
+and is released when the connection closes. Transactional schema initialization
+refuses unsupported versions. Back up both schemas together.
+Never use two distinct databases for the same remote scope: their locks cannot
+coordinate with each other. Use a direct PostgreSQL connection; session locks
+are incompatible with transaction-pooling proxies.
 Changing parent or namespace requires a separately reviewed scope and ledger;
 the existing ledger rejects configuration drift.
 
@@ -102,7 +106,7 @@ footers, inline objects, suggestions and tabbed API responses block writes.
 
 ## Acceptance evidence
 
-Offline tests in `tests/test_publication.py` cover:
+Tests with disposable PostgreSQL and mocked Google APIs in `tests/test_publication.py` cover:
 
 - Native hierarchy and all fifteen artifacts, stable identities across restarts,
   and per-artifact source snapshot/provenance (AC 1–3; FR-013–016/020).
@@ -112,12 +116,12 @@ Offline tests in `tests/test_publication.py` cover:
   conflicts, revision rejection and readback protection (AC 5–6; FR-019/053).
 - Duplicate suppression, missing identities, scope guards, single-writer locks,
   ambiguous creation and update recovery (AC 7/9; QR-006/008).
-- Local-only publication metadata/events, separate snapshot history, bounded
+- Database publication metadata/events, separate snapshot history, bounded
   responses and sanitized failures (AC 8; FR-050–051; QR-009–010).
 
 Tests use mocked HTTP transport and representative normalized snapshots. They
-do not attest live Drive permissions, native API interoperability, deployed state
-mounts, or a production publication. A live smoke publication needs an approved
+do not attest live Drive permissions, native API interoperability, deployed database
+configuration, or a production publication. A live smoke publication needs an approved
 parent and runtime credentials in a separate delivery/deployment step.
 
 API authorities: [Drive create](https://developers.google.com/workspace/drive/api/reference/rest/v3/files/create),

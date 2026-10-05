@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from architecture_docs.codec import snapshot_from_json
+from architecture_docs.database import database_url
 from architecture_docs.publishing import publish
 from architecture_docs.publishing.google_drive import GoogleDrive, PublicationError
 from architecture_docs.renderers.artifacts import RenderConfig
@@ -14,7 +15,6 @@ from architecture_docs.renderers.artifacts import RenderConfig
 def main(arguments: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("snapshot", type=Path)
-    parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--parent", required=True)
     parser.add_argument("--namespace", default="architecture-docs")
     parser.add_argument("--title-prefix", default="")
@@ -28,7 +28,7 @@ def main(arguments: list[str] | None = None) -> int:
         result = publish(
             snapshot,
             drive,
-            args.state,
+            database_url(),
             args.parent,
             namespace=args.namespace,
             config=config,
@@ -37,7 +37,7 @@ def main(arguments: list[str] | None = None) -> int:
         parser.exit(
             2,
             "Unable to publish deterministic documents; "
-            "inspect local publication state.\n",
+            "inspect PostgreSQL publication state.\n",
         )
     finally:
         if drive is not None:

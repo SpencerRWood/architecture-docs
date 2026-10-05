@@ -2,8 +2,7 @@
 
 import json
 import re
-import sqlite3
-from contextlib import closing
+from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -11,6 +10,7 @@ from typing import Any
 import httpx
 import pytest
 
+from architecture_docs.database import connection as database_connection
 from architecture_docs.model import Failure
 from architecture_docs.publishing import publish
 from architecture_docs.publishing.__main__ import main
@@ -143,12 +143,12 @@ class DriveService:
 
 
 def test_create_native_hierarchy_restart_and_provenance_no_change(
-    tmp_path: Path,
+    database_url: str,
 ) -> None:
     service = DriveService()
     drive = service.client()
     snapshot = representative()
-    state = tmp_path / "publication.sqlite3"
+    state = database_url
     first = publish(snapshot, drive, state, "approved-parent")
     assert first.complete
     assert len(service.files) == 17
@@ -192,23 +192,24 @@ def test_create_native_hierarchy_restart_and_provenance_no_change(
     assert all(item.state == "unchanged" for item in second.artifacts)
     assert tuple(item.file_id for item in second.artifacts) == files
     assert len(service.writes) == 15
-    with closing(sqlite3.connect(state)) as connection:
-        committed = json.loads(
-            connection.execute(
-                "SELECT committed FROM identities WHERE key=?", (DocumentKind.OVERVIEW,)
-            ).fetchone()[0]
-        )
+    with database_connection(state, "architecture_publication") as connection:
+        row = connection.execute(
+            "SELECT committed FROM identities WHERE key=%s",
+            (DocumentKind.OVERVIEW,),
+        ).fetchone()
+        assert row is not None
+        committed = json.loads(row[0])
         assert committed["snapshot_id"] == snapshot.id
         assert committed["sources"]
-        assert connection.execute("SELECT count(*) FROM events").fetchone()[0] == 30
+        assert connection.execute("SELECT count(*) FROM events").fetchone() == (30,)
 
 
 def test_material_update_in_place_and_partial_evidence_protection(
-    tmp_path: Path,
+    database_url: str,
 ) -> None:
     service = DriveService()
     drive = service.client()
-    state = tmp_path / "state.sqlite3"
+    state = database_url
     snapshot = representative()
     initial = publish(snapshot, drive, state, "parent")
     before = service.texts.copy()
@@ -242,13 +243,13 @@ def test_material_update_in_place_and_partial_evidence_protection(
     assert len(service.writes) == 30
 
 
-def test_blocked_first_run_performs_no_drive_requests(tmp_path: Path) -> None:
+def test_blocked_first_run_performs_no_drive_requests(database_url: str) -> None:
     service = DriveService()
     snapshot = representative()
     result = publish(
         partial(snapshot),
         service.client(),
-        tmp_path / "state",
+        database_url,
         "parent",
     )
     assert not result.complete
@@ -257,11 +258,11 @@ def test_blocked_first_run_performs_no_drive_requests(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize("failure", ["after", "revision"])
 def test_ambiguous_update_recovery_and_revision_rejection(
-    tmp_path: Path, failure: str
+    database_url: str, failure: str
 ) -> None:
     service = DriveService()
     service.update_failure = failure
-    state = tmp_path / "state"
+    state = database_url
     snapshot = representative()
     first = publish(snapshot, service.client(), state, "parent")
     assert first.artifacts[0].state == "failed"
@@ -277,11 +278,11 @@ def test_ambiguous_update_recovery_and_revision_rejection(
 
 
 @pytest.mark.parametrize("failure", ["before", "after"])
-def test_uncertain_creation_never_duplicates(tmp_path: Path, failure: str) -> None:
+def test_uncertain_creation_never_duplicates(database_url: str, failure: str) -> None:
     service = DriveService()
     service.create_failure = failure
     snapshot = representative()
-    state = tmp_path / "state"
+    state = database_url
     first = publish(snapshot, service.client(), state, "parent")
     assert not first.complete
     second = publish(snapshot, service.client(), state, "parent")
@@ -295,11 +296,13 @@ def test_uncertain_creation_never_duplicates(tmp_path: Path, failure: str) -> No
     assert "fixture-sensitive-literal" not in first.to_json()
 
 
-def test_duplicate_suppression_missing_identity_and_scope_guard(tmp_path: Path) -> None:
+def test_duplicate_suppression_missing_identity_and_scope_guard(
+    database_url: str,
+) -> None:
     service = DriveService()
     drive = service.client()
     snapshot = representative()
-    state = tmp_path / "state"
+    state = database_url
     first = publish(snapshot, drive, state, "parent")
     file_id = first.artifacts[0].file_id
     assert file_id is not None
@@ -316,10 +319,10 @@ def test_duplicate_suppression_missing_identity_and_scope_guard(tmp_path: Path) 
         publish(snapshot, drive, state, "other-parent")
 
 
-def test_content_conflict_and_readback_protection(tmp_path: Path) -> None:
+def test_content_conflict_and_readback_protection(database_url: str) -> None:
     service = DriveService()
     service.update_failure = "corrupt"
-    state = tmp_path / "state"
+    state = database_url
     snapshot = representative()
     first = publish(snapshot, service.client(), state, "parent")
     assert first.artifacts[0].reason == "publication_readback_mismatch"
@@ -329,17 +332,19 @@ def test_content_conflict_and_readback_protection(tmp_path: Path) -> None:
     assert before == service.texts
 
 
-def test_recovery_adopts_remote_ids_but_refuses_unowned_content(tmp_path: Path) -> None:
+def test_recovery_adopts_remote_ids_but_refuses_unowned_content(
+    database_url: str, database_factory: Callable[[], str]
+) -> None:
     service = DriveService()
     snapshot = representative()
-    publish(snapshot, service.client(), tmp_path / "state", "parent")
-    result = publish(snapshot, service.client(), tmp_path / "new-state", "parent")
+    publish(snapshot, service.client(), database_url, "parent")
+    result = publish(snapshot, service.client(), database_factory(), "parent")
     assert all(item.reason == "document_content_conflict" for item in result.artifacts)
     assert len(service.files) == 17
 
 
 def test_render_failure_prevents_all_remote_work(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    database_url: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     snapshot = representative()
     rendered = render_documents(snapshot)
@@ -349,11 +354,11 @@ def test_render_failure_prevents_all_remote_work(
         lambda *_args: replace(rendered, documents=rendered.documents[:-1]),
     )
     with pytest.raises(PublicationError, match="invalid_rendered_artifacts"):
-        publish(snapshot, service.client(), tmp_path / "state", "parent")
+        publish(snapshot, service.client(), database_url, "parent")
     assert not service.requests
 
 
-def test_only_materially_affected_documents_are_updated(tmp_path: Path) -> None:
+def test_only_materially_affected_documents_are_updated(database_url: str) -> None:
     source = observation("architecture.node", node("api", host="linux"))
     first, _ = reconcile(complete(source))
     second, _ = reconcile(
@@ -369,7 +374,7 @@ def test_only_materially_affected_documents_are_updated(tmp_path: Path) -> None:
     assert affected
     assert len(affected) < len(DocumentKind)
     service = DriveService()
-    state = tmp_path / "state"
+    state = database_url
     assert publish(first, service.client(), state, "parent").complete
     service.writes.clear()
     result = publish(second, service.client(), state, "parent")
@@ -381,7 +386,7 @@ def test_only_materially_affected_documents_are_updated(tmp_path: Path) -> None:
 
 
 def test_definitive_create_rejection_can_retry_and_metadata_mismatch_blocks(
-    tmp_path: Path,
+    database_url: str,
 ) -> None:
     service = DriveService()
     reject = True
@@ -393,7 +398,7 @@ def test_definitive_create_rejection_can_retry_and_metadata_mismatch_blocks(
 
     drive = GoogleDrive("fixture-token", transport=httpx.MockTransport(transport))
     snapshot = representative()
-    state = tmp_path / "state"
+    state = database_url
     failed = publish(snapshot, drive, state, "parent")
     assert all(item.reason == "unauthorized" for item in failed.artifacts)
     reject = False
@@ -438,42 +443,48 @@ def test_transport_errors_are_bounded_and_sanitized(
     drive.close()
 
 
-def test_store_and_transport_invalid_contracts(tmp_path: Path) -> None:
+def test_store_and_transport_invalid_contracts(database_url: str) -> None:
     for bad in ("", "x\n", "a' or true", "../file"):
         with pytest.raises(PublicationError):
             identity(bad)
     for token in ("", "bad\n"):
         with pytest.raises(PublicationError, match="token"):
             GoogleDrive(token)
-    for path in (Path(":memory:"), Path("relative.sqlite3")):
-        with pytest.raises(PublicationError, match="persistent_absolute"):
-            PublicationStore(path)
+    for url in ("", ":memory:", "relative.sqlite3"):
+        with pytest.raises(PublicationError, match="database_url"):
+            PublicationStore(url)
     with (
         pytest.raises(PublicationError, match="unavailable"),
-        PublicationStore(tmp_path / "missing" / "state").locked("scope"),
+        PublicationStore("postgresql://fixture:fixture@127.0.0.1:1/missing").locked(
+            "scope"
+        ),
     ):
-        pytest.fail("missing parent must fail")
-    state = tmp_path / "future"
-    with closing(sqlite3.connect(state)) as connection:
-        connection.execute("PRAGMA user_version=2")
+        pytest.fail("unavailable database must fail")
+    state = database_url
+    with PublicationStore(state).locked("scope"):
+        pass
+    with database_connection(state, "architecture_publication") as connection:
+        connection.execute("UPDATE schema_version SET version=2")
     with (
         pytest.raises(PublicationError, match="unsupported_publication_schema"),
         PublicationStore(state).locked("scope"),
     ):
         pytest.fail("future schema must fail")
-    state = tmp_path / "locked"
+    with database_connection(state, "architecture_publication") as connection:
+        connection.execute("UPDATE schema_version SET version=1")
     with PublicationStore(state).locked("scope") as connection:
+        connection.commit()
         with (
             pytest.raises(PublicationError, match="busy"),
             PublicationStore(state).locked("scope"),
         ):
-            pytest.fail("second writer must fail")
+            pytest.fail("second writer must fail even after commit")
         with pytest.raises(PublicationError, match="invalid_state_field"):
             save_state(connection, "key", "bad", {})
     service = DriveService()
     service.list_failure = True
-    result = publish(representative(), service.client(), tmp_path / "pages", "parent")
-    assert all(item.reason == "ambiguous_identity" for item in result.artifacts)
+    with pytest.raises(PublicationError, match="scope_mismatch"):
+        publish(representative(), service.client(), state, "parent")
     drive = GoogleDrive(
         "token",
         transport=httpx.MockTransport(lambda _request: httpx.Response(200, json={})),
@@ -542,13 +553,17 @@ def test_unsupported_docs_structure_is_protected(body: dict[str, Any]) -> None:
 
 
 def test_cli_reports_summary_without_credentials(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path,
+    database_url: str,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     service = DriveService()
     snapshot = tmp_path / "snapshot.json"
     snapshot.write_text(representative().to_json())
-    args = [str(snapshot), "--state", str(tmp_path / "state"), "--parent", "parent"]
+    args = [str(snapshot), "--parent", "parent"]
     monkeypatch.setenv("ARCHITECTURE_DOCS_GOOGLE_ACCESS_TOKEN", "fixture-token")
+    monkeypatch.setenv("ARCHITECTURE_DOCS_DATABASE_URL", database_url)
     monkeypatch.setattr(
         "architecture_docs.publishing.__main__.GoogleDrive",
         lambda _token: service.client(),
