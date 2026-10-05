@@ -18,6 +18,15 @@ class DocumentKind(StrEnum):
     RUNTIME = "runtime-infrastructure-architecture"
     DATA = "data-storage-architecture"
     AUTOMATION = "automation-orchestration-architecture"
+    SECRETS = "secrets-manifest"
+    DEPLOYMENT_RUNBOOK = "runbook-deployment-redeployment"
+    ROLLBACK_RUNBOOK = "runbook-rollback-known-good-recovery"
+    HOST_RUNBOOK = "runbook-linux-host-rebuild-recovery"
+    SECRETS_RUNBOOK = "runbook-secret-reference-management"
+    DATABASE_RUNBOOK = "runbook-database-provisioning-onboarding"
+    RELEASE_RUNBOOK = "runbook-release-promotion-troubleshooting"
+    RESTORATION_RUNBOOK = "runbook-service-restoration"
+    DAGSTER_RUNBOOK = "runbook-dagster-operations"
 
 
 @dataclass(frozen=True)

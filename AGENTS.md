@@ -8,6 +8,7 @@
 - Keep collection independent of Codex. codex-runtime owns provider capacity.
 - Graph reconciliation owns evidence, conflicts, snapshots, and material changes.
 - Render documents only from normalized snapshots and their provenance.
-- Drive publication, secrets/runbook generation, nightly scheduling, and narrative belong to later Stories.
+- Secrets and runbooks retain only typed metadata and repository-contract references.
+- Drive publication, nightly scheduling, and narrative belong to later Stories.
 - Tests use offline representative repositories and mocked HTTP transports.
 - Preserve the published Dagster template's validation, packaging, and release.
