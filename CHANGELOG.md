@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.7.0 (2026-10-07)
+
+### Features
+
+- Expand architecture estate and publish readable secret mappings
+  ([#7](https://github.com/SpencerRWood/architecture-docs/pull/7),
+  [`7a3e149`](https://github.com/SpencerRWood/architecture-docs/commit/7a3e149a0c5fed6765b8cf11edc202260021f9aa))
+
+
 ## v0.6.0 (2026-10-05)
 
 ### Features
