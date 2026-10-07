@@ -68,6 +68,7 @@ FIELDS = frozenset(
         "port",
         "deployment_path",
         "owner",
+        "infisical_key",
         "host",
         "collected_at",
         "last_seen",
@@ -101,7 +102,16 @@ FIELDS = frozenset(
 
 # Secret references accept only location/usage metadata, never arbitrary attributes.
 SECRET_FIELDS = frozenset(
-    {"project", "environment", "path", "scope", "injection", "required", "owner"}
+    {
+        "project",
+        "environment",
+        "path",
+        "scope",
+        "injection",
+        "required",
+        "owner",
+        "infisical_key",
+    }
 )
 
 
@@ -224,9 +234,21 @@ def edge_declaration(data: dict[str, Any]) -> dict[str, Any]:
 
 def architecture_declarations(data: dict[str, Any]) -> list[tuple[str, str]]:
     """Optional architecture.toml closes explicit gaps without guessing topology."""
-    if set(data) - {"version", "nodes", "edges"} or data.get("version") != 1:
+    if (
+        set(data) - {"version", "nodes", "edges", "secrets", "secret_locations"}
+        or data.get("version") != 1
+    ):
         raise ValueError("unsupported architecture declaration")
+    from architecture_docs.secret_locations import SecretLocation  # noqa: PLC0415
+
+    locations = list(data.get("secret_locations", []))
+    if "secrets" in data:
+        locations.append(data["secrets"])
     return [
+        *(
+            ("secret.location", canonical(SecretLocation(**item).to_data()))
+            for item in locations
+        ),
         *(
             ("architecture.node", canonical(node_declaration(node)))
             for node in data.get("nodes", [])

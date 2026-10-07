@@ -11,6 +11,7 @@ from architecture_docs.collectors.github import (
     sha,
     text,
 )
+from architecture_docs.collectors.infisical import Infisical
 from architecture_docs.collectors.metadata import MetadataCollector
 from architecture_docs.config import Registry, Repository
 from architecture_docs.model import (
@@ -85,10 +86,12 @@ def source_files(
     )
 
 
-def collect(
+def collect(  # noqa: PLR0915 - source phases have isolated failure boundaries
     registry: Registry,
     github: GitHub,
     collectors: tuple[Collector, ...] | None = None,
+    *,
+    infisical: Infisical | None = None,
 ) -> CollectionResult:
     plugins: tuple[Collector, ...] = (
         (*content_collectors(), MetadataCollector())
@@ -96,9 +99,11 @@ def collect(
         else collectors
     )
     names = [plugin.name for plugin in plugins]
-    if len(names) != len(set(names)):
+    if len(names) != len(set(names)) or "estate" in names:
         raise ValueError("duplicate collector identity")
     observations: list[Observation] = []
+    if registry.estate is not None:
+        observations.append(registry.estate.observation())
     failures: list[Failure] = []
     skipped = []
     coverage: list[SourceCoverage] = []
@@ -148,6 +153,19 @@ def collect(
                     failures.append(Failure(plugin.name, provenance, "collector_error"))
         except SourceError as error:
             failures.append(Failure("github_source", provenance, str(error)))
+    if registry.infisical is not None:
+        owned = infisical is None
+        client = infisical or Infisical.from_environment(registry.infisical)
+        if client.config != registry.infisical:
+            raise ValueError("Infisical client approval mismatch")
+        try:
+            metadata_result = client.collect()
+            observations.extend(metadata_result.observations)
+            failures.extend(metadata_result.failures)
+            coverage.extend(metadata_result.coverage)
+        finally:
+            if owned:
+                client.close()
     return CollectionResult(
         precedence(tuple(set(observations))),
         tuple(

@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/wood-charts/architecture.toml
+# Reviewed source revision: f8db26d260ea92cf0fe02e724087f91389ec2d0d
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/wood-charts/blob/f8db26d260ea92cf0fe02e724087f91389ec2d0d/README.md (blob 03808c9c9e70e8c51c25c9488c602272417051c3)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/wood-charts"
+attributes = { purpose = "theme-driven-plotly-chart-construction", owner = "SpencerRWood" }

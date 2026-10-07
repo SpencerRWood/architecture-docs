@@ -30,6 +30,20 @@ class Observation:
     value: str
     provenance: Provenance
 
+    def __post_init__(self) -> None:
+        if self.key == "secret.location":
+            from architecture_docs.secret_locations import (  # noqa: PLC0415
+                SecretLocation,
+            )
+
+            SecretLocation(**json.loads(self.value))
+        if self.key.startswith("infisical."):
+            from architecture_docs.infisical_scope import (  # noqa: PLC0415
+                validate_metadata_observation,
+            )
+
+            validate_metadata_observation(self.key, self.value)
+
 
 @dataclass(frozen=True)
 class Failure:

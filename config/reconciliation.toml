@@ -1,6 +1,12 @@
 version = 1
 transient_properties = ["collected_at", "last_seen"]
 
+# Story 521: explicitly withdrawn collection scope, not a source failure.
+# Remove historical Homelab-owned evidence; included-repository references survive.
+[[tombstones]]
+repository = "SpencerRWood/homelab"
+reason = "out_of_scope"
+
 # Explicit reviewed removals, independent of collection availability:
 # [[tombstones]]
 # repository = "owner/retired-repository"

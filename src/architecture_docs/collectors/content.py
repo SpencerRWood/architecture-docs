@@ -13,7 +13,12 @@ import yaml
 
 from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.collectors.github import mapping
-from architecture_docs.declarations import architecture_declarations
+from architecture_docs.collectors.workflow_secrets import secret_facts
+from architecture_docs.declarations import (
+    architecture_declarations,
+    canonical,
+    node_declaration,
+)
 from architecture_docs.model import (
     Authority,
     CollectionResult,
@@ -114,14 +119,17 @@ def structured_configuration(data: dict[str, Any], path: str) -> Facts:
         facts.extend(
             (f"ansible.{group}", value) for value in identifiers(data.get(group))
         )
-    for section in ("services", "volumes", "networks", "jobs"):
+    services = compose_services(data, path)
+    for section in ("volumes", "networks", "jobs"):
         facts.extend(
             (f"compose.{section}", value)
             for value in identifiers(
                 data.get(section, {}),
             )
         )
-    for name, service in mapping(data.get("services", {})).items():
+    facts.extend(("compose.services", name) for name in identifiers(services))
+    facts.extend(postgres_facts(data))
+    for name, service in services.items():
         if name not in identifiers([name]):
             continue
         settings = mapping(service)
@@ -164,6 +172,40 @@ def structured_configuration(data: dict[str, Any], path: str) -> Facts:
     return facts
 
 
+def compose_services(data: dict[str, Any], path: str) -> dict[str, Any]:
+    """Environment boolean selectors cannot establish Compose service topology."""
+    services = mapping(data.get("services", {}))
+    if all(isinstance(value, dict) for value in services.values()):
+        return services
+    if "compose" in PurePosixPath(path).name or not all(
+        type(value) is bool for value in services.values()
+    ):
+        raise ValueError("invalid compose services")
+    return {}
+
+
+def postgres_facts(data: dict[str, Any]) -> Facts:
+    """Retain database/role identities without connection or credential values."""
+    applications = data.get("postgres_applications", [])
+    if not isinstance(applications, list):
+        raise ValueError("invalid postgres applications")
+    facts: Facts = []
+    for application in applications:
+        settings = mapping(application)
+        attributes = {"technology": "postgresql"}
+        if "role" in settings:
+            attributes["role"] = settings["role"]
+        declaration = node_declaration(
+            {
+                "kind": "database",
+                "name": settings["database"],
+                "attributes": attributes,
+            }
+        )
+        facts.append(("architecture.node", canonical(declaration)))
+    return facts
+
+
 def ansible(plays: list[Any]) -> Facts:
     """Collect declared roles and module identifiers, never task arguments."""
     facts: Facts = []
@@ -203,17 +245,10 @@ def executable(source: SourceFile) -> Facts:
                 )
             )
         elif suffix == ".sh":
-            for line in source.content.splitlines():
-                tokens = shlex.split(line, comments=True)
-                if tokens and tokens[0] not in {"echo", "printf", "export", "set"}:
-                    facts.extend(
-                        ("shell.executable", value)
-                        for value in identifiers([tokens[0]])
-                        if re.fullmatch(r"[\w./-]+", value)
-                    )
+            facts.extend(shell_facts(source.content))
         return facts
     data = parsed(source)
-    facts = []
+    facts = secret_facts(data)
     for name, job in mapping(data.get("jobs", {})).items():
         settings = mapping(job)
         encoded = json.dumps(settings)
@@ -235,8 +270,6 @@ def executable(source: SourceFile) -> Facts:
                 )
             )
         )
-        if settings.get("secrets") == "inherit":
-            facts.append(("workflow.secret_gap", "inherited_secret_names_unavailable"))
         if re.search(r"secrets\s*\[", encoded):
             facts.append(("workflow.secret_gap", "indexed_secret_reference_unresolved"))
         if any(
@@ -248,6 +281,51 @@ def executable(source: SourceFile) -> Facts:
             ).values()
         ):
             facts.append(("workflow.secret_gap", "literal_secret_input_excluded"))
+    return facts
+
+
+def shell_facts(content: str) -> Facts:
+    """Read logical shell lines; retain only known command names, never arguments."""
+    commands = {
+        "ansible",
+        "ansible-playbook",
+        "bash",
+        "curl",
+        "dbt",
+        "docker",
+        "gh",
+        "infisical",
+        "psql",
+        "python",
+        "python3",
+        "sh",
+        "ssh",
+        "terraform",
+        "uv",
+        "wood",
+    }
+    facts: Facts = []
+    pending = ""
+    delimiter: str | None = None
+    for line in content.replace("\\\n", "").splitlines():
+        if delimiter is not None:
+            if line.lstrip("\t") == delimiter:
+                delimiter = None
+            continue
+        pending += line + "\n"
+        try:
+            tokens = shlex.split(pending, comments=True)
+        except ValueError:
+            continue  # A quoted string can span logical lines.
+        if match := re.search(r"<<-?\s*(?:'([\w]+)'|\"([\w]+)\"|([\w]+))", pending):
+            delimiter = next(value for value in match.groups() if value is not None)
+        pending = ""
+        if tokens and tokens[0] == "exec":
+            tokens = tokens[1:]
+        if tokens and PurePosixPath(tokens[0]).name in commands:
+            facts.append(("shell.executable", PurePosixPath(tokens[0]).name))
+    if pending or delimiter is not None:
+        raise ValueError("incomplete shell structure")
     return facts
 
 

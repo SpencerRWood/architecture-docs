@@ -18,7 +18,13 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
             "targets",
             "Declared environments, hosts and runtime services",
             view.entities(
-                (NodeKind.ENVIRONMENT, NodeKind.HOST, NodeKind.SERVICE, NodeKind.SYSTEM)
+                (
+                    NodeKind.ENVIRONMENT,
+                    NodeKind.HOST,
+                    NodeKind.SERVICE,
+                    NodeKind.SYSTEM,
+                ),
+                ("purpose", "technology", "host", "environment", "owner", "port"),
             ),
             "Environments, hosts and runtime targets are not declared.",
         ),
@@ -53,7 +59,10 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
         section(
             "persistence",
             "Persistent storage and shared database responsibilities",
-            view.entities((NodeKind.DATABASE, NodeKind.STORAGE)),
+            view.entities(
+                (NodeKind.DATABASE, NodeKind.STORAGE),
+                ("purpose", "technology", "role", "schema"),
+            ),
             "Storage and database responsibilities are not declared.",
         ),
         section(

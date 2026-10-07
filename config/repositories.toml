@@ -1,5 +1,9 @@
-# Explicit example scope. Operators review additions before collection.
+# Reviewed active SpencerRWood estate for Story #521, 2026-10-06.
+# Exact paths only; additions require an explicit registry review.
+# Archived repositories, homelab, wood-data-platform, and website-marketing-simulation
+# are excluded. References from approved repositories do not authorize collection.
 version = 1
+infisical_scope = "infisical.toml"
 
 [limits]
 max_file_bytes = 262144
@@ -9,4 +13,628 @@ max_pages = 10
 [[repositories]]
 name = "SpencerRWood/architecture-docs"
 archived = "exclude"
-paths = ["architecture.toml", "pyproject.toml", ".github/release.toml", ".github/workflows/*.yml", "README.md", "docs/*.md"]
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "architecture.toml",
+  "docs/operations.md",
+  "docs/postgresql.md",
+  "docs/publication.md",
+  "docs/reconciliation.md",
+  "docs/rendering.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/automerge-repair"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/codex-config"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "docs/openproject-planning-increments.md",
+  "docs/wood-delivery-workflow.md",
+  "scripts/brief-check.py",
+  "scripts/install.sh",
+  "scripts/token-report.py",
+]
+
+[[repositories]]
+name = "SpencerRWood/codex-runtime"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "docs/consumer-contract.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/events-service"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "docker-compose.yml",
+  "docs/production-acceptance.md",
+  "pyproject.toml",
+  "scripts/__init__.py",
+  "scripts/isolated_postgres.py",
+  "scripts/run_service.sh",
+  "scripts/telegram_webhook.py",
+  "scripts/verify_deployment.py",
+  "scripts/verify_foundation.py",
+]
+
+[[repositories]]
+name = "SpencerRWood/infrastructure"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/deploy.yml",
+  ".github/workflows/release.yml",
+  ".github/workflows/rollback.yml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "ansible/filter_plugins/postgres_application.py",
+  "ansible/inventory/dev/hosts.yml",
+  "ansible/inventory/prod/hosts.yml",
+  "ansible/playbooks/deploy.yml",
+  "ansible/playbooks/dev-infisical.yml",
+  "ansible/playbooks/dev.yml",
+  "ansible/playbooks/prod.yml",
+  "ansible/roles/automerge_repair/defaults/main.yml",
+  "ansible/roles/automerge_repair/tasks/main.yml",
+  "ansible/roles/caddy/defaults/main.yml",
+  "ansible/roles/caddy/tasks/main.yml",
+  "ansible/roles/dagster/defaults/main.yml",
+  "ansible/roles/dagster/tasks/main.yml",
+  "ansible/roles/events_service/defaults/main.yml",
+  "ansible/roles/events_service/tasks/main.yml",
+  "ansible/roles/github_runner/defaults/main.yml",
+  "ansible/roles/github_runner/tasks/main.yml",
+  "ansible/roles/host/defaults/main.yml",
+  "ansible/roles/host/tasks/main.yml",
+  "ansible/roles/infisical/defaults/main.yml",
+  "ansible/roles/infisical/tasks/main.yml",
+  "ansible/roles/keycloak/defaults/main.yml",
+  "ansible/roles/keycloak/tasks/main.yml",
+  "ansible/roles/openwebui/defaults/main.yml",
+  "ansible/roles/openwebui/tasks/main.yml",
+  "ansible/roles/postgres/defaults/main.yml",
+  "ansible/roles/postgres/tasks/application.yml",
+  "ansible/roles/postgres/tasks/main.yml",
+  "ansible/roles/rag_service/defaults/main.yml",
+  "ansible/roles/rag_service/tasks/main.yml",
+  "ansible/roles/website_portfolio/defaults/main.yml",
+  "ansible/roles/website_portfolio/tasks/main.yml",
+  "compose/automerge-repair/compose.yml",
+  "compose/caddy/compose.yml",
+  "compose/dagster/compose.infisical.yml",
+  "compose/dagster/compose.yml",
+  "compose/events-service/compose.yml",
+  "compose/infisical/compose.yml",
+  "compose/keycloak/compose.infisical.yml",
+  "compose/keycloak/compose.yml",
+  "compose/openwebui/compose.infisical.yml",
+  "compose/openwebui/compose.yml",
+  "compose/postgres/compose.yml",
+  "compose/rag-service/compose.yml",
+  "compose/website-portfolio/compose.infisical.yml",
+  "compose/website-portfolio/compose.yml",
+  "docs/architecture-docs-database.md",
+  "docs/architecture.md",
+  "docs/codex-usage-schedule.md",
+  "docs/database-provisioning.md",
+  "docs/environments.md",
+  "docs/events-service-deployment.md",
+  "docs/infisical-bootstrap.md",
+  "docs/infisical-runtime.md",
+  "docs/postgres-migration-inventory.md",
+  "docs/rag-service-deployment.md",
+  "docs/rollback-contract.md",
+  "docs/rollback-exercise.md",
+  "docs/rollback-result.schema.json",
+  "docs/secrets.md",
+  "docs/website-portfolio-deployment.md",
+  "environments/dev.yml",
+  "environments/prod.yml",
+  "postgres/README.md",
+  "pyproject.toml",
+  "scripts/deploy-infrastructure-infisical-service",
+  "scripts/health-check-dev-remote.sh",
+  "scripts/health-check-dev.sh",
+  "scripts/resolve-ci-ghcr.py",
+  "scripts/resolve-infisical-env.py",
+  "scripts/rollback-infrastructure-infisical-service",
+  "scripts/rollback.py",
+  "scripts/validate.sh",
+  "services/postgres/README.md",
+  "terraform/README.md",
+]
+
+[[repositories]]
+name = "SpencerRWood/openproject-reports"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/portfolio-website"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "backend/README.md",
+  "backend/pyproject.toml",
+  "backend/src/portfolio_website/content/README.md",
+  "docker-compose.yml",
+  "frontend/package.json",
+  "pyproject.toml",
+  "scripts/dev",
+]
+
+[[repositories]]
+name = "SpencerRWood/rag-service"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "docker-compose.yml",
+  "pyproject.toml",
+  "scripts/entrypoint.sh",
+]
+
+[[repositories]]
+name = "SpencerRWood/sql-control-cli"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/synthetic-website-analytics"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+  "scripts/dev",
+]
+
+[[repositories]]
+name = "SpencerRWood/synthetic-website-analytics-platform"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  "README.md",
+  "docs/architecture.md",
+  "docs/roadmap.md",
+]
+
+[[repositories]]
+name = "SpencerRWood/synthetic-website-data"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "Dockerfile",
+  "README.md",
+  "pyproject.toml",
+  "scripts/dev",
+  "scripts/install-dagster-grpc-launchagent",
+  "scripts/refresh-dagster-grpc-env",
+  "scripts/run-dagster-grpc.py",
+  "scripts/start-dagster-grpc",
+]
+
+[[repositories]]
+name = "SpencerRWood/synthetic-website-dbt"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "Dockerfile",
+  "README.md",
+  "dbt_project.yml",
+  "pyproject.toml",
+  "scripts/dev",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-dbt"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "dbt_project.yml",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-fastapi-react"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "backend/README.md",
+  "backend/pyproject.toml",
+  "docker-compose.yml",
+  "frontend/package.json",
+  "scripts/rename_project.py",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-fastapi-service"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "docker-compose.yml",
+  "pyproject.toml",
+  "scripts/rename_project.py",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-python-analytics"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-python-api-client"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-python-cli"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-python-dagster"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-python-library"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-synthetic-data"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/template-web-automation"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/wood-agents"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/wood-charts"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/wood-reports"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "docs/latex-workspaces.md",
+  "docs/markdown-authoring.md",
+  "docs/production-analytics-integration.md",
+  "docs/publication-design-system.md",
+  "pyproject.toml",
+  "scripts/dev",
+]
+
+[[repositories]]
+name = "SpencerRWood/wood-tools"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "pyproject.toml",
+]
+
+[[repositories]]
+name = "SpencerRWood/workflows"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/container-release.yml",
+  ".github/workflows/deploy-ansible.yml",
+  ".github/workflows/promote-container-to-dev.yml",
+  ".github/workflows/release-container.yml",
+  ".github/workflows/release.yml",
+  ".github/workflows/resolve-release.yml",
+  ".github/workflows/test-contracts.yml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "docs/branch-rules.md",
+  "scripts/application_runtime.py",
+  "scripts/container_release.py",
+  "scripts/dagster_runtime.py",
+  "scripts/dependency_release_parser.py",
+  "scripts/release_config.py",
+  "scripts/release_head.py",
+  "scripts/release_publish.py",
+  "scripts/semantic_release_config.py",
+  "scripts/update_environment_image_pin.py",
+  "scripts/validation_status.py",
+  "scripts/verify_container_promotion_pr.py",
+]
+
+[[estate.repositories]]
+name = "SpencerRWood/architecture-docs"
+classification = "core"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/automerge-repair"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/codex-config"
+classification = "core"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/codex-runtime"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/events-service"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/infrastructure"
+classification = "core"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/openproject-reports"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/portfolio-website"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/rag-service"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/sql-control-cli"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/synthetic-website-analytics"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/synthetic-website-analytics-platform"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/synthetic-website-data"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/synthetic-website-dbt"
+classification = "service"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/template-dbt"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-fastapi-react"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-fastapi-service"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-python-analytics"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-python-api-client"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-python-cli"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-python-dagster"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-python-library"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-synthetic-data"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/template-web-automation"
+classification = "supporting"
+required = false
+
+[[estate.repositories]]
+name = "SpencerRWood/wood-agents"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/wood-charts"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/wood-reports"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/wood-tools"
+classification = "core"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/workflows"
+classification = "core"
+required = true
+
+[[estate.domains]]
+name = "deployment_release"
+node_kinds = ["release_contract"]
+fact_prefixes = ["workflow.uses","release."]
+
+[[estate.domains]]
+name = "runtime_infrastructure"
+node_kinds = ["host","service","system"]
+fact_prefixes = ["compose.services","container.base_image","ansible.module"]
+
+[[estate.domains]]
+name = "data_storage"
+node_kinds = ["database","storage"]
+fact_prefixes = ["compose.volumes"]
+
+[[estate.domains]]
+name = "automation_orchestration"
+node_kinds = ["orchestration"]
+fact_prefixes = ["workflow.job","ansible.role"]
+
+[[estate.domains]]
+name = "secrets"
+node_kinds = ["secret_reference"]
+fact_prefixes = ["workflow.secret_name"]
+
+[[estate.domains]]
+name = "runbooks"
+node_kinds = ["procedure"]
+fact_prefixes = ["shell.executable","python.declaration","contract.kind"]

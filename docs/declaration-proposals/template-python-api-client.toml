@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-python-api-client/architecture.toml
+# Reviewed source revision: 7dfe01a1f7add816dd1e170fa30599c5e315e18f
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-python-api-client/blob/7dfe01a1f7add816dd1e170fa30599c5e315e18f/README.md (blob 2cd00b2f9f3deb1ba76fa1833be8a80e6905ccb1)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-python-api-client"
+attributes = { purpose = "python-rest-api-client-template", owner = "SpencerRWood" }

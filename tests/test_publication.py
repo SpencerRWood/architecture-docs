@@ -11,6 +11,7 @@ import httpx
 import pytest
 
 from architecture_docs.database import connection as database_connection
+from architecture_docs.estate import ExpectedRepository, contract_from_data
 from architecture_docs.model import Failure
 from architecture_docs.publishing import publish
 from architecture_docs.publishing.__main__ import main
@@ -169,7 +170,12 @@ def test_create_native_hierarchy_restart_and_provenance_no_change(
             assert item["parents"] == [
                 runbooks["id"] if key.startswith("runbook-") else architecture["id"]
             ]
-            assert snapshot.id in service.texts[item["id"]]
+            assert snapshot.id not in service.texts[item["id"]]
+    with database_connection(state, "architecture_publication") as db:
+        committed = db.execute(
+            "SELECT committed FROM identities WHERE committed IS NOT NULL"
+        ).fetchall()
+    assert all(json.loads(row[0])["snapshot_id"] == snapshot.id for row in committed)
     drive.close()
     # New client/process, same durable identities. Provenance-only churn is skipped.
     updated = replace(
@@ -178,7 +184,17 @@ def test_create_native_hierarchy_restart_and_provenance_no_change(
             snapshot.collection,
             observations=tuple(
                 replace(item, provenance=replace(item.provenance, revision="c" * 40))
+                if item.collector != "estate"
+                else item
                 for item in snapshot.collection.observations
+            ),
+            coverage=tuple(
+                replace(item, revision="c" * 40)
+                for item in snapshot.collection.coverage
+            ),
+            inventories=tuple(
+                replace(item, revision="c" * 40)
+                for item in snapshot.collection.inventories
             ),
         ),
     )
@@ -254,6 +270,58 @@ def test_blocked_first_run_performs_no_drive_requests(database_url: str) -> None
     )
     assert not result.complete
     assert not service.requests
+
+
+def test_incomplete_estate_preserves_committed_state_with_zero_remote_calls(
+    database_url: str,
+) -> None:
+    service = DriveService()
+    snapshot = representative()
+    drive = service.client()
+    assert publish(snapshot, drive, database_url, "parent").complete
+    with database_connection(database_url, "architecture_publication") as connection:
+        before = connection.execute(
+            "SELECT key, file_id, committed, pending, attempted "
+            "FROM identities ORDER BY key"
+        ).fetchall()
+    requests = len(service.requests)
+    texts = service.texts.copy()
+    contract_fact = next(
+        fact
+        for fact in snapshot.collection.observations
+        if fact.key == "estate.contract"
+    )
+    contract = contract_from_data(json.loads(contract_fact.value))
+    expanded = replace(
+        contract,
+        repositories=(
+            *contract.repositories,
+            ExpectedRepository("fixture/missing", "core", True),
+        ),
+    )
+    candidate, _ = reconcile(
+        replace(
+            snapshot.collection,
+            observations=tuple(
+                expanded.observation() if fact.key == "estate.contract" else fact
+                for fact in snapshot.collection.observations
+            ),
+        ),
+        snapshot,
+    )
+    assert candidate.collection.complete
+    assert candidate.estate_state == "incomplete_estate"
+    result = publish(candidate, drive, database_url, "parent")
+    assert not result.complete
+    assert all(item.reason == "incomplete_estate" for item in result.artifacts)
+    assert len(service.requests) == requests
+    assert service.texts == texts
+    with database_connection(database_url, "architecture_publication") as connection:
+        after = connection.execute(
+            "SELECT key, file_id, committed, pending, attempted "
+            "FROM identities ORDER BY key"
+        ).fetchall()
+    assert after == before
 
 
 @pytest.mark.parametrize("failure", ["after", "revision"])
@@ -383,6 +451,33 @@ def test_only_materially_affected_documents_are_updated(database_url: str) -> No
         item.artifact for item in result.artifacts if item.state == "published"
     } == affected
     assert len(service.writes) == len(affected)
+
+
+def test_presentation_version_replaces_existing_documents_and_reruns_are_idle(
+    database_url: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    snapshot = representative()
+    current = render_documents(snapshot)
+    old = replace(
+        current,
+        documents=tuple(replace(d, renderer_version=1) for d in current.documents),
+    )
+    service = DriveService()
+    monkeypatch.setattr("architecture_docs.publishing.render_documents", lambda *_: old)
+    assert publish(snapshot, service.client(), database_url, "parent").complete
+    identities = set(service.files)
+    service.writes.clear()
+    monkeypatch.setattr(
+        "architecture_docs.publishing.render_documents", render_documents
+    )
+    result = publish(snapshot, service.client(), database_url, "parent")
+    assert result.complete
+    assert all(a.state == "published" for a in result.artifacts)
+    assert len(service.writes) == 15
+    assert set(service.files) == identities
+    service.writes.clear()
+    assert publish(snapshot, service.client(), database_url, "parent").complete
+    assert not service.writes
 
 
 def test_definitive_create_rejection_can_retry_and_metadata_mismatch_blocks(

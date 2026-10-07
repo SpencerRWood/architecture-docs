@@ -1,0 +1,35 @@
+# DRAFT additive fragment for SpencerRWood/openproject-reports/architecture.toml
+# Reviewed source revision: a907c22c7c6c25b2deb3c4fb973f1d936bc191cc
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/openproject-reports/blob/a907c22c7c6c25b2deb3c4fb973f1d936bc191cc/README.md (blob 53c549cfcfeed02fb8eed0cc09e385e57a91956c)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/openproject-reports"
+attributes = { purpose = "daily-openproject-status-workbook", tag = "reporting", owner = "SpencerRWood" }
+
+# Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.
+# Supplemental metadata: provenance.json operational_metadata.github_repository_secrets.openproject-reports
+# Source: https://github.com/SpencerRWood/openproject-reports/blob/a907c22c7c6c25b2deb3c4fb973f1d936bc191cc/.github/workflows/release.yml (blob 0df49842e5924be3aa65532dc95c5c68c2eafc46)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PR_TOKEN"
+attributes = { scope = "repository", injection = "github-actions", owner = "SpencerRWood", required = "true" }
+
+# Platform Dagster runtime manifest declares the required key and location; project ID verified separately on the deployment host.
+# Supplemental metadata: provenance.json operational_metadata.infrastructure_project
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/environments/dev.yml (blob 375ea3b98882127797f8de9cef3ce798f318e6d7)
+[[nodes]]
+kind = "secret_reference"
+name = "OPENPROJECT_API_TOKEN"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/dagster", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Platform Dagster runtime manifest declares the required key and location; project ID verified separately on the deployment host.
+# Supplemental metadata: provenance.json operational_metadata.infrastructure_project
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/environments/dev.yml (blob 375ea3b98882127797f8de9cef3ce798f318e6d7)
+[[nodes]]
+kind = "secret_reference"
+name = "GOOGLE_DRIVE_CREDENTIALS_JSON"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/dagster", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }

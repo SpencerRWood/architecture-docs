@@ -23,14 +23,27 @@ nor any Codex provider. Optional narrative integration belongs to #476.
 
 ## Repository approval
 
-`config/repositories.toml` explicitly includes this repository as an example;
-it does not enumerate an account's repositories. Review scope before adding entries.
-Each entry declares `name`, approved `paths` (case-sensitive shell globs),
+`config/repositories.toml` explicitly accounts for 29 reviewed active repositories.
+`homelab`, `wood-data-platform` and `website-marketing-simulation` are intentionally
+excluded. References from included repositories remain reference-only dependencies.
+Collection never
+discovers or approves repositories automatically. Review scope before adding entries.
+Each entry declares `name`, approved `paths` (case-sensitive, per-segment globs),
 `archived` (`exclude`, `include`, or `only`), and optional `ref` (otherwise the
 default branch). Archived repositories default to exclusion. Limits bound files,
 file bytes, metadata pages, and API response bytes. An empty registry deliberately
 performs no network access. Sensitive path classes, environment files, private
 keys, and Terraform state are denied even under a broad glob.
+Globs cannot cross directory boundaries; recursive `**` approvals are rejected.
+The supported estate uses exact reviewed paths and excludes test fixtures.
+
+Estate expectations separately declare required/optional repositories and
+core/service/supporting classifications, plus six required evidence domains.
+Source success alone does not establish estate completeness. Missing required
+repositories, skipped/failed collection, absent domains or stale evidence produce
+`incomplete_estate`; publication makes zero Drive calls and preserves committed
+documents. Missing expectations also fail closed. Optional omissions remain
+visible. See [estate coverage](docs/estate-coverage.md) for configuration and review.
 
 ## Collector contract
 
@@ -41,7 +54,10 @@ retrieval. One commit is resolved per repository; its tree and immutable blobs
 are read, with blob hashes verified. No source script or workflow is executed.
 The transport sends only GET to api.github.com and never follows redirects.
 Use a fine-grained token with Contents, Metadata, and Actions read permissions.
-No write API, secret-management API, or GitHub checkout mutation is exposed.
+No write API or GitHub checkout mutation is exposed. The
+[Infisical collector](docs/infisical-metadata.md) lists only approved metadata
+with server-side values disabled and a fail-closed transport boundary. Its
+machine identity token is injected at runtime; no secret values enter the model.
 
 Content collectors extract a constrained metadata vocabulary:
 

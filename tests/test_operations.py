@@ -47,23 +47,14 @@ def test_manifest_metadata_consumers_provenance_and_gaps() -> None:
     snapshot = operational_snapshot()
     doc = document(snapshot, DocumentKind.SECRETS)
     secret_rows = rows(doc)
-    for field, value in {
-        "project": "platform",
-        "environment": "dev",
-        "path": "/api",
-        "injection": "infisical",
-        "scope": "runtime",
-        "required": "true",
-    }.items():
-        row = next(row for row in secret_rows if row.label == f"API_TOKEN / {field}")
-        assert row.value == value
-        assert row.sources
-        assert all(source.revision for source in row.sources)
-    assert any(
-        row.label == "consumes_secret" and "api" in row.value for row in secret_rows
-    )
-    assert any(row.state == "gap" and "owner" in row.value for row in secret_rows)
-    assert "missing secret project" in doc.to_markdown()
+    references = [row for row in secret_rows if row.label == "API_TOKEN"]
+    assert references
+    assert all(row.state == "location-declared" for row in references)
+    assert any("api" in row.value for row in references)
+    assert all(row.sources for row in references)
+    assert "Unverified repository location declarations" in doc.to_markdown()
+    assert "platform" in doc.to_markdown()
+    assert "Secret owner is not declared" not in doc.to_markdown()
     assert all(source.revision for source in doc.sources)
     assert {
         "project",
@@ -73,6 +64,7 @@ def test_manifest_metadata_consumers_provenance_and_gaps() -> None:
         "injection",
         "required",
         "owner",
+        "infisical_key",
     } == SECRET_FIELDS
 
 
@@ -235,7 +227,11 @@ def test_secret_location_drift_and_ambiguity_are_gaps_with_all_candidates() -> N
             "/old",
             "/current",
         }
-        assert "Conflicting secret path" in doc.to_markdown()
+        assert "Ambiguous mappings" in doc.to_markdown()
+        expected = (
+            "ambiguous" if other.authority == Authority.CONFIGURATION else "unresolved"
+        )
+        assert any(row.state == expected for row in rows(doc))
         assert doc.publication_blocked == (other.authority == Authority.CONFIGURATION)
 
 

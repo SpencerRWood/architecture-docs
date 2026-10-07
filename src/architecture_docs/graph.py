@@ -264,6 +264,16 @@ def workflow(builder: Builder, repository: str, item: Evidence) -> None:
     if observation.key == "workflow.secret_name":
         target = builder.node(NodeKind.SECRET_REFERENCE, observation.value, item)
         builder.edge(EdgeKind.CONSUMES_SECRET, source, target, item)
+    elif observation.key in {
+        "workflow.input_ref",
+        "workflow.secret_parameter",
+        "workflow.call",
+        "workflow.secret_ref",
+        "workflow.reusable",
+    }:
+        # Typed call/usage metadata is resolved by the consumer mapper. It must
+        # not create synthetic workflow jobs named after JSON payloads.
+        return
     elif observation.key == "workflow.secret_gap":
         builder.property(
             source, f"secret_gap:{observation.value}", observation.value, item
@@ -392,6 +402,10 @@ def source_fact(builder: Builder, repository: str, item: Evidence) -> None:
 def normalize(evidence: tuple[Evidence, ...]) -> Graph:
     builder = Builder()
     for item in sorted(evidence, key=evidence_key):
+        if item.observation.key == "estate.contract" or item.observation.key.startswith(
+            "infisical."
+        ):
+            continue
         repository = item.observation.provenance.repository
         identity = builder.node(NodeKind.REPOSITORY, repository, item)
         source_fact(builder, identity, item)

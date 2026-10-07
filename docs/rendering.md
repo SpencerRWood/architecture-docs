@@ -20,12 +20,28 @@ source references: repository, source path/object, revision, blob, collector,
 authority, and verification state. Source references omit original observation
 payloads, raw source text, commands with arguments, and secret values.
 
-JSON is the publication-neutral artifact model. Markdown includes source
-footnotes with pinned GitHub file links when revisions are available; metadata
-and unpinned observations keep their explicit source identity without fabricating
-a commit. All source-derived display text is escaped for Markdown and HTML.
+JSON is the publication-neutral artifact model and retains full machine identifiers.
+Normal Markdown across all architecture views and runbooks uses numbered citations
+and named provenance: source system, repository/project, path or object name,
+environment/location and verification status. Snapshot hashes, blob IDs, inventory
+digests, provider UUIDs and internal source/graph IDs are not document headers or
+normal prose. Infisical locations use project names rather than workspace UUIDs;
+secret object UUIDs stay in typed evidence and semantic inputs.
+
+Pinned GitHub links and workflow references use short commit SHAs. Stale evidence
+can identify the last verified short commit; otherwise indistinguishable ambiguous
+Infisical locations use the shortest distinguishing project/object prefix in their
+diagnostic rows. Full references, precedence, revisions and blobs remain available
+internally. Mermaid node aliases are short presentation-local numbers. Missing
+human labels are not invented. All source-derived display text is escaped for
+Markdown and HTML.
 Source links may be disabled while preserving provenance. Titles admit a bounded
 prefix. Configuration mismatches and unsupported model versions fail clearly.
+
+Renderer version 2 participates in semantic publication hashes so this global
+presentation change replaces existing documents through the normal ledger even
+when the underlying architecture snapshot has not changed. Metadata-aware material
+inputs, stale/partial blocks, known-good preservation and idempotency remain intact.
 
 `content_hash` excludes citation/commit/blob churn, configuration-only source-link
 changes, and the snapshot identifier. It includes displayed facts, diagnostics,
@@ -38,8 +54,8 @@ and how to refresh these details; this Story performs no remote update.
 
 | Document | Deterministic view |
 | --- | --- |
-| Architecture Overview | Repository/system/service boundaries, typed interactions, major and cross-repository graph diagram; reference-only nodes labeled explicitly |
-| Repository & Dependency Catalog | One section per declared included repository, purpose when declared, entities, dependencies, shared workflows, ownership, hosting, interfaces, storage and data relationships; separate reference-only repositories |
+| Architecture Overview | Declared major systems, runtime boundaries, databases/storage and orchestration; significant typed interactions and cross-repository dependencies; individual Actions, workflow jobs, packages, volumes and reference-only dependencies excluded |
+| Repository & Dependency Catalog | Repository summary followed by comprehensive entity and dependency evidence, including Actions, workflows, packages and volumes; separate reference-only repositories |
 | Deployment & Release Architecture | Eight lifecycle stages: validation, candidate artifacts, runtime gates, release, promotion, deployment, rollback, verification; release contracts and typed deployment ownership/target/workflow edges |
 | Runtime & Infrastructure Architecture | Declared environments/hosts/services, interfaces, explicit networking/reverse-proxy contracts, orchestration/code locations, persistence, shared data access and ownership |
 | Data & Storage Architecture | Databases with explicit role/schema metadata, storage/NAS declarations, consumers, ownership/hosting and encoded backup/recovery references |
@@ -50,6 +66,47 @@ normalized model**, including retained stale repositories. A failed first-ever
 collection is reported as failure evidence, not fabricated as an empty catalog
 entry. A repository link alone is a reference, not proof it was collected.
 Incoming and outgoing typed edges show both upstream and downstream relationships.
+
+Each document begins with a deterministic summary derived from its selected graph
+architecture categories and agreed technology identifiers. The Overview summarizes
+repository classifications, major persistence boundaries, cross-repository
+relationships, estate coverage and material unresolved gaps without enumerating
+arbitrary featured entities. Its graph selects declared system/runtime boundaries
+and semantically significant services: explicit major/shared roles, shared
+persistence, external interfaces, cross-repository relationships or deployment
+and orchestration topology. Compose discovery alone does not qualify a leaf
+service. Detailed service, package, action, job and volume evidence remains in
+specialized views and the catalog; filtering never changes the underlying graph.
+Summaries do not resolve drift or establish missing purpose declarations. The
+catalog shows all successful estate repository/domain evidence; specialized views
+retain estate status and every missing repository/domain without repeating the
+entire successful inventory. Source failures remain visible in every document.
+
+Reference-only and missing-secret-field diagnostics are grouped by architecture
+domain and reason, retaining all affected entity IDs and source references.
+Secrets Manifest leads with consumer-to-Infisical mapping tables. Unresolved
+references and ambiguous candidates remain separate; optional metadata uses `—`.
+Approved inventory with no known consumer and unverified repository declarations
+are secondary sections. Matching names do not establish synchronized values or a
+shared distribution/rotation policy. Each mapping retains consumer and secret-manager
+provenance with independent revision semantics. See [metadata collection](infisical-metadata.md).
+
+Runbooks show supporting typed contracts separately from explicit procedure
+steps. Supporting script/workflow references retain source provenance and identify
+the missing `runbook`, `phase`, `order`, and approved source-reference contract.
+They never establish executable instructions or successful recovery. Runtime and
+automation views select relevant fields; package dependency details remain in the
+catalog, and detailed data recovery contracts remain in the data view.
+When procedure declarations are absent, runbooks also group current, completely
+parsed first-party workflows, scripts and evidenced Ansible sources using explicit
+path hints. Generic external Actions are excluded from procedure candidates;
+explicit operational procedure references can retain external sources. Exact
+shared workflow references aggregate consumers and all consumer-specific citations
+into one row. A common requirements row identifies the missing procedure contract.
+These are
+discovery candidates with undeclared applicability, remain gaps, and cannot
+supply procedure steps. Failed, stale, unapproved or unmatched-revision sources
+cannot become current supporting candidates.
 
 Explicit graph fields are projected as named declarations. For example,
 `build.python_package=true` states a package-build contract flag; it does not say

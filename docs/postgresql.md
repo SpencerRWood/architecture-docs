@@ -66,7 +66,8 @@ No automated destructive downgrade is supplied.
 
 ## Validation
 
-Storage tests launch a private disposable PostgreSQL 16 Docker container and
+Storage tests launch a private disposable PostgreSQL 16 Docker container with a
+512 MiB temporary memory filesystem for its data directory, and
 use fresh databases owned by a restricted application role. They never read
 the runtime URL. Docker must be available locally and in validation CI; database
 tests fail rather than silently skip when it is unavailable. Google API requests

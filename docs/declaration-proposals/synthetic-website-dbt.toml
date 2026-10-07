@@ -1,0 +1,68 @@
+# DRAFT additive fragment for SpencerRWood/synthetic-website-dbt/architecture.toml
+# Reviewed source revision: c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md (blob e0136311f835b57358db415418caf65d4a6ff586)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/synthetic-website-dbt"
+attributes = { purpose = "synthetic-website-analytical-marts", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_DBNAME"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_HOST"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_PASSWORD"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_PORT"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_SCHEMA"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml (blob 72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_USER"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Documented local development password resolution; canonical Infrastructure Dev project ID unresolved.
+# Supplemental metadata: provenance.json operational_metadata.infrastructure_project
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md (blob e0136311f835b57358db415418caf65d4a6ff586)
+[[nodes]]
+kind = "secret_reference"
+name = "local-development/DBT_PASSWORD"
+attributes = { environment = "dev", path = "/synthetic-website-dbt", scope = "local-development", injection = "infisical", owner = "SpencerRWood", project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4" }
+
+# Transformation role owns dbt schemas and reads raw; runtime database availability is not attested.
+# Source: https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md (blob e0136311f835b57358db415418caf65d4a6ff586)
+[[nodes]]
+kind = "database"
+name = "synthetic_website_data"
+attributes = { technology = "postgresql", role = "dbt_editor", schema = "staging/intermediate/marts", owner = "SpencerRWood" }

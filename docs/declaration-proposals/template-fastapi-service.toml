@@ -1,0 +1,18 @@
+# DRAFT additive fragment for SpencerRWood/template-fastapi-service/architecture.toml
+# Reviewed source revision: f27a9c1fb4a1fcd94a437cd065fe12448c34e734
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-fastapi-service/blob/f27a9c1fb4a1fcd94a437cd065fe12448c34e734/README.md (blob 7f8b04b3518012960c80cdfe63602791280031c9)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-fastapi-service"
+attributes = { purpose = "fastapi-http-service-template", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-fastapi-service/blob/f27a9c1fb4a1fcd94a437cd065fe12448c34e734/.github/workflows/release.yml (blob 67de0aaab279b7c5a788de071d8a326193abb70c)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PR_TOKEN"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }

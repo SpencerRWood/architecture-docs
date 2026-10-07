@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/wood-reports/architecture.toml
+# Reviewed source revision: 94044e680c5970045bcd3bfe23b06ab36899aa93
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/wood-reports/blob/94044e680c5970045bcd3bfe23b06ab36899aa93/README.md (blob 7c4ff6e09d069aeea54992815d52bac95d0eba20)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/wood-reports"
+attributes = { purpose = "powerpoint-and-latex-report-publication", tag = "reporting", owner = "SpencerRWood" }

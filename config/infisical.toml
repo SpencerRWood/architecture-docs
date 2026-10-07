@@ -1,0 +1,66 @@
+# Story 521: exact dev folders only; no recursive, imported or account inventory.
+version = 1
+url = "https://dev-infisical.woodhost.cloud"
+max_secrets = 500
+max_response_bytes = 1048576
+
+[[scopes]]
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/architecture-docs"
+
+[[scopes]]
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/rag-service"
+
+[[scopes]]
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/events-service"
+
+[[scopes]]
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/synthetic-website-data"
+
+[[scopes]]
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/synthetic-website-dbt"
+
+[[bindings]]
+repository = "SpencerRWood/architecture-docs"
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/architecture-docs"
+injection = "runtime"
+
+[[bindings]]
+repository = "SpencerRWood/rag-service"
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/rag-service"
+injection = "runtime"
+
+[[bindings]]
+repository = "SpencerRWood/events-service"
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/events-service"
+injection = "runtime"
+
+# These are separate consumers and existing folders; never normalize their names.
+[[bindings]]
+repository = "SpencerRWood/synthetic-website-data"
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/synthetic-website-data"
+injection = "runtime"
+
+[[bindings]]
+repository = "SpencerRWood/synthetic-website-dbt"
+project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+environment = "dev"
+path = "/synthetic-website-dbt"
+injection = "runtime"

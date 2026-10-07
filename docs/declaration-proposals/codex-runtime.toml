@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/codex-runtime/architecture.toml
+# Reviewed source revision: e596a4c47734d0a0c030e7f822859d53532a3c82
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/codex-runtime/blob/e596a4c47734d0a0c030e7f822859d53532a3c82/README.md (blob 7c7c06e9879ce0e571bf9a8696f77f1148608b52)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/codex-runtime"
+attributes = { purpose = "codex-capacity-inspection-library", tag = "codex", owner = "SpencerRWood" }

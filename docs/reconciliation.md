@@ -51,7 +51,7 @@ identities escape all components to prevent delimiter collisions.
 | database, storage | role, schema, backup path |
 | release_contract | workflow, checks, publish, rollback path |
 | orchestration, interface | workflow, endpoint identifier, protocol, port |
-| secret_reference | project, environment, path, scope, injection, required |
+| secret_reference | project, environment, path, infisical_key, scope, injection, required |
 | owner, procedure | script, prerequisite, verification, rollback, recovery |
 | package | collected package and dependency names |
 
@@ -117,14 +117,22 @@ empty material diff. Identical complete inputs reuse the existing snapshot;
 repeated partial inputs likewise settle to the same stale snapshot. Runs retain
 their own IDs and diffs, including A→B→A transitions.
 
-`BEGIN IMMEDIATE` locks reading the prior head and writing the new snapshot/diff
-as one transaction. A crash or write failure rolls back the entire update;
+A PostgreSQL transaction advisory lock protects reading the prior head and writing
+the new snapshot/diff as one transaction. A crash or write failure rolls back the update;
 normalization failure leaves the head unchanged and records a normalized error
 and source provenance without exception text or rejected values. Hash/schema
 checks reject corrupt or future records. `latest()`, `get(id)`, and
 `recent_runs(limit=20)` provide inspection; the latter permits at most 100 records.
 Snapshot JSON and diff JSON can be exported from these methods for diagnosis.
 No pruning policy is applied in R1, so history remains available.
+
+The local estate contract is persisted as configuration evidence in each collection,
+including failed and skipped runs. It never creates graph topology. Coverage uses
+the current collection's successfully parsed sources and matching revisions;
+retained stale graph evidence cannot satisfy it. Coverage and expectation changes
+appear in material diffs as `estate_coverage` and survive snapshot ledger restarts.
+See [estate coverage](estate-coverage.md). PostgreSQL stores both snapshot and
+publication ledgers; the architecture declaration matches that implementation.
 
 The classifier compares node identities, declared state, resolved properties,
 candidate conflicts, and typed edges. It ignores revision/blob provenance and

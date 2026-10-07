@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-python-cli/architecture.toml
+# Reviewed source revision: 1596609f095db787a6cd8a2bb38f9a6fa22ca6c5
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-python-cli/blob/1596609f095db787a6cd8a2bb38f9a6fa22ca6c5/README.md (blob bc02f93fce8c4da34ed2e3590062e71b55384244)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-python-cli"
+attributes = { purpose = "python-cli-project-template", owner = "SpencerRWood" }

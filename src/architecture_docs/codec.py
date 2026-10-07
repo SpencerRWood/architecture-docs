@@ -3,6 +3,7 @@
 import json
 from typing import Any
 
+from architecture_docs.estate import evaluate
 from architecture_docs.graph import Evidence, normalize
 from architecture_docs.model import (
     Authority,
@@ -67,7 +68,7 @@ def collection_from_data(data: dict[str, Any]) -> CollectionResult:
         )
     ):
         raise ValueError("invalid collection shape")
-    return CollectionResult(
+    collection = CollectionResult(
         tuple(observation_from_data(item) for item in data["observations"]),
         tuple(
             Failure(item["collector"], Provenance(**item["provenance"]), item["reason"])
@@ -85,6 +86,8 @@ def collection_from_data(data: dict[str, Any]) -> CollectionResult:
             for item in data.get("inventories", [])
         ),
     )
+    evaluate(collection)
+    return collection
 
 
 def collection_from_json(payload: str) -> CollectionResult:

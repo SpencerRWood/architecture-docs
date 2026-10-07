@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/wood-tools/architecture.toml
+# Reviewed source revision: e6e888208cd2b4059bacfd2ca06dc5618e01a96b
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/wood-tools/blob/e6e888208cd2b4059bacfd2ca06dc5618e01a96b/README.md (blob 5a75f881a7cf84469b2f35c82e1f3a583cdf69f6)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/wood-tools"
+attributes = { purpose = "deterministic-delivery-and-openproject-tooling", tag = "openproject", owner = "SpencerRWood" }

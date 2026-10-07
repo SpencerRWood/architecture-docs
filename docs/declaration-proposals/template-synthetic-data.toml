@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-synthetic-data/architecture.toml
+# Reviewed source revision: 76c387688fa16e6e08bd4e0d2a5f7f7fceaf949a
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-synthetic-data/blob/76c387688fa16e6e08bd4e0d2a5f7f7fceaf949a/README.md (blob 3ea11bca8cbb22362c3c4e7278f17b4e83ccdd00)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-synthetic-data"
+attributes = { purpose = "synthetic-dataset-generation-template", owner = "SpencerRWood" }

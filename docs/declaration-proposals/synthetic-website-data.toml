@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/synthetic-website-data/architecture.toml
+# Reviewed source revision: fc805ca604c26ed3c1294e10e25a690863022a01
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/synthetic-website-data/blob/fc805ca604c26ed3c1294e10e25a690863022a01/README.md (blob 985e2fb56b7fa2ca665026ae15063ed713b5836b)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/synthetic-website-data"
+attributes = { purpose = "synthetic-event-generation-and-postgresql-loading", owner = "SpencerRWood" }

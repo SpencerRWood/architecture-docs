@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-python-dagster/architecture.toml
+# Reviewed source revision: 2b7d901e63095def72171397e3f5b99d457497d3
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-python-dagster/blob/2b7d901e63095def72171397e3f5b99d457497d3/README.md (blob f856d2cca037f8c20ae917919952ff7ea5b6e418)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-python-dagster"
+attributes = { purpose = "dagster-code-location-template", owner = "SpencerRWood" }

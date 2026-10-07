@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/synthetic-website-analytics/architecture.toml
+# Reviewed source revision: bd0ab0a5d362004a6a4d32046468644b89ddab33
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/synthetic-website-analytics/blob/bd0ab0a5d362004a6a4d32046468644b89ddab33/README.md (blob f805d07ad9380fcd2aaa6c18dbe0b16fbb8c03fd)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/synthetic-website-analytics"
+attributes = { purpose = "synthetic-website-data-analysis", owner = "SpencerRWood" }

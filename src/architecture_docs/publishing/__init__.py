@@ -176,7 +176,8 @@ def publish(  # noqa: PLR0913 -- explicit storage, destination and render config
         or any(
             doc.snapshot_id != snapshot.id
             or doc.schema_version != 1
-            or doc.generation_state not in {"complete", "with_gaps", "blocked"}
+            or doc.generation_state
+            not in {"complete", "with_gaps", "blocked", "incomplete_estate"}
             for doc in documents.documents
         )
     ):
@@ -191,7 +192,12 @@ def publish(  # noqa: PLR0913 -- explicit storage, destination and render config
             try:
                 if snapshot.publication_blocked or doc.publication_blocked:
                     result = ArtifactResult(
-                        doc.id, "blocked", file_id, "incomplete_evidence"
+                        doc.id,
+                        "blocked",
+                        file_id,
+                        "incomplete_estate"
+                        if snapshot.estate_state == "incomplete_estate"
+                        else "incomplete_evidence",
                     )
                 else:
                     if not folders:

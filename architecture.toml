@@ -1,5 +1,10 @@
 version = 1
 
+[secrets]
+project = "Infrastructure Dev"
+environment = "dev"
+path = "/architecture-docs"
+
 [[nodes]]
 kind = "system"
 name = "architecture-docs"
@@ -13,7 +18,24 @@ attributes = { technology = "dagster" }
 [[nodes]]
 kind = "storage"
 name = "snapshot-ledger"
-attributes = { technology = "sqlite" }
+attributes = { technology = "postgresql" }
+
+# Runtime consumer reference: documented in docs/postgresql.md and infrastructure's
+# approved docs/architecture-docs-database.md. Location requires live metadata.
+[[nodes]]
+kind = "secret_reference"
+name = "ARCHITECTURE_DOCS_DATABASE_URL"
+attributes = { scope = "runtime", injection = "runtime", required = "true" }
+
+[[edges]]
+kind = "consumes_secret"
+source = { kind = "service", name = "code-location" }
+target = { kind = "secret_reference", name = "ARCHITECTURE_DOCS_DATABASE_URL" }
+
+[[nodes]]
+kind = "storage"
+name = "publication-ledger"
+attributes = { technology = "postgresql" }
 
 [[nodes]]
 kind = "orchestration"
@@ -37,3 +59,8 @@ target = { kind = "storage", name = "snapshot-ledger" }
 kind = "orchestrates"
 source = { kind = "orchestration", name = "architecture_reconciliation_job" }
 target = { kind = "service", name = "code-location" }
+
+[[edges]]
+kind = "uses_storage"
+source = { kind = "service", name = "code-location" }
+target = { kind = "storage", name = "publication-ledger" }

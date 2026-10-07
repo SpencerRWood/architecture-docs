@@ -1,0 +1,97 @@
+# DRAFT additive fragment for SpencerRWood/infrastructure/architecture.toml
+# Reviewed source revision: ecec2f31f76231410847f63f0047b9872236d31c
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/README.md (blob 4c949b539dac9e1353d759a232ba2833a068a9be)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/infrastructure"
+attributes = { purpose = "portable-runtime-infrastructure", owner = "SpencerRWood" }
+
+# Documented dev-only database connection reference; no value collected.
+# Supplemental metadata: provenance.json operational_metadata.infrastructure_project
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture-docs-database.md (blob 17d1a1e78dc862ac30d48956c1139853983a325d)
+[[nodes]]
+kind = "secret_reference"
+name = "ARCHITECTURE_DOCS_DATABASE_URL"
+attributes = { environment = "dev", path = "/architecture-docs", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood", project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4" }
+
+# Application-owned migrations; infrastructure owns dev database provisioning.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture-docs-database.md (blob 17d1a1e78dc862ac30d48956c1139853983a325d)
+[[nodes]]
+kind = "database"
+name = "architecture_docs"
+attributes = { technology = "postgresql", role = "architecture_docs", environment = "dev", owner = "SpencerRWood" }
+
+# Separate dev proxy topology; reserved future TLS listener is not declared active.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture.md (blob 4d9134d3da4d13e41554d07a5adda2129d5a271f)
+[[nodes]]
+kind = "service"
+name = "caddy"
+attributes = { technology = "caddy", environment = "dev", network = "infrastructure-dev-proxy", owner = "SpencerRWood" }
+
+# Require explicit supported policy and prior successful release; preview ready does not attest to recovery.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/prerequisites"
+attributes = { runbook = "rollback-known-good-recovery", phase = "prerequisites", order = "1", reference = "docs/rollback-contract.md" }
+
+# Invoke the common contract; selection and execution semantics reside in this document.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/steps"
+attributes = { runbook = "rollback-known-good-recovery", phase = "steps", order = "1", reference = "docs/rollback-contract.md" }
+
+# Require status succeeded and verification_result passed; current protected health gates apply.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/verification"
+attributes = { runbook = "rollback-known-good-recovery", phase = "verification", order = "1", reference = "docs/rollback-contract.md" }
+
+# Failed or interrupted rollback stops; preserve original failure and deployment metadata. Database restore excluded.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/recovery"
+attributes = { runbook = "rollback-known-good-recovery", phase = "rollback-recovery", order = "1", reference = "docs/rollback-contract.md" }
+
+# Platform registry-authentication resolver explicitly selects this CI project, environment, path, and key; metadata inventory confirms presence.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/scripts/resolve-ci-ghcr.py (blob 890e198e0b800f9ab853c2bbaee4cea4527b714c)
+[[nodes]]
+kind = "secret_reference"
+name = "WEBSITE_PORTFOLIO_GHCR_TOKEN"
+attributes = { project = "33c5aed5-165f-4ef3-845a-2f9d0f9c06d5", environment = "ci", path = "/github", scope = "ci", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md (blob 11bdd32a166f0b2588c0988cd42d766319f475ad)
+[[nodes]]
+kind = "procedure"
+name = "events-deployment/prerequisites"
+attributes = { runbook = "deployment-redeployment", phase = "prerequisites", order = "1", reference = "docs/events-service-deployment.md" }
+
+# Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md (blob 11bdd32a166f0b2588c0988cd42d766319f475ad)
+[[nodes]]
+kind = "procedure"
+name = "events-deployment/steps"
+attributes = { runbook = "deployment-redeployment", phase = "steps", order = "1", reference = "docs/events-service-deployment.md" }
+
+# Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md (blob 11bdd32a166f0b2588c0988cd42d766319f475ad)
+[[nodes]]
+kind = "procedure"
+name = "events-deployment/verification"
+attributes = { runbook = "deployment-redeployment", phase = "verification", order = "1", reference = "docs/events-service-deployment.md" }
+
+# Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries.
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md (blob 11bdd32a166f0b2588c0988cd42d766319f475ad)
+[[nodes]]
+kind = "procedure"
+name = "events-deployment/rollback-recovery"
+attributes = { runbook = "deployment-redeployment", phase = "rollback-recovery", order = "1", reference = "docs/events-service-deployment.md" }

@@ -1,0 +1,53 @@
+# DRAFT additive fragment for SpencerRWood/template-dbt/architecture.toml
+# Reviewed source revision: 015c7fd7548b53dcb61cebda9e60c7422b1d9426
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/README.md (blob da7f3b3641cbfedc1bf22e0e132e31a440ba0083)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-dbt"
+attributes = { purpose = "dbt-core-project-template", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_DBNAME"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_HOST"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_PASSWORD"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_PORT"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_SCHEMA"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml (blob 6aae27f21c40f9909821c93dba3aba8032810c5d)
+[[nodes]]
+kind = "secret_reference"
+name = "DBT_USER"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }

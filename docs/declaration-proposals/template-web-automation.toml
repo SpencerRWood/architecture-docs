@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-web-automation/architecture.toml
+# Reviewed source revision: 1d2d0bab5ec5edfde9a364811da8690df43895db
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-web-automation/blob/1d2d0bab5ec5edfde9a364811da8690df43895db/README.md (blob b880b5f7a4d8980a1daa9252fb8dde876caf9042)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-web-automation"
+attributes = { purpose = "playwright-browser-automation-template", owner = "SpencerRWood" }

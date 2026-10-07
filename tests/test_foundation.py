@@ -104,6 +104,8 @@ def test_manual_rendering_job_emits_documents_without_external_publication(
     snapshot = SnapshotStore().latest()
     assert snapshot is not None
     assert artifacts["snapshot_id"] == snapshot.id
-    assert all(doc["generation_state"] == "with_gaps" for doc in artifacts["documents"])
+    assert all(
+        doc["generation_state"] == "incomplete_estate" for doc in artifacts["documents"]
+    )
     assert not defs.schedules
     assert not defs.sensors

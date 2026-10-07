@@ -23,6 +23,11 @@ the standard My Drive files surface and does not configure shared-drive flags.
 Never store a token in the repository or ledger. The current implementation does
 not establish production credentials, deploy storage, or schedule a run.
 
+Estate completeness is a publication prerequisite independent of source success.
+`incomplete_estate` candidates make zero remote requests and retain committed file
+identities, content metadata and pending intents. Every artifact reports the reason
+`incomplete_estate`. See [estate coverage](estate-coverage.md).
+
 Each scope is derived from the parent ID and explicit namespace (default
 `architecture-docs`). Drive private `appProperties` identify that scope and the
 stable artifact kind. Searches are restricted to the exact parent and both
