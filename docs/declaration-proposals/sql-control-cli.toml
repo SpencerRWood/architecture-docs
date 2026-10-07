@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/sql-control-cli/architecture.toml
+# Reviewed source revision: dbfcb98d943181f7b713305a59c97bfffb28f024
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/sql-control-cli/blob/dbfcb98d943181f7b713305a59c97bfffb28f024/README.md (blob ca3d2ec4cfeae3e0f00eaaeddba7a98477ff17a7)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/sql-control-cli"
+attributes = { purpose = "sql-validation-and-release-control", owner = "SpencerRWood" }

@@ -39,6 +39,8 @@ def postgres_admin_url() -> Iterator[str]:
             name,
             "--publish",
             "127.0.0.1::5432",
+            "--tmpfs",
+            "/var/lib/postgresql/data:rw,size=512m",
             "--env",
             "POSTGRES_PASSWORD=fixture-password",
             "postgres:16-alpine",

@@ -24,6 +24,8 @@ dependencies = ["dagster>=1.12,<2", "httpx>=0.28,<1", "pyyaml>=6,<7", "psycopg[b
 [tool.wood.openproject]
 project_id = 3
 initiative_id = 462
+release_id = 20
+epic_id = 520
 
 [dependency-groups]
 dev = [

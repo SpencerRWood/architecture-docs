@@ -1,0 +1,19 @@
+# DRAFT additive fragment for SpencerRWood/rag-service/architecture.toml
+# Reviewed source revision: d4162ee324b43a6143091ae8316c2cb6d79d9090
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/rag-service/blob/d4162ee324b43a6143091ae8316c2cb6d79d9090/README.md (blob 4a53654bc5a3c3c26ef30a7903e3995ad5c5f60f)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/rag-service"
+attributes = { purpose = "document-ingestion-and-retrieval-api", owner = "SpencerRWood" }
+
+# Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.
+# Supplemental metadata: provenance.json operational_metadata.github_repository_secrets.rag-service
+# Source: https://github.com/SpencerRWood/rag-service/blob/d4162ee324b43a6143091ae8316c2cb6d79d9090/.github/workflows/release.yml (blob cc5481a55e5d2ec0f43b53935f9de295dfb86e12)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PR_TOKEN"
+attributes = { scope = "repository", injection = "github-actions", owner = "SpencerRWood", required = "true" }

@@ -2,7 +2,8 @@
 
 import json
 import tomllib
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
+from functools import cached_property
 from hashlib import sha256
 from pathlib import Path
 from typing import Literal
@@ -15,6 +16,7 @@ from architecture_docs.declarations import (
     canonical,
     identifier,
 )
+from architecture_docs.estate import EstateCoverage, evaluate
 from architecture_docs.graph import Evidence, Graph, Node, evidence_key, normalize
 from architecture_docs.model import CollectionResult, Failure, Observation
 
@@ -82,8 +84,12 @@ class Snapshot:
     @property
     def publication_blocked(self) -> bool:
         """Fail closed for downstream publishers; this layer performs no publication."""
+        from architecture_docs.secret_mappings import mappings  # noqa: PLC0415
+
         return (
-            not self.collection.complete
+            any(item.status == "ambiguous" for item in mappings(self)[0])
+            or not self.estate_coverage.complete
+            or not self.collection.complete
             or any(item.verification != "verified" for item in self.evidence)
             or any(
                 prop.state == "ambiguous"
@@ -91,6 +97,31 @@ class Snapshot:
                 for prop in node.properties
             )
         )
+
+    @cached_property
+    def estate_coverage(self) -> EstateCoverage:
+        verified = {
+            item.observation
+            for item in self.evidence
+            if item.verification == "verified"
+        }
+        current = replace(
+            self.collection,
+            observations=tuple(
+                item
+                for item in self.collection.observations
+                if item.key == "estate.contract" or item in verified
+            ),
+        )
+        return evaluate(current)
+
+    @property
+    def estate_state(self) -> str:
+        if not self.estate_coverage.complete:
+            return "incomplete_estate"
+        if self.publication_blocked:
+            return "blocked"
+        return "complete_with_gaps" if self.graph.gaps else "complete"
 
 
 @dataclass(frozen=True, order=True)
@@ -126,7 +157,10 @@ def unavailable(observation: Observation, failures: tuple[Failure, ...]) -> bool
     return any(
         failure.provenance.repository == provenance.repository
         and (
-            failure.collector == "github_source"
+            (
+                failure.collector == "github_source"
+                and not provenance.source.startswith("infisical:")
+            )
             or (
                 failure.collector == observation.collector
                 and failure.provenance.source == "github:tree"
@@ -144,6 +178,8 @@ def removed(
     observation: Observation, collection: CollectionResult, policy: Policy
 ) -> bool:
     provenance = observation.provenance
+    if observation.key == "estate.contract":
+        return True
     if any(
         rule.repository == provenance.repository
         and (rule.source is None or source_matches(provenance.source, rule.source))
@@ -159,6 +195,8 @@ def removed(
         for scope in collection.coverage
     ):
         return True
+    if provenance.source.startswith("infisical:"):
+        return False  # Git trees cannot attest secret-manager absence.
     # Only a complete tree within unchanged/current approvals proves file absence.
     return any(
         inventory.repository == provenance.repository
@@ -335,6 +373,8 @@ def changed_categories(before: str, after: str, default: str) -> tuple[str, ...]
 
 
 def compare(previous: Snapshot | None, current: Snapshot) -> Diff:
+    from architecture_docs.secret_mappings import mappings  # noqa: PLC0415
+
     before: dict[str, tuple[str, str]] = {}
     after: dict[str, tuple[str, str]] = {}
     for snapshot, target in ((previous, before), (current, after)):
@@ -364,7 +404,65 @@ def compare(previous: Snapshot | None, current: Snapshot) -> Diff:
                 for edge in snapshot.graph.edges
             }
         )
+        metadata = sorted(
+            {
+                canonical((e.observation.value, e.verification))
+                for e in snapshot.evidence
+                if e.observation.key in {"infisical.location", "secret.location"}
+            }
+        )
+        bindings = sorted(
+            {
+                e.observation.value
+                for e in snapshot.evidence
+                if e.observation.key == "infisical.contract"
+            }
+        )
+        if metadata or bindings:
+            target["infisical-metadata"] = (
+                "secret_topology",
+                canonical({"locations": metadata, "approvals": bindings}),
+            )
+        entries, _ = mappings(snapshot)
+        if entries:
+            target["secret-mappings"] = (
+                "secret_topology",
+                canonical(
+                    {
+                        "mappings": [
+                            {
+                                "repository": entry.repository,
+                                "consumer": entry.consumer,
+                                "consumer_name": entry.consumer_name,
+                                "locations": [
+                                    asdict(loc) for loc, _ in entry.locations
+                                ],
+                                "injection": entry.injection,
+                                "required": entry.required,
+                                "owner": entry.owner,
+                                "status": entry.status,
+                                "provider": entry.provider,
+                                "target": entry.target,
+                                "via": entry.via,
+                            }
+                            for entry in entries
+                        ]
+                    }
+                ),
+            )
     changes = []
+    old_coverage = canonical(asdict(previous.estate_coverage)) if previous else None
+    new_coverage = canonical(asdict(current.estate_coverage))
+    if old_coverage != new_coverage:
+        changes.append(
+            Change(
+                "estate",
+                "changed" if previous else "created",
+                "estate_coverage",
+                old_coverage,
+                new_coverage,
+            )
+        )
     for identity in sorted(before.keys() | after.keys()):
         old, new = before.get(identity), after.get(identity)
         if old == new:

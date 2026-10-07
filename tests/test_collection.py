@@ -16,6 +16,7 @@ from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.collectors.github import GitHub, SourceError
 from architecture_docs.config import Registry, Repository
 from architecture_docs.model import Authority, CollectionResult, Observation, Provenance
+from estate_fixtures import FIXTURE_ESTATE
 
 FIXTURES = Path(__file__).parent / "fixtures" / "repository"
 REVISION = "a" * 40
@@ -99,7 +100,22 @@ class FixtureGitHub:
 
 
 def registry(**limits: int) -> Registry:
-    return Registry((Repository(REPOSITORY, ("*",)),), **limits)
+    return Registry(
+        (
+            Repository(
+                REPOSITORY,
+                (
+                    "*",
+                    ".github/*.toml",
+                    ".github/workflows/*.yml",
+                    "scripts/*",
+                    "ansible/*",
+                ),
+            ),
+        ),
+        estate=FIXTURE_ESTATE,
+        **limits,  # type: ignore[arg-type]
+    )
 
 
 def test_read_only_deterministic_provenance_and_sensitive_exclusion() -> None:
@@ -126,7 +142,9 @@ def test_read_only_deterministic_provenance_and_sensitive_exclusion() -> None:
         item.authority for item in result.observations
     )
     content = [
-        item for item in result.observations if item.authority != Authority.GITHUB
+        item
+        for item in result.observations
+        if item.authority != Authority.GITHUB and item.collector != "estate"
     ]
     assert all(
         item.provenance.revision == REVISION
@@ -235,6 +253,79 @@ def test_invalid_json_cannot_be_accepted_as_yaml() -> None:
     )
 
 
+def test_shell_logical_lines_and_heredocs_retain_commands_without_literals() -> None:
+    fixture = FixtureGitHub()
+    fixture.files["scripts/deploy.sh"] = b"""#!/bin/sh
+exec infisical run -- \\
+  uv run app
+docker compose \\
+  up -d
+python - <<'PY'
+fixture-sensitive-literal ' unbalanced quote in heredoc
+PY
+curl 'a
+b'
+"""
+    result = collect(registry(), fixture.client())
+    assert result.complete
+    facts = {(fact.key, fact.value) for fact in result.observations}
+    assert {
+        ("shell.executable", name) for name in ("infisical", "docker", "python", "curl")
+    } <= facts
+    assert "fixture-sensitive-literal" not in result.to_json()
+
+
+@pytest.mark.parametrize("body", ["docker 'unterminated", "python - <<'PY'\nunclosed"])
+def test_incomplete_shell_structure_remains_incomplete(body: str) -> None:
+    fixture = FixtureGitHub()
+    fixture.files["scripts/deploy.sh"] = body.encode()
+    result = collect(registry(), fixture.client())
+    assert not result.complete
+    assert any(
+        item.provenance.source == "scripts/deploy.sh" and item.reason == "parse_error"
+        for item in result.failures
+    )
+
+
+def test_environment_service_selectors_and_postgres_declarations() -> None:
+    fixture = FixtureGitHub()
+    fixture.files["environment.yml"] = b"""services:
+  postgres: true
+  caddy: false
+postgres_applications:
+  - database: architecture_docs
+    role: architecture_docs
+    password: fixture-sensitive-literal
+"""
+    result = collect(registry(), fixture.client())
+    assert result.complete
+    assert "fixture-sensitive-literal" not in result.to_json()
+    facts = [
+        fact
+        for fact in result.observations
+        if fact.provenance.source == "environment.yml"
+    ]
+    assert not any(fact.key.startswith("compose.") for fact in facts)
+    assert any(
+        fact.key == "architecture.node"
+        and json.loads(fact.value)["attributes"]
+        == {"technology": "postgresql", "role": "architecture_docs"}
+        for fact in facts
+    )
+    fixture.files["compose.yml"] = b"services:\n  postgres: true"
+    assert not collect(registry(), fixture.client()).complete
+
+
+def test_postgres_connection_literals_in_identity_fields_are_not_retained() -> None:
+    fixture = FixtureGitHub()
+    fixture.files["environment.yml"] = b"""postgres_applications:
+  - database: postgresql://fixture-sensitive-literal@localhost/db
+"""
+    result = collect(registry(), fixture.client())
+    assert not result.complete
+    assert "fixture-sensitive-literal" not in result.to_json()
+
+
 @pytest.mark.parametrize(
     ("kind", "reason"),
     [
@@ -285,7 +376,7 @@ def test_plugins_need_no_orchestration_branches() -> None:
         registry(), FixtureGitHub().client(), (BrokenCollector(), ExtraCollector())
     )
     assert result.failures[0].reason == "collector_error"
-    assert result.observations[0].collector == "extra"
+    assert any(item.collector == "extra" for item in result.observations)
     assert "fixture-sensitive-literal" not in result.to_json()
     with pytest.raises(ValueError, match="duplicate collector"):
         collect(

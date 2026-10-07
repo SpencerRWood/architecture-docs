@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/codex-config/architecture.toml
+# Reviewed source revision: 7addbcd39d997589a674559442ca8feb71ac1106
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/codex-config/blob/7addbcd39d997589a674559442ca8feb71ac1106/README.md (blob 5f1c49ec03aceb64ca877e42d77ee028aaf1c18d)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/codex-config"
+attributes = { purpose = "shared-codex-configuration-and-guidance", tag = "codex", owner = "SpencerRWood" }

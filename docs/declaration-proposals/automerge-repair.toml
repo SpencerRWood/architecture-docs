@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/automerge-repair/architecture.toml
+# Reviewed source revision: b39d47432241baf034613b332c9a527084e0e992
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/automerge-repair/blob/b39d47432241baf034613b332c9a527084e0e992/README.md (blob 3b9061bba43730e619104260ccee7b1fb870e2d2)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/automerge-repair"
+attributes = { purpose = "bounded-renovate-automerge-recovery-foundation", tag = "repair", owner = "SpencerRWood" }

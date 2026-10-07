@@ -195,13 +195,8 @@ def test_all_documents_have_stable_ids_generation_metadata_and_sources() -> None
     assert bundle.snapshot_id == snapshot.id
     for doc in bundle.documents:
         assert doc.snapshot_id == snapshot.id
-        assert (
-            doc.schema_version
-            == doc.renderer_version
-            == doc.model_version
-            == doc.graph_version
-            == 1
-        )
+        assert doc.schema_version == doc.model_version == doc.graph_version == 1
+        assert doc.renderer_version == 2
         assert not doc.publication_blocked
         assert len(doc.content_hash) == 64
         if not doc.id.value.startswith("runbook-"):
@@ -209,7 +204,8 @@ def test_all_documents_have_stable_ids_generation_metadata_and_sources() -> None
         assert len({section.id for section in doc.sections}) == len(doc.sections)
         for section in doc.sections:
             assert len({row.id for row in section.rows}) == len(section.rows)
-        assert f"Deterministic snapshot: `{snapshot.id}`" in doc.to_markdown()
+        assert snapshot.id not in doc.to_markdown()
+        assert "Generation state:" in doc.to_markdown()
         assert json.loads(doc.to_json())["id"] == doc.id
         assert json.loads(doc.to_json())["content_hash"] == doc.content_hash
     payload = bundle.to_json()
@@ -230,12 +226,14 @@ def test_overview_explains_typed_cross_repository_interactions_with_provenance()
     doc = document(representative(), DocumentKind.OVERVIEW)
     text = doc.to_markdown()
     assert "declares deployment ownership in repository fixture/infrastructure" in text
-    assert "consumes workflow orchestration fixture/workflows / release" in text
+    assert "fixture/workflows / release" not in text  # Reference-only detail.
     assert "declares data access to database fixture/service / analytics" in text
     assert "declares notifications to interface fixture/service / http" in text
     assert "No narrative" not in text
     assert "```mermaid\nflowchart LR" in text
-    graph = doc.sections[0].diagram
+    graph = next(
+        section.diagram for section in doc.sections if section.id == "boundaries"
+    )
     assert graph is not None
     assert "system fixture/service / platform" in graph
     assert "fixture/infrastructure" in graph
@@ -382,8 +380,8 @@ def test_automation_shows_only_explicit_capabilities_and_notification_relations(
 def test_sparse_and_empty_snapshots_expose_gaps_without_fabricating_topology() -> None:
     snapshot, _ = reconcile(CollectionResult())
     for doc in render_documents(snapshot).documents:
-        assert doc.generation_state == "with_gaps"
-        assert not doc.publication_blocked
+        assert doc.generation_state == "incomplete_estate"
+        assert doc.publication_blocked
         assert not doc.sources
         assert all(row.state == "gap" for row in rows(doc))
         assert "No source facts are available" in doc.to_markdown()
@@ -465,7 +463,7 @@ def test_partial_sources_preserve_stale_content_and_block_publication() -> None:
     )
     for doc in render_documents(partial).documents:
         assert doc.publication_blocked
-        assert doc.generation_state == "blocked"
+        assert doc.generation_state == "incomplete_estate"
         assert "Source verification failure" in doc.to_markdown()
     runtime = document(partial, DocumentKind.RUNTIME)
     assert any(row.value == "linux" and "stale" in row.state for row in rows(runtime))
@@ -533,9 +531,18 @@ def test_renderer_uses_graph_and_provenance_without_collecting_or_reinterpreting
     monkeypatch.setattr("architecture_docs.graph.normalize", forbidden)
     rendered = render_documents(injected)
     assert "fixture-sensitive-literal" not in rendered.to_json()
-    assert [doc.content_hash for doc in rendered.documents] == [
-        doc.content_hash for doc in render_documents(snapshot).documents
-    ]
+    original = render_documents(snapshot)
+    for current, prior in zip(rendered.documents, original.documents, strict=True):
+        assert current.generation_state == "incomplete_estate"
+        assert tuple(
+            section
+            for section in current.sections
+            if section.id not in {"estate-coverage", "supporting-contracts", "summary"}
+        ) == tuple(
+            section
+            for section in prior.sections
+            if section.id not in {"estate-coverage", "supporting-contracts", "summary"}
+        )
 
 
 def test_markdown_escaping_and_immutable_artifact_configuration() -> None:

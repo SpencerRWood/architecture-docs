@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/architecture-docs/architecture.toml
+# Reviewed source revision: 3f0a52d5ed6ff0948aa14bac782aba3a0ea804c6
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/architecture-docs/blob/3f0a52d5ed6ff0948aa14bac782aba3a0ea804c6/README.md (blob 43358f3165fb2ff9332e44df21d0db66a7d01719)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/architecture-docs"
+attributes = { purpose = "repository-architecture-documentation", owner = "SpencerRWood" }

@@ -63,6 +63,7 @@ def architecture_snapshot(
             "material": record.diff.material,
             "change_count": len(record.diff.changes),
             "publication_blocked": record.snapshot.publication_blocked,
+            "estate_state": record.snapshot.estate_state,
             "failure_count": len(record.snapshot.collection.failures),
             "schema_version": record.snapshot.schema_version,
         }

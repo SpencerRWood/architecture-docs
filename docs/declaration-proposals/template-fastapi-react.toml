@@ -1,0 +1,18 @@
+# DRAFT additive fragment for SpencerRWood/template-fastapi-react/architecture.toml
+# Reviewed source revision: 1db84898496f428cdb0d9cdb4278d801f997a80b
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-fastapi-react/blob/1db84898496f428cdb0d9cdb4278d801f997a80b/README.md (blob dddd5f90748d3a5dc26ae6a1f7ff3748a1246f7f)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-fastapi-react"
+attributes = { purpose = "fastapi-react-project-template", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/template-fastapi-react/blob/1db84898496f428cdb0d9cdb4278d801f997a80b/.github/workflows/release.yml (blob 4b37afd38ead0a89b00cb876086609b4f7138b67)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PR_TOKEN"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }

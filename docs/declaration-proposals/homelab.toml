@@ -1,0 +1,54 @@
+# WITHDRAWN historical fragment for SpencerRWood/homelab/architecture.toml
+# Story 521: outside supported estate; do not adopt or collect these declarations.
+# Reviewed source revision: 2b53dee2f5fffedc06846b2603d5993f02e9fe8a
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/README.md (blob 62ed4249f01d49b21edba2a32e88e3da2a464397)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/homelab"
+attributes = { purpose = "home-host-and-service-configuration", owner = "SpencerRWood" }
+
+# Homelab edge proxy configuration.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/architecture.md (blob 02f6578c693fb684b435732cbf186b86b49c5908)
+[[nodes]]
+kind = "service"
+name = "caddy"
+attributes = { technology = "caddy", network = "proxy", owner = "SpencerRWood" }
+
+# Require explicit supported policy and prior successful release; preview ready does not attest to recovery.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/prerequisites"
+attributes = { runbook = "rollback-known-good-recovery", phase = "prerequisites", order = "1", reference = "docs/rollback-contract.md" }
+
+# Invoke the common contract; selection and execution semantics reside in this document.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/steps"
+attributes = { runbook = "rollback-known-good-recovery", phase = "steps", order = "1", reference = "docs/rollback-contract.md" }
+
+# Require status succeeded and verification_result passed; current protected health gates apply.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/verification"
+attributes = { runbook = "rollback-known-good-recovery", phase = "verification", order = "1", reference = "docs/rollback-contract.md" }
+
+# Failed or interrupted rollback stops; preserve original failure and deployment metadata. Database restore excluded.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md (blob fffd7c66f9bc063eb0c009840e190a160a474dd1)
+[[nodes]]
+kind = "procedure"
+name = "rollback-known-good/recovery"
+attributes = { runbook = "rollback-known-good-recovery", phase = "rollback-recovery", order = "1", reference = "docs/rollback-contract.md" }
+
+# Current migration document directs recovery to retained logical backups and later source-cleanup sections. It does not define a periodic backup schedule or numeric RPO/RTO.
+# Source: https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/postgres-migration.md (blob ba8482aa15f4b49b24166f28727d73490137c129)
+[[nodes]]
+kind = "procedure"
+name = "database-recovery-reference"
+attributes = { purpose = "attended-logical-database-recovery", reference = "docs/postgres-migration.md" }

@@ -28,7 +28,10 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
         section(
             "automations",
             "Declared automations, jobs and code locations",
-            view.entities((NodeKind.ORCHESTRATION, NodeKind.SYSTEM, NodeKind.SERVICE)),
+            view.entities(
+                (NodeKind.ORCHESTRATION, NodeKind.SYSTEM, NodeKind.SERVICE),
+                ("purpose", "technology", "code_location", "workflow"),
+            ),
             "No automation declarations are available; Dagster, Renovate, "
             "Codex, OpenProject, reporting and repair capabilities "
             "require explicit evidence.",
@@ -69,8 +72,15 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
         section(
             "orchestration",
             "Orchestration and integration dependencies",
-            view.relationships(
-                (EdgeKind.ORCHESTRATES, EdgeKind.DEPENDS_ON, EdgeKind.OPERATED_BY)
+            tuple(
+                row
+                for row in view.relationships(
+                    (EdgeKind.ORCHESTRATES, EdgeKind.DEPENDS_ON, EdgeKind.OPERATED_BY)
+                )
+                if not any(
+                    view.nodes[entity].kind == NodeKind.PACKAGE
+                    for entity in row.entities
+                )
             ),
             "No orchestration or integration dependency is declared.",
         ),

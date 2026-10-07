@@ -1,0 +1,93 @@
+# DRAFT additive fragment for SpencerRWood/events-service/architecture.toml
+# Reviewed source revision: 532a97cef6ba83be0dbaf35705bde10022aa2f60
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/events-service"
+attributes = { purpose = "event-routing-and-notification-delivery", tag = "events", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/.github/workflows/release.yml (blob 91ab9e0caccb948ccab019a5d7a9137159726d80)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PROMOTION_TOKEN"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }
+
+# Documented required base-runtime secret reference in the EventsService project.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "secret_reference"
+name = "WES_DATABASE_URL"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Documented required base-runtime secret reference in the EventsService project.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "secret_reference"
+name = "WES_PRODUCER_CREDENTIALS"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Optional adapter credentials; exact key location remains unresolved.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "secret_reference"
+name = "NTFY_AUTH_TOKEN"
+attributes = { scope = "runtime", injection = "infisical", required = "false", owner = "SpencerRWood" }
+
+# Optional adapter credentials; exact key location remains unresolved.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "secret_reference"
+name = "SMTP_USERNAME"
+attributes = { scope = "runtime", injection = "infisical", required = "false", owner = "SpencerRWood" }
+
+# Optional adapter credentials; exact key location remains unresolved.
+# Source: https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md (blob 201af678355cf94b530994ce5615e33612c9a490)
+[[nodes]]
+kind = "secret_reference"
+name = "SMTP_PASSWORD"
+attributes = { scope = "runtime", injection = "infisical", required = "false", owner = "SpencerRWood" }
+
+# Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml (blob 7b1b0b4b80c43057fc4b229abe173dc7997752d7)
+[[nodes]]
+kind = "secret_reference"
+name = "TELEGRAM_BOT_TOKEN"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml (blob 7b1b0b4b80c43057fc4b229abe173dc7997752d7)
+[[nodes]]
+kind = "secret_reference"
+name = "TELEGRAM_CHAT_ID"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml (blob 7b1b0b4b80c43057fc4b229abe173dc7997752d7)
+[[nodes]]
+kind = "secret_reference"
+name = "TELEGRAM_WEBHOOK_SECRET"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml (blob 7b1b0b4b80c43057fc4b229abe173dc7997752d7)
+[[nodes]]
+kind = "secret_reference"
+name = "WES_NOTIFICATION_POLICIES"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }
+
+# Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.
+# Supplemental metadata: provenance.json operational_metadata.infisical_key_inventory
+# Source: https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml (blob 7b1b0b4b80c43057fc4b229abe173dc7997752d7)
+[[nodes]]
+kind = "secret_reference"
+name = "WES_SUBSCRIPTIONS"
+attributes = { project = "7ea10433-2eeb-4c57-95a9-b793dd40c7a4", environment = "dev", path = "/events-service", scope = "runtime", injection = "infisical", required = "true", owner = "SpencerRWood" }

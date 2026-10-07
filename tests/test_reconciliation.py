@@ -20,6 +20,7 @@ from architecture_docs.model import (
     SourceCoverage,
 )
 from architecture_docs.reconciliation import Policy, Tombstone, load_policy, reconcile
+from estate_fixtures import FIXTURE_ESTATE
 from test_collection import FixtureGitHub, registry
 
 
@@ -55,7 +56,7 @@ def edge(kind: EdgeKind, target: str, target_kind: NodeKind = NodeKind.HOST) -> 
 
 def complete(*observations: Observation) -> CollectionResult:
     return CollectionResult(
-        observations,
+        (*observations, FIXTURE_ESTATE.observation()),
         coverage=tuple(
             {
                 SourceCoverage(
@@ -155,7 +156,15 @@ def test_no_change_and_deterministic_order_duplicates_and_revision_churn() -> No
                 item,
                 provenance=replace(item.provenance, revision="c" * 40),
             )
+            if item.collector != "estate"
+            else item
             for item in collection.observations
+        ),
+        coverage=tuple(
+            replace(item, revision="c" * 40) for item in collection.coverage
+        ),
+        inventories=tuple(
+            replace(item, revision="c" * 40) for item in collection.inventories
         ),
     )
     updated, diff = reconcile(changed_revision, first)
@@ -296,8 +305,16 @@ def test_incomplete_plugin_payload_cannot_replace_prior_source() -> None:
         failures=(Failure("fixture", original.provenance, "parse_error"),),
     )
     retained, diff = reconcile(partial, first)
-    assert not diff.material
-    assert retained.evidence == (replace(first.evidence[0], verification="stale"),)
+    assert {change.category for change in diff.changes} == {"estate_coverage"}
+    retained_sources = tuple(
+        item for item in retained.evidence if item.observation.collector != "estate"
+    )
+    original_sources = tuple(
+        item for item in first.evidence if item.observation.collector != "estate"
+    )
+    assert retained_sources == tuple(
+        replace(item, verification="stale") for item in original_sources
+    )
 
 
 def test_absence_without_positive_coverage_or_narrowed_scope_is_not_deletion() -> None:
@@ -314,7 +331,7 @@ def test_absence_without_positive_coverage_or_narrowed_scope_is_not_deletion() -
     ):
         snapshot, diff = reconcile(absent, first)
         assert snapshot.evidence
-        assert not diff.material
+        assert {change.category for change in diff.changes} == {"estate_coverage"}
         assert snapshot.publication_blocked
 
 
@@ -329,8 +346,13 @@ def test_positive_source_replacement_tree_absence_and_explicit_tombstone() -> No
     ):
         snapshot, diff = reconcile(absent, first)
         assert not snapshot.evidence
-        assert {change.operation for change in diff.changes} == {"removed"}
-        assert not snapshot.publication_blocked
+        assert {
+            change.operation
+            for change in diff.changes
+            if change.category != "estate_coverage"
+        } == {"removed"}
+        assert snapshot.estate_state == "incomplete_estate"
+        assert snapshot.publication_blocked
     snapshot, diff = reconcile(
         CollectionResult(), first, Policy(tombstones=(Tombstone("fixture/service"),))
     )

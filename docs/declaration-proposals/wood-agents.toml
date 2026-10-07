@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/wood-agents/architecture.toml
+# Reviewed source revision: 35bcc68c2e56d5b30beeb72852b6d331f6e45466
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/wood-agents/blob/35bcc68c2e56d5b30beeb72852b6d331f6e45466/README.md (blob 15651d32e32d68b80caae8e1a62f8c8850505c2f)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/wood-agents"
+attributes = { purpose = "shared-agent-behavior-skills-and-loops", owner = "SpencerRWood" }

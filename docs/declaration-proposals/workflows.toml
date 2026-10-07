@@ -1,0 +1,79 @@
+# DRAFT additive fragment for SpencerRWood/workflows/architecture.toml
+# Reviewed source revision: 51100f648c0ebdb3291ef67165e0277990e32c64
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/README.md (blob dc00bb539d04f299b1a215fc106b46b49c40a105)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/workflows"
+attributes = { purpose = "shared-github-release-validation-and-deployment-contracts", owner = "SpencerRWood" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/promote-container-to-dev.yml (blob a16c7820017fafb2a007df2f2cea423f8355e79d)
+[[nodes]]
+kind = "secret_reference"
+name = "infrastructure_token"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "true" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_dbname"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_host"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_password"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_port"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_schema"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml (blob 4dc8140d2278ffebfe28a69916452a59fd24e712)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml (blob 1b9adc20d7872ec11170bf7e961ebcc609323ad1)
+[[nodes]]
+kind = "secret_reference"
+name = "dbt_user"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood", required = "false" }
+
+# Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed.
+# Source: https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml (blob 32a656437d6c647531b0616c4da7c97b57eb76d8)
+[[nodes]]
+kind = "secret_reference"
+name = "GITHUB_TOKEN"
+attributes = { scope = "ci", injection = "github-actions", owner = "SpencerRWood" }

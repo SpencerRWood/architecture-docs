@@ -10,14 +10,15 @@ Drive publication remains #475; scheduling and narrative remain #476.
 ## Secret metadata boundary
 
 Approved `architecture.toml` declarations and literal GitHub Actions
-`${{ secrets.NAME }}` references supply secret metadata. No Infisical or GitHub
-secret-value endpoint is implemented or called. Repository allowlists, pinned
+`${{ secrets.NAME }}` references supply consumer metadata. Story 521 adds a
+metadata-only Infisical collector to supply independently verified locations.
+No GitHub secret-value endpoint is implemented or called. Repository allowlists, pinned
 GET-only reads, integrity checks and sensitive-path denial remain unchanged.
 Source parsing reads approved repository content in memory and discards bodies;
 it never emits literal environment values, workflow commands or exception text.
 
 `secret_reference` nodes accept only `project`, `environment`, `path`, `scope`,
-`injection`, `required` and `owner`; all are identifiers. `path` must be absolute;
+`injection`, `required`, `owner` and `infisical_key`; all are identifiers. `path` must be absolute;
 `required` is `true` or `false`, otherwise omit it for unknown. The owning system
 must be explicitly declared with `owner` or an ownership relationship. Repository
 namespace and variable names cannot establish ownership, location or secret use.
@@ -50,11 +51,17 @@ Every metadata candidate retains source repository/path, revision/blob,
 collector, authority and verification. The source revision is the last verified
 commit for that evidence, including when retained as stale. Different candidates
 retain their own revisions; no timestamp or guessed latest commit is introduced.
-Missing fields/consumers/ownership and conflicting location candidates are gaps.
+Missing or conflicting locations are gaps; undeclared optional ownership and
+requiredness appear as `—` in the mapping table rather than repeated warnings.
 All drift and ambiguity candidates remain visible. Partial collection retains
 stale evidence and blocks publication; ambiguity also blocks publication.
 
 ## Ordered procedure references
+
+Story 521's [Infisical metadata integration](infisical-metadata.md) documents
+approved scope, runtime machine identity authentication, aliases and matching
+precedence, fail-closed transport handling, provenance and outage preservation.
+Secret values never enter the architecture model.
 
 An opt-in `procedure` declaration describes one ordered, reference-only step:
 
@@ -114,7 +121,8 @@ is provisioned or that execution is safe in the current live environment.
 Runbook rendering reads only normalized graph/evidence; it never scans files or
 calls a service. Stable IDs, Markdown/JSON exports, model versions, semantic
 hashes and existing publication blocks carry over from #473. This Story adds
-no autonomous processing, secret-management integration, publication or Codex.
+no autonomous processing or Codex. Story 521's read-only secret-management metadata
+integration is described below; native Docs rendering remains separate Story 523.
 
 ## Acceptance evidence
 
@@ -122,7 +130,7 @@ no autonomous processing, secret-management integration, publication or Codex.
 | --- | --- |
 | 1: no secret-value field | Kind-specific `SECRET_FIELDS`; unknown-field, malformed metadata and malicious snapshot tests |
 | 2: metadata manifest | `renderers/secrets.py`; metadata fields, ownership gaps, consumers and pinned provenance tests |
-| 3: approved discovery | Existing registry and GET-only transport; reference-only workflow extraction; no secret-management client |
+| 3: approved discovery | Explicit repository and Infisical scopes; GET-only transport and metadata boundary |
 | 4: missing/conflicting locations | Manifest location gaps and all graph candidates; drift/ambiguity fixture tests |
 | 5: eight separate runbooks | `RunbookKind`, stable `DocumentKind` IDs and integrated exporter / manual Dagster rendering |
 | 6: traceable steps | Procedure plus current source grounding, revision match and pinned citations |

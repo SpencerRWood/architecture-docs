@@ -1,0 +1,19 @@
+# DRAFT additive fragment for SpencerRWood/portfolio-website/architecture.toml
+# Reviewed source revision: 442b8319f66bb0c32af48cfa0aebf6e093f29bdd
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Purpose explicitly declared by the operator; pinned documentation supports application structure.
+# Source: https://github.com/SpencerRWood/portfolio-website/blob/442b8319f66bb0c32af48cfa0aebf6e093f29bdd/backend/README.md (blob 4d0601a52bff380f7c7bf86725bff01fff344728)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/portfolio-website"
+attributes = { purpose = "portfolio-projects-and-analytics-engineering-writing", owner = "SpencerRWood" }
+
+# Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.
+# Supplemental metadata: provenance.json operational_metadata.github_repository_secrets.portfolio-website
+# Source: https://github.com/SpencerRWood/portfolio-website/blob/442b8319f66bb0c32af48cfa0aebf6e093f29bdd/.github/workflows/release.yml (blob bfe20661c21bc4159faccdbb7adc3fb36112f0f4)
+[[nodes]]
+kind = "secret_reference"
+name = "INFRASTRUCTURE_PR_TOKEN"
+attributes = { scope = "repository", injection = "github-actions", owner = "SpencerRWood", required = "true" }

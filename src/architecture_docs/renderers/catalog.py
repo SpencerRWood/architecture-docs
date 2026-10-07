@@ -7,9 +7,10 @@ from architecture_docs.renderers.artifacts import (
     Document,
     DocumentKind,
     RenderConfig,
+    Row,
     Section,
 )
-from architecture_docs.renderers.views import View, gap, section
+from architecture_docs.renderers.views import View, freshness, gap, section, sources
 
 
 def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Document:
@@ -24,12 +25,42 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
             if node.repository == repository.repository
         )
         identities = frozenset(node.id for node in members)
-        rows = tuple(
-            row
-            for node in members
-            for row in view.entity_rows(
-                node, () if node.kind == NodeKind.SECRET_REFERENCE else None
+        purposes = tuple(
+            candidate.value
+            for prop in repository.properties
+            if prop.name == "purpose"
+            for candidate in prop.candidates
+        )
+        dependencies = tuple(
+            sorted(
+                {
+                    view.nodes[edge.target].repository
+                    for edge in snapshot.graph.edges
+                    if edge.source in identities
+                    and view.nodes[edge.target].repository != repository.repository
+                }
             )
+        )
+        rows = (
+            Row(
+                f"repository-summary:{repository.id}",
+                "Repository summary",
+                "Purpose: "
+                + (", ".join(purposes) or "not declared")
+                + f"; {len(members)} cataloged entities; cross-repository targets: "
+                + (", ".join(dependencies) or "none evidenced")
+                + ".",
+                freshness(repository.evidence),
+                (repository.id,),
+                sources(repository.evidence),
+            ),
+            *(
+                row
+                for node in members
+                for row in view.entity_rows(
+                    node, () if node.kind == NodeKind.SECRET_REFERENCE else None
+                )
+            ),
         )
         if not any(prop.name == "purpose" for prop in repository.properties):
             rows += (

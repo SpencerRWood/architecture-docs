@@ -1,0 +1,2245 @@
+{
+  "version": 1,
+  "status": "draft",
+  "basis": "Pinned approved repository source review; declarations are proposed and are not collected evidence.",
+  "observed_at": "2026-10-06T14:31:55.410799+00:00",
+  "plans": [
+    {
+      "repository": "SpencerRWood/architecture-docs",
+      "revision": "3f0a52d5ed6ff0948aa14bac782aba3a0ea804c6",
+      "target": "architecture.toml",
+      "fragment": "architecture-docs.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/architecture-docs",
+          "attributes": {
+            "purpose": "repository-architecture-documentation",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/architecture-docs",
+              "path": "README.md",
+              "revision": "3f0a52d5ed6ff0948aa14bac782aba3a0ea804c6",
+              "blob": "43358f3165fb2ff9332e44df21d0db66a7d01719",
+              "url": "https://github.com/SpencerRWood/architecture-docs/blob/3f0a52d5ed6ff0948aa14bac782aba3a0ea804c6/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/automerge-repair",
+      "revision": "b39d47432241baf034613b332c9a527084e0e992",
+      "target": "architecture.toml",
+      "fragment": "automerge-repair.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/automerge-repair",
+          "attributes": {
+            "purpose": "bounded-renovate-automerge-recovery-foundation",
+            "tag": "repair",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/automerge-repair",
+              "path": "README.md",
+              "revision": "b39d47432241baf034613b332c9a527084e0e992",
+              "blob": "3b9061bba43730e619104260ccee7b1fb870e2d2",
+              "url": "https://github.com/SpencerRWood/automerge-repair/blob/b39d47432241baf034613b332c9a527084e0e992/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/codex-config",
+      "revision": "7addbcd39d997589a674559442ca8feb71ac1106",
+      "target": "architecture.toml",
+      "fragment": "codex-config.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/codex-config",
+          "attributes": {
+            "purpose": "shared-codex-configuration-and-guidance",
+            "tag": "codex",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/codex-config",
+              "path": "README.md",
+              "revision": "7addbcd39d997589a674559442ca8feb71ac1106",
+              "blob": "5f1c49ec03aceb64ca877e42d77ee028aaf1c18d",
+              "url": "https://github.com/SpencerRWood/codex-config/blob/7addbcd39d997589a674559442ca8feb71ac1106/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/codex-runtime",
+      "revision": "e596a4c47734d0a0c030e7f822859d53532a3c82",
+      "target": "architecture.toml",
+      "fragment": "codex-runtime.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/codex-runtime",
+          "attributes": {
+            "purpose": "codex-capacity-inspection-library",
+            "tag": "codex",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/codex-runtime",
+              "path": "README.md",
+              "revision": "e596a4c47734d0a0c030e7f822859d53532a3c82",
+              "blob": "7c7c06e9879ce0e571bf9a8696f77f1148608b52",
+              "url": "https://github.com/SpencerRWood/codex-runtime/blob/e596a4c47734d0a0c030e7f822859d53532a3c82/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/events-service",
+      "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+      "target": "architecture.toml",
+      "fragment": "events-service.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/events-service",
+          "attributes": {
+            "purpose": "event-routing-and-notification-delivery",
+            "tag": "events",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PROMOTION_TOKEN",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": ".github/workflows/release.yml",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "91ab9e0caccb948ccab019a5d7a9137159726d80",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "WES_DATABASE_URL",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Documented required base-runtime secret reference in the EventsService project."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "WES_PRODUCER_CREDENTIALS",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Documented required base-runtime secret reference in the EventsService project."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "NTFY_AUTH_TOKEN",
+          "attributes": {
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "false",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Optional adapter credentials; exact key location remains unresolved."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "SMTP_USERNAME",
+          "attributes": {
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "false",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Optional adapter credentials; exact key location remains unresolved."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "SMTP_PASSWORD",
+          "attributes": {
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "false",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/events-service",
+              "path": "README.md",
+              "revision": "532a97cef6ba83be0dbaf35705bde10022aa2f60",
+              "blob": "201af678355cf94b530994ce5615e33612c9a490",
+              "url": "https://github.com/SpencerRWood/events-service/blob/532a97cef6ba83be0dbaf35705bde10022aa2f60/README.md"
+            }
+          ],
+          "reason": "Optional adapter credentials; exact key location remains unresolved."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "TELEGRAM_BOT_TOKEN",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "ansible/roles/events_service/defaults/main.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "7b1b0b4b80c43057fc4b229abe173dc7997752d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml"
+            }
+          ],
+          "reason": "Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "TELEGRAM_CHAT_ID",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "ansible/roles/events_service/defaults/main.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "7b1b0b4b80c43057fc4b229abe173dc7997752d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml"
+            }
+          ],
+          "reason": "Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "TELEGRAM_WEBHOOK_SECRET",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "ansible/roles/events_service/defaults/main.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "7b1b0b4b80c43057fc4b229abe173dc7997752d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml"
+            }
+          ],
+          "reason": "Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "WES_NOTIFICATION_POLICIES",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "ansible/roles/events_service/defaults/main.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "7b1b0b4b80c43057fc4b229abe173dc7997752d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml"
+            }
+          ],
+          "reason": "Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "WES_SUBSCRIPTIONS",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/events-service",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "ansible/roles/events_service/defaults/main.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "7b1b0b4b80c43057fc4b229abe173dc7997752d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/ansible/roles/events_service/defaults/main.yml"
+            }
+          ],
+          "reason": "Required by the current platform's Telegram-only deployment key contract; present in metadata-only Infisical inventory.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/homelab",
+      "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+      "target": "architecture.toml",
+      "fragment": "homelab.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/homelab",
+          "attributes": {
+            "purpose": "home-host-and-service-configuration",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "README.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "62ed4249f01d49b21edba2a32e88e3da2a464397",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "service",
+          "name": "caddy",
+          "attributes": {
+            "technology": "caddy",
+            "network": "proxy",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/architecture.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "02f6578c693fb684b435732cbf186b86b49c5908",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/architecture.md"
+            }
+          ],
+          "reason": "Homelab edge proxy configuration."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/prerequisites",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "prerequisites",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/rollback-contract.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Require explicit supported policy and prior successful release; preview ready does not attest to recovery."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/steps",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "steps",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/rollback-contract.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Invoke the common contract; selection and execution semantics reside in this document."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/verification",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "verification",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/rollback-contract.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Require status succeeded and verification_result passed; current protected health gates apply."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/recovery",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "rollback-recovery",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/rollback-contract.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Failed or interrupted rollback stops; preserve original failure and deployment metadata. Database restore excluded."
+        },
+        {
+          "kind": "procedure",
+          "name": "database-recovery-reference",
+          "attributes": {
+            "purpose": "attended-logical-database-recovery",
+            "reference": "docs/postgres-migration.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/homelab",
+              "path": "docs/postgres-migration.md",
+              "revision": "2b53dee2f5fffedc06846b2603d5993f02e9fe8a",
+              "blob": "ba8482aa15f4b49b24166f28727d73490137c129",
+              "url": "https://github.com/SpencerRWood/homelab/blob/2b53dee2f5fffedc06846b2603d5993f02e9fe8a/docs/postgres-migration.md"
+            }
+          ],
+          "reason": "Current migration document directs recovery to retained logical backups and later source-cleanup sections. It does not define a periodic backup schedule or numeric RPO/RTO."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "recovery-authority"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/infrastructure",
+      "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+      "target": "architecture.toml",
+      "fragment": "infrastructure.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/infrastructure",
+          "attributes": {
+            "purpose": "portable-runtime-infrastructure",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "README.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "4c949b539dac9e1353d759a232ba2833a068a9be",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "ARCHITECTURE_DOCS_DATABASE_URL",
+          "attributes": {
+            "environment": "dev",
+            "path": "/architecture-docs",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood",
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/architecture-docs-database.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "17d1a1e78dc862ac30d48956c1139853983a325d",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture-docs-database.md"
+            }
+          ],
+          "reason": "Documented dev-only database connection reference; no value collected.",
+          "operational_metadata_reference": "infrastructure_project"
+        },
+        {
+          "kind": "database",
+          "name": "architecture_docs",
+          "attributes": {
+            "technology": "postgresql",
+            "role": "architecture_docs",
+            "environment": "dev",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/architecture-docs-database.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "17d1a1e78dc862ac30d48956c1139853983a325d",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture-docs-database.md"
+            }
+          ],
+          "reason": "Application-owned migrations; infrastructure owns dev database provisioning."
+        },
+        {
+          "kind": "service",
+          "name": "caddy",
+          "attributes": {
+            "technology": "caddy",
+            "environment": "dev",
+            "network": "infrastructure-dev-proxy",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/architecture.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "4d9134d3da4d13e41554d07a5adda2129d5a271f",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/architecture.md"
+            }
+          ],
+          "reason": "Separate dev proxy topology; reserved future TLS listener is not declared active."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/prerequisites",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "prerequisites",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/rollback-contract.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Require explicit supported policy and prior successful release; preview ready does not attest to recovery."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/steps",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "steps",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/rollback-contract.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Invoke the common contract; selection and execution semantics reside in this document."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/verification",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "verification",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/rollback-contract.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Require status succeeded and verification_result passed; current protected health gates apply."
+        },
+        {
+          "kind": "procedure",
+          "name": "rollback-known-good/recovery",
+          "attributes": {
+            "runbook": "rollback-known-good-recovery",
+            "phase": "rollback-recovery",
+            "order": "1",
+            "reference": "docs/rollback-contract.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/rollback-contract.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "fffd7c66f9bc063eb0c009840e190a160a474dd1",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/rollback-contract.md"
+            }
+          ],
+          "reason": "Failed or interrupted rollback stops; preserve original failure and deployment metadata. Database restore excluded."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "WEBSITE_PORTFOLIO_GHCR_TOKEN",
+          "attributes": {
+            "project": "33c5aed5-165f-4ef3-845a-2f9d0f9c06d5",
+            "environment": "ci",
+            "path": "/github",
+            "scope": "ci",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "scripts/resolve-ci-ghcr.py",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "890e198e0b800f9ab853c2bbaee4cea4527b714c",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/scripts/resolve-ci-ghcr.py"
+            }
+          ],
+          "reason": "Platform registry-authentication resolver explicitly selects this CI project, environment, path, and key; metadata inventory confirms presence.",
+          "operational_metadata_reference": "infisical_key_inventory"
+        },
+        {
+          "kind": "procedure",
+          "name": "events-deployment/prerequisites",
+          "attributes": {
+            "runbook": "deployment-redeployment",
+            "phase": "prerequisites",
+            "order": "1",
+            "reference": "docs/events-service-deployment.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/events-service-deployment.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "11bdd32a166f0b2588c0988cd42d766319f475ad",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md"
+            }
+          ],
+          "reason": "Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries."
+        },
+        {
+          "kind": "procedure",
+          "name": "events-deployment/steps",
+          "attributes": {
+            "runbook": "deployment-redeployment",
+            "phase": "steps",
+            "order": "1",
+            "reference": "docs/events-service-deployment.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/events-service-deployment.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "11bdd32a166f0b2588c0988cd42d766319f475ad",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md"
+            }
+          ],
+          "reason": "Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries."
+        },
+        {
+          "kind": "procedure",
+          "name": "events-deployment/verification",
+          "attributes": {
+            "runbook": "deployment-redeployment",
+            "phase": "verification",
+            "order": "1",
+            "reference": "docs/events-service-deployment.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/events-service-deployment.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "11bdd32a166f0b2588c0988cd42d766319f475ad",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md"
+            }
+          ],
+          "reason": "Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries."
+        },
+        {
+          "kind": "procedure",
+          "name": "events-deployment/rollback-recovery",
+          "attributes": {
+            "runbook": "deployment-redeployment",
+            "phase": "rollback-recovery",
+            "order": "1",
+            "reference": "docs/events-service-deployment.md"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "docs/events-service-deployment.md",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "11bdd32a166f0b2588c0988cd42d766319f475ad",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/docs/events-service-deployment.md"
+            }
+          ],
+          "reason": "Events platform deployment document explicitly defines prerequisites, deployment, health verification, and attended first-deployment/compatible-release recovery boundaries."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "recovery-authority"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/openproject-reports",
+      "revision": "a907c22c7c6c25b2deb3c4fb973f1d936bc191cc",
+      "target": "architecture.toml",
+      "fragment": "openproject-reports.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/openproject-reports",
+          "attributes": {
+            "purpose": "daily-openproject-status-workbook",
+            "tag": "reporting",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/openproject-reports",
+              "path": "README.md",
+              "revision": "a907c22c7c6c25b2deb3c4fb973f1d936bc191cc",
+              "blob": "53c549cfcfeed02fb8eed0cc09e385e57a91956c",
+              "url": "https://github.com/SpencerRWood/openproject-reports/blob/a907c22c7c6c25b2deb3c4fb973f1d936bc191cc/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PR_TOKEN",
+          "attributes": {
+            "scope": "repository",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "true"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/openproject-reports",
+              "path": ".github/workflows/release.yml",
+              "revision": "a907c22c7c6c25b2deb3c4fb973f1d936bc191cc",
+              "blob": "0df49842e5924be3aa65532dc95c5c68c2eafc46",
+              "url": "https://github.com/SpencerRWood/openproject-reports/blob/a907c22c7c6c25b2deb3c4fb973f1d936bc191cc/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.",
+          "operational_metadata_reference": "github_repository_secrets.openproject-reports"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "OPENPROJECT_API_TOKEN",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/dagster",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "environments/dev.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "375ea3b98882127797f8de9cef3ce798f318e6d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/environments/dev.yml"
+            }
+          ],
+          "reason": "Platform Dagster runtime manifest declares the required key and location; project ID verified separately on the deployment host.",
+          "operational_metadata_reference": "infrastructure_project"
+        },
+        {
+          "kind": "secret_reference",
+          "name": "GOOGLE_DRIVE_CREDENTIALS_JSON",
+          "attributes": {
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+            "environment": "dev",
+            "path": "/dagster",
+            "scope": "runtime",
+            "injection": "infisical",
+            "required": "true",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/infrastructure",
+              "path": "environments/dev.yml",
+              "revision": "ecec2f31f76231410847f63f0047b9872236d31c",
+              "blob": "375ea3b98882127797f8de9cef3ce798f318e6d7",
+              "url": "https://github.com/SpencerRWood/infrastructure/blob/ecec2f31f76231410847f63f0047b9872236d31c/environments/dev.yml"
+            }
+          ],
+          "reason": "Platform Dagster runtime manifest declares the required key and location; project ID verified separately on the deployment host.",
+          "operational_metadata_reference": "infrastructure_project"
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/portfolio-website",
+      "revision": "442b8319f66bb0c32af48cfa0aebf6e093f29bdd",
+      "target": "architecture.toml",
+      "fragment": "portfolio-website.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/portfolio-website",
+          "attributes": {
+            "purpose": "portfolio-projects-and-analytics-engineering-writing",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/portfolio-website",
+              "path": "backend/README.md",
+              "revision": "442b8319f66bb0c32af48cfa0aebf6e093f29bdd",
+              "blob": "4d0601a52bff380f7c7bf86725bff01fff344728",
+              "url": "https://github.com/SpencerRWood/portfolio-website/blob/442b8319f66bb0c32af48cfa0aebf6e093f29bdd/backend/README.md"
+            }
+          ],
+          "reason": "Purpose explicitly declared by the operator; pinned documentation supports application structure."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PR_TOKEN",
+          "attributes": {
+            "scope": "repository",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "true"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/portfolio-website",
+              "path": ".github/workflows/release.yml",
+              "revision": "442b8319f66bb0c32af48cfa0aebf6e093f29bdd",
+              "blob": "bfe20661c21bc4159faccdbb7adc3fb36112f0f4",
+              "url": "https://github.com/SpencerRWood/portfolio-website/blob/442b8319f66bb0c32af48cfa0aebf6e093f29bdd/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.",
+          "operational_metadata_reference": "github_repository_secrets.portfolio-website"
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/rag-service",
+      "revision": "d4162ee324b43a6143091ae8316c2cb6d79d9090",
+      "target": "architecture.toml",
+      "fragment": "rag-service.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/rag-service",
+          "attributes": {
+            "purpose": "document-ingestion-and-retrieval-api",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/rag-service",
+              "path": "README.md",
+              "revision": "d4162ee324b43a6143091ae8316c2cb6d79d9090",
+              "blob": "4a53654bc5a3c3c26ef30a7903e3995ad5c5f60f",
+              "url": "https://github.com/SpencerRWood/rag-service/blob/d4162ee324b43a6143091ae8316c2cb6d79d9090/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PR_TOKEN",
+          "attributes": {
+            "scope": "repository",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "true"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/rag-service",
+              "path": ".github/workflows/release.yml",
+              "revision": "d4162ee324b43a6143091ae8316c2cb6d79d9090",
+              "blob": "cc5481a55e5d2ec0f43b53935f9de295dfb86e12",
+              "url": "https://github.com/SpencerRWood/rag-service/blob/d4162ee324b43a6143091ae8316c2cb6d79d9090/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Observed GitHub repository secret, required when this caller's promotion job runs. The upstream synchronization mapping is unverified.",
+          "operational_metadata_reference": "github_repository_secrets.rag-service"
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/sql-control-cli",
+      "revision": "dbfcb98d943181f7b713305a59c97bfffb28f024",
+      "target": "architecture.toml",
+      "fragment": "sql-control-cli.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/sql-control-cli",
+          "attributes": {
+            "purpose": "sql-validation-and-release-control",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/sql-control-cli",
+              "path": "README.md",
+              "revision": "dbfcb98d943181f7b713305a59c97bfffb28f024",
+              "blob": "ca3d2ec4cfeae3e0f00eaaeddba7a98477ff17a7",
+              "url": "https://github.com/SpencerRWood/sql-control-cli/blob/dbfcb98d943181f7b713305a59c97bfffb28f024/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/synthetic-website-analytics",
+      "revision": "bd0ab0a5d362004a6a4d32046468644b89ddab33",
+      "target": "architecture.toml",
+      "fragment": "synthetic-website-analytics.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/synthetic-website-analytics",
+          "attributes": {
+            "purpose": "synthetic-website-data-analysis",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-analytics",
+              "path": "README.md",
+              "revision": "bd0ab0a5d362004a6a4d32046468644b89ddab33",
+              "blob": "f805d07ad9380fcd2aaa6c18dbe0b16fbb8c03fd",
+              "url": "https://github.com/SpencerRWood/synthetic-website-analytics/blob/bd0ab0a5d362004a6a4d32046468644b89ddab33/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/synthetic-website-analytics-platform",
+      "revision": "4e52f29eda919f25484661bdca12241026037dd1",
+      "target": "architecture.toml",
+      "fragment": "synthetic-website-analytics-platform.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/synthetic-website-analytics-platform",
+          "attributes": {
+            "purpose": "synthetic-website-analytics-platform-documentation",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-analytics-platform",
+              "path": "README.md",
+              "revision": "4e52f29eda919f25484661bdca12241026037dd1",
+              "blob": "7bb946db1931ab279bfa591ca8dba406fdf94f4a",
+              "url": "https://github.com/SpencerRWood/synthetic-website-analytics-platform/blob/4e52f29eda919f25484661bdca12241026037dd1/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/synthetic-website-data",
+      "revision": "fc805ca604c26ed3c1294e10e25a690863022a01",
+      "target": "architecture.toml",
+      "fragment": "synthetic-website-data.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/synthetic-website-data",
+          "attributes": {
+            "purpose": "synthetic-event-generation-and-postgresql-loading",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-data",
+              "path": "README.md",
+              "revision": "fc805ca604c26ed3c1294e10e25a690863022a01",
+              "blob": "985e2fb56b7fa2ca665026ae15063ed713b5836b",
+              "url": "https://github.com/SpencerRWood/synthetic-website-data/blob/fc805ca604c26ed3c1294e10e25a690863022a01/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/synthetic-website-dbt",
+      "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+      "target": "architecture.toml",
+      "fragment": "synthetic-website-dbt.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/synthetic-website-dbt",
+          "attributes": {
+            "purpose": "synthetic-website-analytical-marts",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": "README.md",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "e0136311f835b57358db415418caf65d4a6ff586",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_DBNAME",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_HOST",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_PASSWORD",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_PORT",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_SCHEMA",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_USER",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "72e2ceb6108f219b2b1b0f8a9c863ff8c058e9e7",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "local-development/DBT_PASSWORD",
+          "attributes": {
+            "environment": "dev",
+            "path": "/synthetic-website-dbt",
+            "scope": "local-development",
+            "injection": "infisical",
+            "owner": "SpencerRWood",
+            "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": "README.md",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "e0136311f835b57358db415418caf65d4a6ff586",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md"
+            }
+          ],
+          "reason": "Documented local development password resolution; canonical Infrastructure Dev project ID unresolved.",
+          "operational_metadata_reference": "infrastructure_project"
+        },
+        {
+          "kind": "database",
+          "name": "synthetic_website_data",
+          "attributes": {
+            "technology": "postgresql",
+            "role": "dbt_editor",
+            "schema": "staging/intermediate/marts",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/synthetic-website-dbt",
+              "path": "README.md",
+              "revision": "c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228",
+              "blob": "e0136311f835b57358db415418caf65d4a6ff586",
+              "url": "https://github.com/SpencerRWood/synthetic-website-dbt/blob/c3b8e5c5e108fdbeceb7bbdc5e290c7359b71228/README.md"
+            }
+          ],
+          "reason": "Transformation role owns dbt schemas and reads raw; runtime database availability is not attested."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/template-dbt",
+      "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+      "target": "architecture.toml",
+      "fragment": "template-dbt.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-dbt",
+          "attributes": {
+            "purpose": "dbt-core-project-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": "README.md",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "da7f3b3641cbfedc1bf22e0e132e31a440ba0083",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_DBNAME",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_HOST",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_PASSWORD",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_PORT",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_SCHEMA",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "DBT_USER",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-dbt",
+              "path": ".github/workflows/release.yml",
+              "revision": "015c7fd7548b53dcb61cebda9e60c7422b1d9426",
+              "blob": "6aae27f21c40f9909821c93dba3aba8032810c5d",
+              "url": "https://github.com/SpencerRWood/template-dbt/blob/015c7fd7548b53dcb61cebda9e60c7422b1d9426/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/template-fastapi-react",
+      "revision": "1db84898496f428cdb0d9cdb4278d801f997a80b",
+      "target": "architecture.toml",
+      "fragment": "template-fastapi-react.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-fastapi-react",
+          "attributes": {
+            "purpose": "fastapi-react-project-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-fastapi-react",
+              "path": "README.md",
+              "revision": "1db84898496f428cdb0d9cdb4278d801f997a80b",
+              "blob": "dddd5f90748d3a5dc26ae6a1f7ff3748a1246f7f",
+              "url": "https://github.com/SpencerRWood/template-fastapi-react/blob/1db84898496f428cdb0d9cdb4278d801f997a80b/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PR_TOKEN",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-fastapi-react",
+              "path": ".github/workflows/release.yml",
+              "revision": "1db84898496f428cdb0d9cdb4278d801f997a80b",
+              "blob": "4b37afd38ead0a89b00cb876086609b4f7138b67",
+              "url": "https://github.com/SpencerRWood/template-fastapi-react/blob/1db84898496f428cdb0d9cdb4278d801f997a80b/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/template-fastapi-service",
+      "revision": "f27a9c1fb4a1fcd94a437cd065fe12448c34e734",
+      "target": "architecture.toml",
+      "fragment": "template-fastapi-service.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-fastapi-service",
+          "attributes": {
+            "purpose": "fastapi-http-service-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-fastapi-service",
+              "path": "README.md",
+              "revision": "f27a9c1fb4a1fcd94a437cd065fe12448c34e734",
+              "blob": "7f8b04b3518012960c80cdfe63602791280031c9",
+              "url": "https://github.com/SpencerRWood/template-fastapi-service/blob/f27a9c1fb4a1fcd94a437cd065fe12448c34e734/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "INFRASTRUCTURE_PR_TOKEN",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-fastapi-service",
+              "path": ".github/workflows/release.yml",
+              "revision": "f27a9c1fb4a1fcd94a437cd065fe12448c34e734",
+              "blob": "67de0aaab279b7c5a788de071d8a326193abb70c",
+              "url": "https://github.com/SpencerRWood/template-fastapi-service/blob/f27a9c1fb4a1fcd94a437cd065fe12448c34e734/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    },
+    {
+      "repository": "SpencerRWood/template-python-analytics",
+      "revision": "f642c2e2844fc8c6a66441b787136ae0a159df55",
+      "target": "architecture.toml",
+      "fragment": "template-python-analytics.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-python-analytics",
+          "attributes": {
+            "purpose": "python-analytics-project-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-python-analytics",
+              "path": "README.md",
+              "revision": "f642c2e2844fc8c6a66441b787136ae0a159df55",
+              "blob": "55398d33903579e9ff397877cb559fc1863750d1",
+              "url": "https://github.com/SpencerRWood/template-python-analytics/blob/f642c2e2844fc8c6a66441b787136ae0a159df55/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-python-api-client",
+      "revision": "7dfe01a1f7add816dd1e170fa30599c5e315e18f",
+      "target": "architecture.toml",
+      "fragment": "template-python-api-client.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-python-api-client",
+          "attributes": {
+            "purpose": "python-rest-api-client-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-python-api-client",
+              "path": "README.md",
+              "revision": "7dfe01a1f7add816dd1e170fa30599c5e315e18f",
+              "blob": "2cd00b2f9f3deb1ba76fa1833be8a80e6905ccb1",
+              "url": "https://github.com/SpencerRWood/template-python-api-client/blob/7dfe01a1f7add816dd1e170fa30599c5e315e18f/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-python-cli",
+      "revision": "1596609f095db787a6cd8a2bb38f9a6fa22ca6c5",
+      "target": "architecture.toml",
+      "fragment": "template-python-cli.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-python-cli",
+          "attributes": {
+            "purpose": "python-cli-project-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-python-cli",
+              "path": "README.md",
+              "revision": "1596609f095db787a6cd8a2bb38f9a6fa22ca6c5",
+              "blob": "bc02f93fce8c4da34ed2e3590062e71b55384244",
+              "url": "https://github.com/SpencerRWood/template-python-cli/blob/1596609f095db787a6cd8a2bb38f9a6fa22ca6c5/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-python-dagster",
+      "revision": "2b7d901e63095def72171397e3f5b99d457497d3",
+      "target": "architecture.toml",
+      "fragment": "template-python-dagster.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-python-dagster",
+          "attributes": {
+            "purpose": "dagster-code-location-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-python-dagster",
+              "path": "README.md",
+              "revision": "2b7d901e63095def72171397e3f5b99d457497d3",
+              "blob": "f856d2cca037f8c20ae917919952ff7ea5b6e418",
+              "url": "https://github.com/SpencerRWood/template-python-dagster/blob/2b7d901e63095def72171397e3f5b99d457497d3/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-python-library",
+      "revision": "f397b22d6aee90fccbf2ba2e7c48b459c1552c0c",
+      "target": "architecture.toml",
+      "fragment": "template-python-library.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-python-library",
+          "attributes": {
+            "purpose": "typed-python-library-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-python-library",
+              "path": "README.md",
+              "revision": "f397b22d6aee90fccbf2ba2e7c48b459c1552c0c",
+              "blob": "cb6c9fcec23d160893e1a26968ad254d4b0e88fa",
+              "url": "https://github.com/SpencerRWood/template-python-library/blob/f397b22d6aee90fccbf2ba2e7c48b459c1552c0c/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-synthetic-data",
+      "revision": "76c387688fa16e6e08bd4e0d2a5f7f7fceaf949a",
+      "target": "architecture.toml",
+      "fragment": "template-synthetic-data.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-synthetic-data",
+          "attributes": {
+            "purpose": "synthetic-dataset-generation-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-synthetic-data",
+              "path": "README.md",
+              "revision": "76c387688fa16e6e08bd4e0d2a5f7f7fceaf949a",
+              "blob": "3ea11bca8cbb22362c3c4e7278f17b4e83ccdd00",
+              "url": "https://github.com/SpencerRWood/template-synthetic-data/blob/76c387688fa16e6e08bd4e0d2a5f7f7fceaf949a/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/template-web-automation",
+      "revision": "1d2d0bab5ec5edfde9a364811da8690df43895db",
+      "target": "architecture.toml",
+      "fragment": "template-web-automation.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/template-web-automation",
+          "attributes": {
+            "purpose": "playwright-browser-automation-template",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/template-web-automation",
+              "path": "README.md",
+              "revision": "1d2d0bab5ec5edfde9a364811da8690df43895db",
+              "blob": "b880b5f7a4d8980a1daa9252fb8dde876caf9042",
+              "url": "https://github.com/SpencerRWood/template-web-automation/blob/1d2d0bab5ec5edfde9a364811da8690df43895db/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/wood-agents",
+      "revision": "35bcc68c2e56d5b30beeb72852b6d331f6e45466",
+      "target": "architecture.toml",
+      "fragment": "wood-agents.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/wood-agents",
+          "attributes": {
+            "purpose": "shared-agent-behavior-skills-and-loops",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/wood-agents",
+              "path": "README.md",
+              "revision": "35bcc68c2e56d5b30beeb72852b6d331f6e45466",
+              "blob": "15651d32e32d68b80caae8e1a62f8c8850505c2f",
+              "url": "https://github.com/SpencerRWood/wood-agents/blob/35bcc68c2e56d5b30beeb72852b6d331f6e45466/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/wood-charts",
+      "revision": "f8db26d260ea92cf0fe02e724087f91389ec2d0d",
+      "target": "architecture.toml",
+      "fragment": "wood-charts.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/wood-charts",
+          "attributes": {
+            "purpose": "theme-driven-plotly-chart-construction",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/wood-charts",
+              "path": "README.md",
+              "revision": "f8db26d260ea92cf0fe02e724087f91389ec2d0d",
+              "blob": "03808c9c9e70e8c51c25c9488c602272417051c3",
+              "url": "https://github.com/SpencerRWood/wood-charts/blob/f8db26d260ea92cf0fe02e724087f91389ec2d0d/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/wood-reports",
+      "revision": "94044e680c5970045bcd3bfe23b06ab36899aa93",
+      "target": "architecture.toml",
+      "fragment": "wood-reports.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/wood-reports",
+          "attributes": {
+            "purpose": "powerpoint-and-latex-report-publication",
+            "tag": "reporting",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/wood-reports",
+              "path": "README.md",
+              "revision": "94044e680c5970045bcd3bfe23b06ab36899aa93",
+              "blob": "7c4ff6e09d069aeea54992815d52bac95d0eba20",
+              "url": "https://github.com/SpencerRWood/wood-reports/blob/94044e680c5970045bcd3bfe23b06ab36899aa93/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/wood-tools",
+      "revision": "e6e888208cd2b4059bacfd2ca06dc5618e01a96b",
+      "target": "architecture.toml",
+      "fragment": "wood-tools.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/wood-tools",
+          "attributes": {
+            "purpose": "deterministic-delivery-and-openproject-tooling",
+            "tag": "openproject",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/wood-tools",
+              "path": "README.md",
+              "revision": "e6e888208cd2b4059bacfd2ca06dc5618e01a96b",
+              "blob": "5a75f881a7cf84469b2f35c82e1f3a583cdf69f6",
+              "url": "https://github.com/SpencerRWood/wood-tools/blob/e6e888208cd2b4059bacfd2ca06dc5618e01a96b/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        }
+      ],
+      "edges": [],
+      "decisions": []
+    },
+    {
+      "repository": "SpencerRWood/workflows",
+      "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+      "target": "architecture.toml",
+      "fragment": "workflows.toml",
+      "nodes": [
+        {
+          "kind": "repository",
+          "name": "SpencerRWood/workflows",
+          "attributes": {
+            "purpose": "shared-github-release-validation-and-deployment-contracts",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": "README.md",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "dc00bb539d04f299b1a215fc106b46b49c40a105",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/README.md"
+            }
+          ],
+          "reason": "Repository role described by approved documentation."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "infrastructure_token",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "true"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/promote-container-to-dev.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "a16c7820017fafb2a007df2f2cea423f8355e79d",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/promote-container-to-dev.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_dbname",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_host",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_password",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_port",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_schema",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "dbt_user",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood",
+            "required": "false"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release-container.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "4dc8140d2278ffebfe28a69916452a59fd24e712",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release-container.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            },
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/validate.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "1b9adc20d7872ec11170bf7e961ebcc609323ad1",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/validate.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        },
+        {
+          "kind": "secret_reference",
+          "name": "GITHUB_TOKEN",
+          "attributes": {
+            "scope": "ci",
+            "injection": "github-actions",
+            "owner": "SpencerRWood"
+          },
+          "evidence": [
+            {
+              "repository": "SpencerRWood/workflows",
+              "path": ".github/workflows/release.yml",
+              "revision": "51100f648c0ebdb3291ef67165e0277990e32c64",
+              "blob": "32a656437d6c647531b0616c4da7c97b57eb76d8",
+              "url": "https://github.com/SpencerRWood/workflows/blob/51100f648c0ebdb3291ef67165e0277990e32c64/.github/workflows/release.yml"
+            }
+          ],
+          "reason": "Workflow references GitHub Actions secrets; upstream store location and requiredness remain unconfirmed."
+        }
+      ],
+      "edges": [],
+      "decisions": [
+        "ci-secret-mappings"
+      ]
+    }
+  ],
+  "operator_decisions": {
+    "default_owner": {
+      "identifier": "SpencerRWood",
+      "authority": "user",
+      "statement": "im the owner",
+      "applies_to": [
+        "repository",
+        "service",
+        "database",
+        "secret_reference"
+      ],
+      "exceptions": []
+    },
+    "portfolio_purpose": {
+      "authority": "user",
+      "repository": "SpencerRWood/portfolio-website",
+      "purpose": "portfolio-projects-and-analytics-engineering-writing",
+      "narrative": "Exhibit portfolio projects and write about analytics engineering."
+    },
+    "excluded_repositories": [
+      "SpencerRWood/wood-data-platform",
+      "SpencerRWood/website-marketing-simulation"
+    ]
+  },
+  "research_observed_at": "2026-10-06T15:24:01Z",
+  "operational_metadata": {
+    "infrastructure_project": {
+      "id": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+      "authority": "protected-host-deployer-configuration",
+      "host": "swood-server",
+      "environment": "dev"
+    },
+    "events_runtime": {
+      "host": "swood-server",
+      "services_running": [
+        "wood-broker",
+        "wood-notify"
+      ],
+      "wood_notify_provider_configuration": {
+        "telegram": true,
+        "ntfy": false,
+        "smtp": false
+      }
+    },
+    "infisical_key_inventory": [
+      {
+        "project": "7ea10433-2eeb-4c57-95a9-b793dd40c7a4",
+        "environment": "dev",
+        "path": "/events-service",
+        "keys": [
+          "TELEGRAM_BOT_TOKEN",
+          "TELEGRAM_CHAT_ID",
+          "TELEGRAM_WEBHOOK_SECRET",
+          "WES_DATABASE_URL",
+          "WES_NOTIFICATION_POLICIES",
+          "WES_PRODUCER_CREDENTIALS",
+          "WES_SUBSCRIPTIONS"
+        ]
+      },
+      {
+        "project": "33c5aed5-165f-4ef3-845a-2f9d0f9c06d5",
+        "environment": "ci",
+        "path": "/github",
+        "keys": [
+          "INFRASTRUCTURE_PR_TOKEN",
+          "WEBSITE_PORTFOLIO_GHCR_TOKEN"
+        ]
+      }
+    ],
+    "github_repository_secrets": {
+      "openproject-reports": [
+        "INFRASTRUCTURE_PR_TOKEN"
+      ],
+      "portfolio-website": [
+        "INFRASTRUCTURE_PR_TOKEN"
+      ],
+      "rag-service": [
+        "INFRASTRUCTURE_PR_TOKEN"
+      ],
+      "events-service": [],
+      "synthetic-website-dbt": [],
+      "template-dbt": [],
+      "template-fastapi-react": [],
+      "template-fastapi-service": [],
+      "workflows": []
+    },
+    "github_environment_secrets": {
+      "rag-service/infrastructure-dev": []
+    },
+    "limitations": [
+      "Presence of matching Infisical and GitHub key names does not attest to synchronized values or rotation.",
+      "Provider configuration is an observation, not an end-to-end delivery test.",
+      "No credential values were returned or persisted."
+    ]
+  }
+}

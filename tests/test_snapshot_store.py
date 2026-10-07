@@ -57,7 +57,7 @@ def test_partial_failure_is_persisted_and_recovery_uses_known_good_facts(
     assert partial.snapshot.evidence[0].observation == original
     recovered = SnapshotStore(path).reconcile(complete(original))
     assert recovered.snapshot.id == first.snapshot.id
-    assert not recovered.diff.material
+    assert {change.category for change in recovered.diff.changes} == {"estate_coverage"}
     assert SnapshotStore(path).get(partial.snapshot.id).collection.failures
 
 

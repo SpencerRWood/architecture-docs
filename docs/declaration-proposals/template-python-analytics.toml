@@ -1,0 +1,11 @@
+# DRAFT additive fragment for SpencerRWood/template-python-analytics/architecture.toml
+# Reviewed source revision: f642c2e2844fc8c6a66441b787136ae0a159df55
+# Merge nodes by kind/name; preserve existing declarations and edges.
+version = 1
+
+# Repository role described by approved documentation.
+# Source: https://github.com/SpencerRWood/template-python-analytics/blob/f642c2e2844fc8c6a66441b787136ae0a159df55/README.md (blob 55398d33903579e9ff397877cb559fc1863750d1)
+[[nodes]]
+kind = "repository"
+name = "SpencerRWood/template-python-analytics"
+attributes = { purpose = "python-analytics-project-template", owner = "SpencerRWood" }
