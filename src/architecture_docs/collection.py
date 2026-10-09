@@ -1,5 +1,6 @@
 """Pin reads, isolate source failures, and dispatch the common plugin interface."""
 
+from architecture_docs.collectors.architecture import ArchitectureCollector
 from architecture_docs.collectors.content import content_collectors
 from architecture_docs.collectors.contracts import Collector, Context, SourceFile
 from architecture_docs.collectors.github import (
@@ -15,6 +16,7 @@ from architecture_docs.collectors.infisical import Infisical
 from architecture_docs.collectors.metadata import MetadataCollector
 from architecture_docs.config import Registry, Repository
 from architecture_docs.model import (
+    Authority,
     CollectionResult,
     Failure,
     Observation,
@@ -86,7 +88,7 @@ def source_files(
     )
 
 
-def collect(  # noqa: PLR0915 - source phases have isolated failure boundaries
+def collect(  # noqa: PLR0912, PLR0915 - source phases have isolated failure boundaries
     registry: Registry,
     github: GitHub,
     collectors: tuple[Collector, ...] | None = None,
@@ -94,7 +96,7 @@ def collect(  # noqa: PLR0915 - source phases have isolated failure boundaries
     infisical: Infisical | None = None,
 ) -> CollectionResult:
     plugins: tuple[Collector, ...] = (
-        (*content_collectors(), MetadataCollector())
+        (*content_collectors(), ArchitectureCollector(), MetadataCollector())
         if collectors is None
         else collectors
     )
@@ -119,6 +121,25 @@ def collect(  # noqa: PLR0915 - source phases have isolated failure boundaries
                 repository.archived == "only" and not archived
             ):
                 skipped.append(repository.name)
+                # Preserve positive archive evidence without reading excluded contents.
+                if archived:
+                    observations.extend(
+                        Observation(
+                            "github_metadata", Authority.GITHUB, key, value, provenance
+                        )
+                        for key, value in (
+                            ("repository.identity", repository.name),
+                            ("repository.archived", "true"),
+                        )
+                    )
+                    coverage.append(
+                        SourceCoverage(
+                            repository.name,
+                            "github:repository",
+                            "github_metadata",
+                            None,
+                        )
+                    )
                 continue
             ref = repository.ref or text(metadata.get("default_branch"))
             commit = mapping(

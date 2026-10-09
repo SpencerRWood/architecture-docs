@@ -4,6 +4,7 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from functools import cached_property
 
+from architecture_docs.architecture_graph import relationship_state
 from architecture_docs.declarations import EdgeKind, NodeKind
 from architecture_docs.graph import Edge, Evidence, Node
 from architecture_docs.reconciliation import Snapshot
@@ -266,7 +267,11 @@ class View:
             ),
             None,
         )
-        state: str = prop.state if prop else "declared"
+        state: str = (
+            prop.state
+            if prop and prop.state != "agreed"
+            else relationship_state(edge, self.snapshot.graph)
+        )
         if prop and state == "drift":
             state += ": preferred" if prop.preferred == edge.target else ": alternative"
         return Row(
@@ -313,6 +318,11 @@ class View:
     def diagnostics(self, entities: frozenset[str]) -> tuple[Row, ...]:
         groups: dict[tuple[str, str], list[Node]] = defaultdict(list)
         for item in sorted(self.snapshot.graph.gaps):
+            if (
+                item.reason.startswith("missing_metadata_")
+                or item.reason == "unresolved_relationship"
+            ):
+                continue  # The architecture coverage report owns these diagnostics.
             if item.entity in entities:
                 node = self.nodes[item.entity]
                 if item.reason.startswith("missing_secret_") and all(

@@ -2,6 +2,7 @@
 
 from architecture_docs.declarations import NodeKind
 from architecture_docs.reconciliation import Snapshot
+from architecture_docs.renderers.architecture import coverage, dependencies
 from architecture_docs.renderers.artifacts import (
     DEFAULT_CONFIG,
     Document,
@@ -28,10 +29,10 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
         purposes = tuple(
             candidate.value
             for prop in repository.properties
-            if prop.name == "purpose"
+            if prop.name in {"purpose", "component.description"}
             for candidate in prop.candidates
         )
-        dependencies = tuple(
+        dependency_targets = tuple(
             sorted(
                 {
                     view.nodes[edge.target].repository
@@ -48,7 +49,7 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
                 "Purpose: "
                 + (", ".join(purposes) or "not declared")
                 + f"; {len(members)} cataloged entities; cross-repository targets: "
-                + (", ".join(dependencies) or "none evidenced")
+                + (", ".join(dependency_targets) or "none evidenced")
                 + ".",
                 freshness(repository.evidence),
                 (repository.id,),
@@ -62,7 +63,10 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
                 )
             ),
         )
-        if not any(prop.name == "purpose" for prop in repository.properties):
+        if not any(
+            prop.name in {"purpose", "component.description"}
+            for prop in repository.properties
+        ):
             rows += (
                 gap(
                     f"purpose:{repository.id}",
@@ -97,5 +101,8 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
             )
         )
     return view.document(
-        DocumentKind.CATALOG, "Repository & Dependency Catalog", tuple(entries), config
+        DocumentKind.CATALOG,
+        "Repository & Dependency Catalog",
+        (*entries, dependencies(view), coverage(view)),
+        config,
     )

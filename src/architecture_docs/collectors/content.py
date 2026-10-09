@@ -11,6 +11,7 @@ from typing import Any
 
 import yaml
 
+from architecture_docs.classification import metadata
 from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.collectors.github import mapping
 from architecture_docs.collectors.workflow_secrets import secret_facts
@@ -61,7 +62,7 @@ def identifiers(values: object) -> list[str]:
 
 
 def parsed(source: SourceFile) -> dict[str, Any]:
-    if source.provenance.source.endswith(".toml"):
+    if source.provenance.source.endswith((".toml", ".lock")):
         return tomllib.loads(source.content)
     if source.provenance.source.endswith(".json"):
         return mapping(json.loads(source.content))
@@ -72,7 +73,7 @@ def parsed(source: SourceFile) -> dict[str, Any]:
 def configuration(source: SourceFile) -> Facts:
     path = source.provenance.source
     if PurePosixPath(path).name == "architecture.toml":
-        return architecture_declarations(parsed(source))
+        return architecture_configuration(parsed(source))
     if PurePosixPath(path).name == "Dockerfile":
         return [
             ("container.base_image", value)
@@ -97,6 +98,28 @@ def configuration(source: SourceFile) -> Facts:
         if isinstance(decoded, list):
             return ansible(decoded)
     return structured_configuration(parsed(source), path)
+
+
+def architecture_configuration(data: dict[str, Any]) -> Facts:
+    if "architecture" not in data:
+        return architecture_declarations(data)
+    if set(data) - {
+        "architecture",
+        "project",
+        "version",
+        "nodes",
+        "edges",
+        "secrets",
+        "secret_locations",
+    }:
+        raise ValueError("invalid equivalent metadata file")
+    metadata(data["architecture"])
+    declarations = {
+        key: value
+        for key, value in data.items()
+        if key not in {"architecture", "project"}
+    }
+    return architecture_declarations(declarations) if declarations else []
 
 
 def structured_configuration(data: dict[str, Any], path: str) -> Facts:
@@ -249,6 +272,15 @@ def executable(source: SourceFile) -> Facts:
         return facts
     data = parsed(source)
     facts = secret_facts(data)
+    events = data.get("on", {})
+    dispatch = events.get("workflow_dispatch") if isinstance(events, dict) else None
+    inputs = dispatch.get("inputs") if isinstance(dispatch, dict) else None
+    selected = inputs.get("environment") if isinstance(inputs, dict) else None
+    environment_input = selected if isinstance(selected, dict) else {}
+    facts.extend(
+        ("environment.supported", value)
+        for value in identifiers(environment_input.get("options", []))
+    )
     for name, job in mapping(data.get("jobs", {})).items():
         settings = mapping(job)
         encoded = json.dumps(settings)

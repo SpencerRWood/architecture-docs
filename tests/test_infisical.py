@@ -883,7 +883,12 @@ def test_integration_candidate_uses_live_metadata_and_honest_local_provenance(  
     assert report["mapped"] == (1 if credentials else 0)
     assert report["document_count"] == 15
     assert "secrets-manifest" in report["affected_documents"]
-    assert "secret_topology" in report["material_categories"]
+    if credentials:
+        assert "secret_topology" in report["material_categories"]
+    else:
+        assert (
+            report["material_categories"] == []
+        )  # Incomplete evidence defers changes.
     snapshot = snapshot_from_json((output / "snapshot.json").read_text())
     local = [
         e

@@ -2,6 +2,7 @@
 
 from architecture_docs.declarations import EdgeKind, NodeKind
 from architecture_docs.reconciliation import Snapshot
+from architecture_docs.renderers.architecture import solutions
 from architecture_docs.renderers.artifacts import (
     DEFAULT_CONFIG,
     Document,
@@ -61,5 +62,8 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
         ),
     )
     return view.document(
-        DocumentKind.DATA, "Data & Storage Architecture", sections, config
+        DocumentKind.DATA,
+        "Data & Storage Architecture",
+        (*sections, *solutions(view)),
+        config,
     )

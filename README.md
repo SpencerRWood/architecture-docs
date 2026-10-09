@@ -1,5 +1,9 @@
 # Architecture Docs
 
+Repository classification, minimal metadata, evidence confidence, environment
+topology and snapshot-change behavior are documented in
+[Architecture classification](docs/architecture-classification.md).
+
 Deterministic, read-only GitHub repository evidence collection (#471) and
 architecture graph/snapshot reconciliation (#472), and deterministic architecture
 documents (#473), Secrets Manifest and grounded runbooks (#474), and stable native
@@ -23,7 +27,10 @@ nor any Codex provider. Optional narrative integration belongs to #476.
 
 ## Repository approval
 
-`config/repositories.toml` explicitly accounts for 29 reviewed active repositories.
+`config/repositories.toml` explicitly accounts for 29 reviewed active repositories
+from authenticated discovery on 2026-10-09. This includes pi-config and
+recovery-verification; deleted wood-agents and all four archived repositories
+are excluded.
 `homelab`, `wood-data-platform` and `website-marketing-simulation` are intentionally
 excluded. References from included repositories remain reference-only dependencies.
 Collection never

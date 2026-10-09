@@ -35,7 +35,14 @@ def test_approved_collection_never_requests_excluded_repositories() -> None:
         github.close()
     assert paths == [f"/repos/{repo.name}" for repo in registry.repositories]
     assert len(paths) == 29
-    for excluded in (HOMELAB, "SpencerRWood/wood-data-platform"):
+    for excluded in (
+        HOMELAB,
+        "SpencerRWood/wood-data-platform",
+        "SpencerRWood/sql-control-cli",
+        "SpencerRWood/wood-agents",
+        "SpencerRWood/woodanalytics-site",
+        "SpencerRWood/website-marketing-simulation",
+    ):
         assert all(excluded not in path for path in paths)
         assert excluded not in collection.observations[0].value
 

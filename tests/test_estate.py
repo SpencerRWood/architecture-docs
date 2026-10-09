@@ -299,10 +299,12 @@ def test_registry_accounts_for_supported_estate_with_bounded_approvals() -> None
     }
     assert "SpencerRWood/website-marketing-simulation" not in names
     assert {
-        "SpencerRWood/wood-agents",
-        "SpencerRWood/sql-control-cli",
+        "SpencerRWood/pi-config",
+        "SpencerRWood/recovery-verification",
         "SpencerRWood/synthetic-website-analytics-platform",
     } <= names
+    assert "SpencerRWood/wood-agents" not in names
+    assert "SpencerRWood/sql-control-cli" not in names
     assert all("*" not in path for repo in loaded.repositories for path in repo.paths)
     assert not Repository("o/r", ("docs/*.md",)).approves("docs/private/README.md")
     with pytest.raises(ValueError, match="paths"):
@@ -313,8 +315,12 @@ def test_collect_persists_expectations_even_when_archived_or_failed() -> None:
     fixture = FixtureGitHub()
     fixture.archived = True
     result = collect(registry(), fixture.client())
-    assert len(result.observations) == 1
+    assert len(result.observations) == 3
     assert result.observations[0].key == "estate.contract"
+    assert any(
+        item.key == "repository.archived" and item.value == "true"
+        for item in result.observations
+    )
     assert not evaluate(result).complete
     fixture.archived = False
     fixture.fail_path = "/repos/"

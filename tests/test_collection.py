@@ -191,7 +191,11 @@ def test_archive_policy(archived: bool, policy: Any, skipped: bool) -> None:
     assert bool(result.skipped) == skipped
     if skipped:
         assert len(fixture.requests) == 1
-        assert not result.observations
+        assert bool(result.observations) == archived
+        if archived:
+            assert ("repository.archived", "true") in {
+                (item.key, item.value) for item in result.observations
+            }
 
 
 def test_one_repository_failure_does_not_corrupt_peers() -> None:
