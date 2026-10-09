@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.8.1 (2026-10-09)
+
+### Bug Fixes
+
+- Retire architecture evidence for verified file deletions
+  ([#10](https://github.com/SpencerRWood/architecture-docs/pull/10),
+  [`ed56037`](https://github.com/SpencerRWood/architecture-docs/commit/ed560377b30774c9939dcb30bbaa27453229c0fc))
+
+
 ## v0.8.0 (2026-10-09)
 
 ### Features
