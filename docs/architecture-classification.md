@@ -173,6 +173,10 @@ Existing material changes gain `reclassification`, `archival`, and
 their existing categories. Diffs point to immutable before/after snapshots carrying
 the original evidence. Metadata disappearance is a gap, not reclassification;
 replacing a validated field or an explicit tombstone remains authoritative change.
+When a complete current tree proves an approved metadata file was deleted, its
+old evidence is retired. An omitted field in a surviving file, a failed read,
+or a file outside current approvals still retains stale evidence and blocks
+publication.
 
 The PostgreSQL diagnostic head still records partial reconciliation. A separately
 maintained `successful_head` advances only after complete collection with current
