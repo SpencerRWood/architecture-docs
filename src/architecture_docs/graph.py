@@ -341,6 +341,11 @@ def operational_fact(builder: Builder, repository: str, item: Evidence) -> None:
             item,
         )
         builder.property(target, f"{key}:{value}", value, item)
+        if key in {"ansible.role", "ansible.roles"}:
+            role = builder.node(
+                NodeKind.ORCHESTRATION, f"role:{value}", item, declared=False
+            )
+            builder.edge(EdgeKind.ORCHESTRATES, target, role, item)
     elif key.startswith("repository."):
         builder.property(repository, key, value, item)
     elif key == "documentation.repository_reference":
@@ -350,10 +355,21 @@ def operational_fact(builder: Builder, repository: str, item: Evidence) -> None:
         )
 
 
-def source_fact(builder: Builder, repository: str, item: Evidence) -> None:
+def source_fact(builder: Builder, repository: str, item: Evidence) -> None:  # noqa: PLR0912 - dispatch by source vocabulary
     observation = item.observation
     key, value = observation.key, observation.value
-    if key in {"architecture.node", "architecture.edge"}:
+    if key.startswith(
+        ("classification.", "component.", "deployment.", "environment.")
+    ) or key in {
+        "architecture.relationship",
+        "data.component",
+        "orchestration.component",
+        "dagster.location",
+    }:
+        from architecture_docs.architecture_graph import fact  # noqa: PLC0415
+
+        fact(builder, repository, item)
+    elif key in {"architecture.node", "architecture.edge"}:
         explicit(builder, item)
     elif key.startswith("workflow."):
         workflow(builder, repository, item)
@@ -373,9 +389,9 @@ def source_fact(builder: Builder, repository: str, item: Evidence) -> None:
         child(builder, repository, NodeKind.SERVICE, value, item)
     elif key == "compose.volumes":
         child(builder, repository, NodeKind.STORAGE, value, item)
-    elif key.startswith("package."):
+    elif key.startswith("package.") and key != "package.repository":
         target = child(builder, repository, NodeKind.PACKAGE, value, item)
-        if key != "package.name":
+        if key not in {"package.name", "package.locked"}:
             builder.edge(EdgeKind.DEPENDS_ON, repository, target, item)
     elif key.startswith(
         ("release.", "validation.", "build.", "container.", "dagster.")
@@ -400,6 +416,8 @@ def source_fact(builder: Builder, repository: str, item: Evidence) -> None:
 
 
 def normalize(evidence: tuple[Evidence, ...]) -> Graph:
+    from architecture_docs.architecture_graph import enrich  # noqa: PLC0415
+
     builder = Builder()
     for item in sorted(evidence, key=evidence_key):
         if item.observation.key == "estate.contract" or item.observation.key.startswith(
@@ -409,4 +427,4 @@ def normalize(evidence: tuple[Evidence, ...]) -> Graph:
         repository = item.observation.provenance.repository
         identity = builder.node(NodeKind.REPOSITORY, repository, item)
         source_fact(builder, identity, item)
-    return builder.finish()
+    return enrich(builder, evidence)

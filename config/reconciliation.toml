@@ -7,6 +7,28 @@ transient_properties = ["collected_at", "last_seen"]
 repository = "SpencerRWood/homelab"
 reason = "out_of_scope"
 
+# GitHub discovery 2026-10-09 confirms these repositories are archived.
+[[tombstones]]
+repository = "SpencerRWood/sql-control-cli"
+reason = "archived"
+
+[[tombstones]]
+repository = "SpencerRWood/website-marketing-simulation"
+reason = "archived"
+
+[[tombstones]]
+repository = "SpencerRWood/wood-data-platform"
+reason = "archived"
+
+[[tombstones]]
+repository = "SpencerRWood/woodanalytics-site"
+reason = "archived"
+
+# Absent from complete authenticated owner discovery and GET returns not_found.
+[[tombstones]]
+repository = "SpencerRWood/wood-agents"
+reason = "deleted"
+
 # Explicit reviewed removals, independent of collection availability:
 # [[tombstones]]
 # repository = "owner/retired-repository"

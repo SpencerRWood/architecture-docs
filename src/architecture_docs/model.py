@@ -31,6 +31,9 @@ class Observation:
     provenance: Provenance
 
     def __post_init__(self) -> None:
+        from architecture_docs.architecture_records import validate  # noqa: PLC0415
+
+        validate(self)
         if self.key == "secret.location":
             from architecture_docs.secret_locations import (  # noqa: PLC0415
                 SecretLocation,

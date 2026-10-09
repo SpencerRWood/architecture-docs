@@ -2,6 +2,7 @@
 
 from architecture_docs.declarations import EdgeKind, NodeKind
 from architecture_docs.reconciliation import Snapshot
+from architecture_docs.renderers.architecture import environments
 from architecture_docs.renderers.artifacts import (
     DEFAULT_CONFIG,
     Document,
@@ -60,7 +61,7 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
                 f"{title} are not evidenced in the normalized snapshot.",
             )
         )
-    sections = tuple(stages)
+    sections = (*tuple(stages), *environments(view))
     sections += (
         section(
             "release-contracts",

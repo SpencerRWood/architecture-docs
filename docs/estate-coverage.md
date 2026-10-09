@@ -1,7 +1,11 @@
 # Estate coverage
 
 The reviewed registry accounts for 29 active SpencerRWood repositories as of
-2026-10-06. Archived repositories, homelab, wood-data-platform, and website-marketing-simulation
+2026-10-09. Authenticated discovery found 30 active repositories; the existing
+Homelab restriction leaves 29 approved active repositories. The reviewed registry
+adds pi-config and recovery-verification, removes unavailable wood-agents, and
+excludes archived sql-control-cli, woodanalytics-site, wood-data-platform, and
+website-marketing-simulation. Archived repositories, homelab, wood-data-platform, and website-marketing-simulation
 are outside this supported estate. The registry declares exact approved paths;
 reviewers must approve new repositories and paths explicitly. Paths exclude
 test fixtures, environment files, credential directories, private keys and state.

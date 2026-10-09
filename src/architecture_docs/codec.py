@@ -1,10 +1,22 @@
 """Version-checked JSON boundaries for collection and persisted snapshot evidence."""
 
 import json
+from dataclasses import asdict
 from typing import Any
 
+from architecture_docs.declarations import EdgeKind, NodeKind
 from architecture_docs.estate import evaluate
-from architecture_docs.graph import Evidence, normalize
+from architecture_docs.graph import (
+    Candidate,
+    Edge,
+    Evidence,
+    Gap,
+    Graph,
+    Node,
+    Property,
+    node_id,
+    resolve,
+)
 from architecture_docs.model import (
     Authority,
     CollectionResult,
@@ -97,6 +109,89 @@ def collection_from_json(payload: str) -> CollectionResult:
         raise ValueError("invalid collection record") from None
 
 
+def graph_from_data(data: dict[str, Any], evidence: tuple[Evidence, ...]) -> Graph:
+    """Read the frozen projection, not today's normalization of historical facts.
+
+    Snapshot IDs bind the complete record in the store. Structural validation
+    additionally binds every graph citation and candidate to snapshot evidence.
+    """
+    if (
+        set(data) != {"nodes", "edges", "gaps", "schema_version"}
+        or data["schema_version"] != 1
+    ):
+        raise ValueError("unsupported graph record")
+    known = {json.dumps(asdict(item), sort_keys=True): item for item in evidence}
+
+    def citations(items: list[dict[str, Any]]) -> tuple[Evidence, ...]:
+        return tuple(known[json.dumps(item, sort_keys=True)] for item in items)
+
+    nodes = []
+    for item in data["nodes"]:
+        properties = []
+        for prop in item["properties"]:
+            candidates = tuple(
+                Candidate(candidate["value"], citations(candidate["evidence"]))
+                for candidate in prop["candidates"]
+            )
+            result = Property(
+                prop["name"], candidates, prop["preferred"], prop["state"]
+            )
+            if result != resolve(
+                result.name,
+                {candidate.value: list(candidate.evidence) for candidate in candidates},
+            ):
+                raise ValueError("invalid property resolution")
+            properties.append(result)
+        node = Node(
+            item["id"],
+            NodeKind(item["kind"]),
+            item["repository"],
+            item["name"],
+            item["declared"],
+            tuple(properties),
+            citations(item["evidence"]),
+        )
+        if (
+            node.id != node_id(node.kind, node.repository, node.name)
+            or not node.evidence
+            or type(node.declared) is not bool
+        ):
+            raise ValueError("invalid graph node")
+        nodes.append(node)
+    identities = {node.id for node in nodes}
+    repositories = {
+        node.repository for node in nodes if node.kind == NodeKind.REPOSITORY
+    }
+    if len(identities) != len(nodes) or not {
+        item.observation.provenance.repository
+        for item in evidence
+        if item.observation.key != "estate.contract"
+        and not item.observation.key.startswith("infisical.")
+    }.issubset(repositories):
+        raise ValueError("missing graph identities")
+    edges = tuple(
+        Edge(
+            item["id"],
+            EdgeKind(item["kind"]),
+            item["source"],
+            item["target"],
+            citations(item["evidence"]),
+        )
+        for item in data["edges"]
+    )
+    if any(
+        edge.source not in identities
+        or edge.target not in identities
+        or not edge.evidence
+        for edge in edges
+    ):
+        raise ValueError("invalid graph endpoints")
+    gaps = tuple(Gap(**item) for item in data["gaps"])
+    if any(gap.entity not in identities for gap in gaps):
+        raise ValueError("invalid graph gap")
+    return Graph(tuple(nodes), edges, gaps)
+
+
 def snapshot_from_json(payload: str) -> Snapshot:
     try:
         data = json.loads(payload)
@@ -114,7 +209,7 @@ def snapshot_from_json(payload: str) -> Snapshot:
         )
         snapshot = Snapshot(
             evidence,
-            normalize(evidence),
+            graph_from_data(data["graph"], evidence),
             collection_from_data(data["collection"]),
             policy,
         )

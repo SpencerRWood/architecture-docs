@@ -195,8 +195,36 @@ def evaluate(collection: CollectionResult) -> EstateCoverage:
         | {item.repository for item in collection.coverage}
         | {item.repository for item in collection.inventories}
     )
-    if present.intersection(collection.skipped):
-        raise ValueError("skipped repository has current evidence")
+    for repository in present.intersection(collection.skipped):
+        facts_for_repository = tuple(
+            item
+            for item in collection.observations
+            if item.provenance.repository == repository and item.collector != "estate"
+        )
+        archive_only = (
+            any(
+                item.key == "repository.archived" and item.value == "true"
+                for item in facts_for_repository
+            )
+            and all(
+                item.collector == "github_metadata"
+                and item.provenance.source == "github:repository"
+                and item.key in {"repository.identity", "repository.archived"}
+                for item in facts_for_repository
+            )
+            and all(
+                scope.source == "github:repository"
+                and scope.collector == "github_metadata"
+                and scope.revision is None
+                for scope in collection.coverage
+                if scope.repository == repository
+            )
+            and not any(
+                item.repository == repository for item in collection.inventories
+            )
+        )
+        if not archive_only:
+            raise ValueError("skipped repository has current evidence")
     inventories = {item.repository: item for item in collection.inventories}
     facts = tuple(
         item

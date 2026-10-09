@@ -410,7 +410,11 @@ def test_missing_secret_metadata_is_a_gap_without_inference() -> None:
             )
         )
     )
-    assert {gap.reason for gap in snapshot.graph.gaps} == {
+    assert {
+        gap.reason
+        for gap in snapshot.graph.gaps
+        if gap.reason.startswith("missing_secret_")
+    } == {
         "missing_secret_project",
         "missing_secret_environment",
         "missing_secret_path",

@@ -57,8 +57,50 @@ def test_partial_failure_is_persisted_and_recovery_uses_known_good_facts(
     assert partial.snapshot.evidence[0].observation == original
     recovered = SnapshotStore(path).reconcile(complete(original))
     assert recovered.snapshot.id == first.snapshot.id
-    assert {change.category for change in recovered.diff.changes} == {"estate_coverage"}
+    assert recovered.diff.previous == first.snapshot.id
+    assert not recovered.diff.material
     assert SnapshotStore(path).get(partial.snapshot.id).collection.failures
+
+
+def test_successful_baseline_preserves_changes_across_partial_run(
+    database_url: str,
+) -> None:
+    original = observation("architecture.node", node("api", host="linux"))
+    healthy_peer = observation(
+        "architecture.node", node("worker", host="nas"), repository="fixture/worker"
+    )
+    first = SnapshotStore(database_url).reconcile(complete(original))
+    partial = SnapshotStore(database_url).reconcile(
+        replace(
+            complete(healthy_peer),
+            failures=(Failure("fixture", original.provenance, "parse_error"),),
+        )
+    )
+    assert not partial.snapshot.successful
+    assert not any(
+        change.category != "estate_coverage" for change in partial.diff.changes
+    )
+    assert SnapshotStore(database_url).latest() == partial.snapshot
+    recovered = SnapshotStore(database_url).reconcile(complete(original, healthy_peer))
+    assert recovered.snapshot.successful
+    assert recovered.diff.previous == first.snapshot.id
+    assert any(
+        change.operation == "created" and change.category == "system"
+        for change in recovered.diff.changes
+    )
+
+
+def test_baseline_bootstrap_preserves_existing_snapshot_identity(
+    database_url: str,
+) -> None:
+    first = SnapshotStore(database_url).reconcile(
+        complete(observation("architecture.node", node("api")))
+    )
+    with database_connection(database_url, "architecture_snapshot") as connection:
+        connection.execute("DROP TABLE successful_head")
+    reopened = SnapshotStore(database_url)
+    assert reopened.latest() == first.snapshot
+    assert not reopened.reconcile(first.snapshot.collection).diff.material
 
 
 def test_normalization_failure_does_not_advance_head_and_is_diagnosable(

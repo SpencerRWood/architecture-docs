@@ -1,4 +1,4 @@
-# Reviewed active SpencerRWood estate for Story #521, 2026-10-06.
+# Reviewed active SpencerRWood estate, refreshed 2026-10-09.
 # Exact paths only; additions require an explicit registry review.
 # Archived repositories, homelab, wood-data-platform, and website-marketing-simulation
 # are excluded. References from approved repositories do not authorize collection.
@@ -47,6 +47,8 @@ paths = [
   ".github/release.toml",
   ".github/workflows/validate.yml",
   "README.md",
+  "architecture.toml",
+  "pyproject.toml",
   "docs/openproject-planning-increments.md",
   "docs/wood-delivery-workflow.md",
   "scripts/brief-check.py",
@@ -122,6 +124,8 @@ paths = [
   "ansible/roles/keycloak/tasks/main.yml",
   "ansible/roles/openwebui/defaults/main.yml",
   "ansible/roles/openwebui/tasks/main.yml",
+  "ansible/roles/overleaf/defaults/main.yml",
+  "ansible/roles/overleaf/tasks/main.yml",
   "ansible/roles/postgres/defaults/main.yml",
   "ansible/roles/postgres/tasks/application.yml",
   "ansible/roles/postgres/tasks/main.yml",
@@ -133,12 +137,15 @@ paths = [
   "compose/caddy/compose.yml",
   "compose/dagster/compose.infisical.yml",
   "compose/dagster/compose.yml",
+  "compose/dagster/config/workspace.yaml",
+  "compose/dagster/app/definitions.py",
   "compose/events-service/compose.yml",
   "compose/infisical/compose.yml",
   "compose/keycloak/compose.infisical.yml",
   "compose/keycloak/compose.yml",
   "compose/openwebui/compose.infisical.yml",
   "compose/openwebui/compose.yml",
+  "compose/overleaf/compose.yml",
   "compose/postgres/compose.yml",
   "compose/rag-service/compose.yml",
   "compose/website-portfolio/compose.infisical.yml",
@@ -219,15 +226,6 @@ paths = [
 ]
 
 [[repositories]]
-name = "SpencerRWood/sql-control-cli"
-archived = "exclude"
-paths = [
-  ".github/release.toml",
-  "README.md",
-  "pyproject.toml",
-]
-
-[[repositories]]
 name = "SpencerRWood/synthetic-website-analytics"
 archived = "exclude"
 paths = [
@@ -244,6 +242,7 @@ archived = "exclude"
 paths = [
   ".github/release.toml",
   "README.md",
+  "architecture.toml",
   "docs/architecture.md",
   "docs/roadmap.md",
 ]
@@ -262,6 +261,8 @@ paths = [
   "scripts/refresh-dagster-grpc-env",
   "scripts/run-dagster-grpc.py",
   "scripts/start-dagster-grpc",
+  "src/synthetic_website_data/dagster/definitions.py",
+  "src/synthetic_website_data/definitions.py",
 ]
 
 [[repositories]]
@@ -273,6 +274,30 @@ paths = [
   "Dockerfile",
   "README.md",
   "dbt_project.yml",
+  "packages.yml",
+  "models/intermediate/_intermediate__models.yml",
+  "models/intermediate/int_campaign_sessions__derived.sql",
+  "models/intermediate/int_events__ordered.sql",
+  "models/intermediate/int_sessions__derived.sql",
+  "models/intermediate/int_visitor_profiles__latest.sql",
+  "models/intermediate/int_visitors__derived.sql",
+  "models/marts/core/_core__models.yml",
+  "models/marts/core/dim_visitors.sql",
+  "models/marts/core/dim_website_pages.sql",
+  "models/marts/core/fct_campaign_daily_performance.sql",
+  "models/marts/core/fct_campaign_overview.sql",
+  "models/marts/core/fct_events.sql",
+  "models/marts/core/fct_sessions.sql",
+  "models/marts/core/fct_website_daily_channel_metrics.sql",
+  "models/marts/core/fct_website_daily_conversion_funnel.sql",
+  "models/marts/core/fct_website_daily_metrics.sql",
+  "models/marts/core/fct_website_page_navigation.sql",
+  "models/staging/raw/_raw__models.yml",
+  "models/staging/raw/_raw__sources.yml",
+  "models/staging/raw/stg_raw__campaigns.sql",
+  "models/staging/raw/stg_raw__events.sql",
+  "models/staging/raw/stg_website.sql",
+  "models/staging/raw/stg_website_page_links.sql",
   "pyproject.toml",
   "scripts/dev",
 ]
@@ -297,6 +322,8 @@ paths = [
   ".github/workflows/validate.yml",
   "Dockerfile",
   "README.md",
+  "architecture.toml",
+  "pyproject.toml",
   "backend/README.md",
   "backend/pyproject.toml",
   "docker-compose.yml",
@@ -391,15 +418,6 @@ paths = [
 ]
 
 [[repositories]]
-name = "SpencerRWood/wood-agents"
-archived = "exclude"
-paths = [
-  ".github/release.toml",
-  "README.md",
-  "pyproject.toml",
-]
-
-[[repositories]]
 name = "SpencerRWood/wood-charts"
 archived = "exclude"
 paths = [
@@ -450,6 +468,8 @@ paths = [
   ".github/workflows/test-contracts.yml",
   ".github/workflows/validate.yml",
   "README.md",
+  "architecture.toml",
+  "pyproject.toml",
   "docs/branch-rules.md",
   "scripts/application_runtime.py",
   "scripts/container_release.py",
@@ -463,6 +483,47 @@ paths = [
   "scripts/validation_status.py",
   "scripts/verify_container_promotion_pr.py",
 ]
+
+[[repositories]]
+name = "SpencerRWood/pi-config"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "README.md",
+  "pyproject.toml",
+  "package.json",
+  "docs/pi-policy.md",
+  "docs/story-sessions.md",
+]
+
+[[repositories]]
+name = "SpencerRWood/recovery-verification"
+archived = "exclude"
+paths = [
+  ".github/release.toml",
+  ".github/workflows/release.yml",
+  ".github/workflows/validate.yml",
+  "Dockerfile",
+  "README.md",
+  "pyproject.toml",
+  "docs/recovery-contract.md",
+  "docs/platform-foundation.md",
+  "docs/consumer-onboarding.md",
+  "src/recovery_verification/dagster/definitions.py",
+  "src/recovery_verification/dagster/jobs.py",
+]
+
+[[estate.repositories]]
+name = "SpencerRWood/pi-config"
+classification = "supporting"
+required = true
+
+[[estate.repositories]]
+name = "SpencerRWood/recovery-verification"
+classification = "service"
+required = true
 
 [[estate.repositories]]
 name = "SpencerRWood/architecture-docs"
@@ -507,11 +568,6 @@ required = true
 [[estate.repositories]]
 name = "SpencerRWood/rag-service"
 classification = "service"
-required = true
-
-[[estate.repositories]]
-name = "SpencerRWood/sql-control-cli"
-classification = "supporting"
 required = true
 
 [[estate.repositories]]
@@ -583,11 +639,6 @@ required = false
 name = "SpencerRWood/template-web-automation"
 classification = "supporting"
 required = false
-
-[[estate.repositories]]
-name = "SpencerRWood/wood-agents"
-classification = "supporting"
-required = true
 
 [[estate.repositories]]
 name = "SpencerRWood/wood-charts"

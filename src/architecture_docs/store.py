@@ -22,6 +22,7 @@ from architecture_docs.reconciliation import (
     Diff,
     Policy,
     Snapshot,
+    compare,
     reconcile,
 )
 
@@ -53,6 +54,23 @@ class SnapshotStore:
                     "state TEXT NOT NULL, "
                     "reason TEXT, sources TEXT)",
                 ),
+            )
+            # Explicit additive migration: preserve diagnostic head/history and
+            # establish a separate baseline for complete architecture changes.
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS successful_head ("
+                "singleton INTEGER PRIMARY KEY CHECK(singleton=1), "
+                "snapshot_id TEXT NOT NULL REFERENCES snapshots(id))"
+            )
+            connection.execute(
+                "INSERT INTO successful_head(singleton,snapshot_id) "
+                "SELECT 1,snapshot_id FROM runs r JOIN snapshots s "
+                "ON s.id=r.snapshot_id WHERE r.state='committed' "
+                "AND s.payload::jsonb->'collection'->'failures'='[]'::jsonb "
+                "AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements("
+                "s.payload::jsonb->'evidence') e "
+                "WHERE e->>'verification'<>'verified') "
+                "ORDER BY r.id DESC LIMIT 1 ON CONFLICT(singleton) DO NOTHING"
             )
 
     @contextmanager
@@ -99,6 +117,13 @@ class SnapshotStore:
                 previous_id = row[0] if row else None
                 previous = self.load(connection, row[0]) if row else None
                 snapshot, diff = reconcile(collection, previous, policy)
+                baseline_row = connection.execute(
+                    "SELECT snapshot_id FROM successful_head WHERE singleton=1"
+                ).fetchone()
+                baseline = (
+                    self.load(connection, baseline_row[0]) if baseline_row else None
+                )
+                diff = compare(baseline, snapshot)
                 connection.execute(
                     "INSERT INTO snapshots(id,payload) VALUES (%s,%s) "
                     "ON CONFLICT(id) DO NOTHING",
@@ -114,6 +139,13 @@ class SnapshotStore:
                     "DO UPDATE SET snapshot_id=excluded.snapshot_id",
                     (snapshot.id,),
                 )
+                if snapshot.successful:
+                    connection.execute(
+                        "INSERT INTO successful_head VALUES(1,%s) "
+                        "ON CONFLICT(singleton) DO UPDATE SET "
+                        "snapshot_id=excluded.snapshot_id",
+                        (snapshot.id,),
+                    )
                 connection.commit()
                 run = cursor.fetchone()
                 if run is None:

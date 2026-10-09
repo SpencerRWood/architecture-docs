@@ -3,15 +3,18 @@
 import html
 from dataclasses import replace
 
+from architecture_docs.architecture_graph import archived, preferred
 from architecture_docs.declarations import EdgeKind, NodeKind
 from architecture_docs.graph import Edge, Node
 from architecture_docs.reconciliation import Snapshot
+from architecture_docs.renderers.architecture import classifications, solutions
 from architecture_docs.renderers.artifacts import (
     DEFAULT_CONFIG,
     Document,
     DocumentKind,
     RenderConfig,
     Row,
+    Section,
 )
 from architecture_docs.renderers.views import EDGE_LABELS, View, label, section, sources
 
@@ -35,6 +38,11 @@ def major_entities(view: View) -> frozenset[str]:
         node.id
         for node in view.snapshot.graph.nodes
         if node.declared
+        and not any(
+            archived(repository)
+            for repository in view.snapshot.graph.manifest(NodeKind.REPOSITORY)
+            if repository.repository == node.repository
+        )
         and node.kind
         in {
             NodeKind.REPOSITORY,
@@ -158,10 +166,31 @@ def diagram(view: View) -> str | None:
         identity: f"n{index}" for index, identity in enumerate(sorted(identities), 1)
     }
     lines = ["flowchart LR"]
+    roots = {
+        node.repository: node
+        for node in view.snapshot.graph.manifest(NodeKind.REPOSITORY)
+    }
+    hierarchy: dict[str, dict[str, list[str]]] = {}
     for identity in sorted(identities):
-        node = view.nodes[identity]
-        text = label(node) + (" (reference only)" if not node.declared else "")
-        lines.append(f'  {aliases[identity]}["{html.escape(text, quote=True)}"]')
+        root = roots[view.nodes[identity].repository]
+        group = preferred(root, "classification.group") or "Unclassified components"
+        solution = preferred(root, "classification.solution") or "Individual components"
+        hierarchy.setdefault(group, {}).setdefault(solution, []).append(identity)
+    for group_index, (group, partitions) in enumerate(sorted(hierarchy.items())):
+        lines.append(f'  subgraph g{group_index}["{html.escape(group, quote=True)}"]')
+        for solution_index, (solution, members) in enumerate(
+            sorted(partitions.items())
+        ):
+            title = html.escape(solution, quote=True)
+            lines.append(f'    subgraph s{group_index}_{solution_index}["{title}"]')
+            for identity in members:
+                node = view.nodes[identity]
+                text = label(node)
+                lines.append(
+                    f'      {aliases[identity]}["{html.escape(text, quote=True)}"]'
+                )
+            lines.append("    end")
+        lines.append("  end")
     for edge in major_edges(view, identities):
         if edge.source in identities and edge.target in identities:
             state = view.relationship(edge).state
@@ -178,7 +207,7 @@ def diagram(view: View) -> str | None:
 def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Document:
     view = View(snapshot)
     identities = major_entities(view)
-    sections = (
+    sections: tuple[Section, ...] = (
         section(
             "boundaries",
             "Repositories and major system boundaries",
@@ -198,7 +227,12 @@ def render(snapshot: Snapshot, config: RenderConfig = DEFAULT_CONFIG) -> Documen
             "interaction paths remain unknown.",
         ),
     )
-    sections = (replace(sections[0], diagram=diagram(view)), sections[1])
+    sections = (
+        *classifications(view),
+        *solutions(view),
+        replace(sections[0], diagram=diagram(view)),
+        sections[1],
+    )
     return view.document(
         DocumentKind.OVERVIEW, "Architecture Overview", sections, config
     )

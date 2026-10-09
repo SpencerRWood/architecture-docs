@@ -74,6 +74,22 @@ class Snapshot:
     policy: Policy
     schema_version: int = 1
 
+    @property
+    def successful(self) -> bool:
+        """Architecture baseline eligibility, distinct from publication coverage."""
+        archived = {
+            item.observation.provenance.repository
+            for item in self.evidence
+            if item.verification == "verified"
+            and item.observation.key == "repository.archived"
+            and item.observation.value == "true"
+        }
+        return self.collection.complete and all(
+            item.verification == "verified"
+            or item.observation.provenance.repository in archived
+            for item in self.evidence
+        )
+
     def to_json(self) -> str:
         return canonical(asdict(self))
 
@@ -174,7 +190,7 @@ def unavailable(observation: Observation, failures: tuple[Failure, ...]) -> bool
     )
 
 
-def removed(
+def removed(  # noqa: PLR0911 - explicit evidence boundaries fail closed independently
     observation: Observation, collection: CollectionResult, policy: Policy
 ) -> bool:
     provenance = observation.provenance
@@ -187,6 +203,17 @@ def removed(
     ):
         return True
     if unavailable(observation, collection.failures):
+        return False
+    if (
+        observation.key.startswith("classification.")
+        or observation.key in {"component.name", "component.description"}
+    ) and not any(
+        item.key == observation.key
+        and item.provenance.repository == provenance.repository
+        and item.provenance.source == provenance.source
+        for item in collection.observations
+    ):
+        # An omitted metadata field is a coverage gap, not reclassification.
         return False
     if any(
         scope.repository == provenance.repository
@@ -355,7 +382,13 @@ def changed_categories(before: str, after: str, default: str) -> tuple[str, ...]
     for field in fields[0].keys() | fields[1].keys():
         if fields[0].get(field) == fields[1].get(field):
             continue
-        if field in {"host", "environment", "deployment_path"} or field.startswith(
+        if field.startswith("classification."):
+            categories.add("reclassification")
+        elif field == "repository.archived":
+            categories.add("archival")
+        elif field.startswith(("deployment.", "environment.", "runtime.")):
+            categories.add("deployment_topology")
+        elif field in {"host", "environment", "deployment_path"} or field.startswith(
             ("relationship:hosted_by", "relationship:deployment_owner")
         ):
             categories.add("deployment_path")
@@ -378,7 +411,7 @@ def compare(previous: Snapshot | None, current: Snapshot) -> Diff:
     before: dict[str, tuple[str, str]] = {}
     after: dict[str, tuple[str, str]] = {}
     for snapshot, target in ((previous, before), (current, after)):
-        if snapshot is None:
+        if snapshot is None or not current.successful:
             continue
         target.update(
             {
