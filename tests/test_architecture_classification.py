@@ -27,12 +27,14 @@ from architecture_docs.collectors.content import executable
 from architecture_docs.collectors.contracts import Context, SourceFile
 from architecture_docs.config import Registry, Repository
 from architecture_docs.declarations import EdgeKind, NodeKind, canonical
+from architecture_docs.estate import EstateContract, ExpectedRepository, RequiredDomain
 from architecture_docs.model import (
     Authority,
     CollectionResult,
     Failure,
     Observation,
     Provenance,
+    RepositoryInventory,
     SourceCoverage,
 )
 from architecture_docs.reconciliation import Policy, Tombstone, reconcile
@@ -641,6 +643,70 @@ def test_deployment_receipts_verify_revision_and_preserve_unavailable_evidence()
             1,
         )
         assert ArchitectureCollector().collect(context).failures
+
+
+@pytest.mark.parametrize(
+    "absence", ["verified", "present", "unapproved", "failed", "unknown"]
+)
+def test_deleted_metadata_source_retires_only_verified_absent_evidence(
+    absence: str,
+) -> None:
+    canonical_file = project(REPOSITORY)
+    duplicate = source(
+        "architecture.toml",
+        '[architecture]\ndomain="engineering"\ncapability="release-control"\n'
+        'kind="workflow"',
+    )
+    estate = EstateContract(
+        (ExpectedRepository(REPOSITORY, "service", True),),
+        (RequiredDomain("classification", fact_prefixes=("classification.",)),),
+    ).observation()
+    previous, _ = reconcile(
+        collection(*observations(canonical_file, duplicate), estate)
+    )
+    assert previous.publication_blocked
+    current = replace(
+        collection(*observations(canonical_file), estate),
+        inventories=()
+        if absence == "unknown"
+        else (
+            RepositoryInventory(
+                REPOSITORY,
+                REVISION,
+                ("pyproject.toml", "architecture.toml")
+                if absence == "present"
+                else ("pyproject.toml",),
+                ("pyproject.toml",)
+                if absence == "unapproved"
+                else ("pyproject.toml", "architecture.toml"),
+            ),
+        ),
+        failures=(
+            Failure(
+                "github_content",
+                Provenance(REPOSITORY, "architecture.toml", REVISION),
+                "request_failed",
+            ),
+        )
+        if absence == "failed"
+        else (),
+    )
+    snapshot, _ = reconcile(current, previous)
+    obsolete = [
+        item
+        for item in snapshot.evidence
+        if item.observation.provenance.source == "architecture.toml"
+    ]
+    if absence == "verified":
+        assert not obsolete
+        assert not snapshot.publication_blocked
+        repository = snapshot.graph.manifest(NodeKind.REPOSITORY)[0]
+        assert preferred(repository, "classification.capability") == "developer-tooling"
+        assert all(item.verification == "verified" for item in snapshot.evidence)
+    else:
+        assert obsolete
+        assert all(item.verification == "stale" for item in obsolete)
+        assert snapshot.publication_blocked
 
 
 def test_snapshot_changes_and_missing_metadata_do_not_reclassify() -> None:

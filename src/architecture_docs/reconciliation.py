@@ -204,6 +204,18 @@ def removed(  # noqa: PLR0911 - explicit evidence boundaries fail closed indepen
         return True
     if unavailable(observation, collection.failures):
         return False
+    # A complete approved tree proves file deletion, even for metadata. This is
+    # distinct from a field omitted from a file that still exists.
+    if any(
+        inventory.repository == provenance.repository
+        and not provenance.source.startswith(("github:", "infisical:"))
+        and Repository(inventory.repository, inventory.approvals).approves(
+            provenance.source
+        )
+        and provenance.source not in inventory.paths
+        for inventory in collection.inventories
+    ):
+        return True
     if (
         observation.key.startswith("classification.")
         or observation.key in {"component.name", "component.description"}
@@ -224,16 +236,7 @@ def removed(  # noqa: PLR0911 - explicit evidence boundaries fail closed indepen
         return True
     if provenance.source.startswith("infisical:"):
         return False  # Git trees cannot attest secret-manager absence.
-    # Only a complete tree within unchanged/current approvals proves file absence.
-    return any(
-        inventory.repository == provenance.repository
-        and not provenance.source.startswith("github:")
-        and Repository(inventory.repository, inventory.approvals).approves(
-            provenance.source
-        )
-        and provenance.source not in inventory.paths
-        for inventory in collection.inventories
-    )
+    return False
 
 
 def stable_collection(collection: CollectionResult) -> CollectionResult:
