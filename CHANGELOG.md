@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.8.0 (2026-10-09)
+
+### Features
+
+- Classify architecture metadata and refresh approved estate
+  ([#9](https://github.com/SpencerRWood/architecture-docs/pull/9),
+  [`18ed23e`](https://github.com/SpencerRWood/architecture-docs/commit/18ed23ec1f68a6df81936369561bbfcefbae345e))
+
+
 ## v0.7.0 (2026-10-07)
 
 ### Features
