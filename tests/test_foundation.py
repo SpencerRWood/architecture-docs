@@ -1,6 +1,7 @@
 """The renamed foundation packages and runs without external credentials."""
 
 import json
+import re
 import tomllib
 from pathlib import Path
 
@@ -47,7 +48,10 @@ def test_package_release_and_shared_runtime_boundary() -> None:
     ]
     assert (root / "src/architecture_docs/py.typed").is_file()
     assert "architecture_docs.dagster.definitions" in (root / "Dockerfile").read_text()
-    assert "release.yml@v1" in (root / ".github/workflows/release.yml").read_text()
+    assert re.search(
+        r"SpencerRWood/workflows/\.github/workflows/release\.yml@[0-9a-f]{40}",
+        (root / ".github/workflows/release.yml").read_text(),
+    )
     assert not any(
         "codex" in dependency for dependency in project["project"]["dependencies"]
     )
